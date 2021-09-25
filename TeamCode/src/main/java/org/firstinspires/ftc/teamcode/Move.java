@@ -16,6 +16,8 @@ public class Move extends LinearOpMode {
     public DcMotor LeftMotor = null;
     public double x = 0.0;
     public double y = 0.0;
+    public double OX = 0.0;
+    public double OY = 0.0;
 
     @Config
     public static class RobotConfig {
@@ -28,21 +30,26 @@ public class Move extends LinearOpMode {
         LeftMotor = hardwareMap.get(DcMotor.class, "L1");
         RightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        TelemetryPacket packet = new TelemetryPacket();
 
         waitForStart();
         while (opModeIsActive()) {
             y = gamepad1.right_stick_x;
             x = gamepad1.left_stick_y;
-            //packet.put("x", x);
-            //packet.put("y", y);
-            packet.fieldOverlay()
-                    .setFill("red")
-                    .fillRect(-20, -20, 10, 10);
             RightMotor.setPower(Range.clip((x - y) * RobotConfig.speed, -1.0, 1.0));
             LeftMotor.setPower(Range.clip((x + y) * RobotConfig.speed, -1.0, 1.0));
-            dashboard.sendTelemetryPacket(packet);
+            OX = OX + x;
+            OY = OY + y;
+            DrawRobot();
         }
+    }
+    public void DrawRobot() {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        TelemetryPacket packet = new TelemetryPacket();
+        //packet.put("x", x);
+        //packet.put("y", y);
+        packet.fieldOverlay()
+                .setFill("red")
+                .fillRect(OX / 1000, OY / 1000, 40, 40);
+        dashboard.sendTelemetryPacket(packet);
     }
 }
