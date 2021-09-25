@@ -35,12 +35,11 @@ public class Move extends LinearOpMode {
         while (opModeIsActive()) {
             y = gamepad1.right_stick_x;
             x = gamepad1.left_stick_y;
-            packet.put("x", x);
-            packet.put("y", y);
-            /*packet.fieldOverlay()
+            //packet.put("x", x);
+            //packet.put("y", y);
+            packet.fieldOverlay()
                     .setFill("red")
-                    .fillRect(20, 30, 10, 10);
-            */
+                    .fillRect(-20, -20, 10, 10);
             RightMotor.setPower(Range.clip((x - y) * RobotConfig.speed, -1.0, 1.0));
             LeftMotor.setPower(Range.clip((x + y) * RobotConfig.speed, -1.0, 1.0));
             dashboard.sendTelemetryPacket(packet);
