@@ -31,7 +31,7 @@ public class Autonom extends LinearOpMode {
         final double R = rightMotorFront.getCurrentPosition();
         final double L = leftMotorFront.getCurrentPosition();
 
-        while(xR != (R+angleF) || yL != (L+angleF)){
+        while((xR > (R+angleF) && direction == 'R') || (yL > (L+angleF) && direction =='L')){
             if (direction == 'R') {
                 rightMotorFront.setPower(-speed);
                 leftMotorFront.setPower(speed);
@@ -81,5 +81,8 @@ public class Autonom extends LinearOpMode {
 
         Move(0,200, 'R');
         Move(1000);
+        telemetry.addData("Rrrrr", rightMotorFront.getCurrentPosition());
+        telemetry.addData("Lllll", leftMotorFront.getCurrentPosition());
+        telemetry.update();
     }
 }
