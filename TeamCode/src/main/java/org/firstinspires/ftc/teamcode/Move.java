@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 //test
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -53,3 +53,4 @@ public class Move extends LinearOpMode {
         dashboard.sendTelemetryPacket(packet);
     }
 }
+*/
