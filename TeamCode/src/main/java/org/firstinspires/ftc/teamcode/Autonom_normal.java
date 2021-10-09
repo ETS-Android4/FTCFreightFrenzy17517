@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-//test
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -11,9 +10,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
-public class Move extends LinearOpMode {
-    public DcMotor RightMotor = null;
-    public DcMotor LeftMotor = null;
+public class Autonom_normal extends LinearOpMode {
+    public DcMotor R_1 = null;
+    public DcMotor L_1 = null;
     public double x = 0.0;
     public double y = 0.0;
     public double OX = 0.0;
@@ -26,27 +25,24 @@ public class Move extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        RightMotor = hardwareMap.get(DcMotor.class, "R1");
-        LeftMotor = hardwareMap.get(DcMotor.class, "L1");
-        RightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        LeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
+        R_1 = hardwareMap.get(DcMotor.class, "R1");
+        L_1 = hardwareMap.get(DcMotor.class, "L1");
+        R_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        L_1.setDirection(DcMotorSimple.Direction.FORWARD);
         waitForStart();
-        while (opModeIsActive()) {
-            y = gamepad1.right_stick_x;
-            x = gamepad1.left_stick_y;
-            RightMotor.setPower(Range.clip((x - y) * RobotConfig.speed, -1.0, 1.0));
-            LeftMotor.setPower(Range.clip((x + y) * RobotConfig.speed, -1.0, 1.0));
-            OX = OX + x;
-            OY = OY + y;
-            DrawRobot();
-        }
+        R_1.setPower(Range.clip((x + y) * Move_normal.RobotConfig.speed, -1.0, 1.0));
+        L_1.setPower(Range.clip((x - y) * Move_normal.RobotConfig.speed, -1.0, 1.0));
     }
-    public void DrawRobot() {
+
+    public void rotation(int i) {
+
+    }
+
+    public void Drawing() {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();
-        //packet.put("x", x);
-        //packet.put("y", y);
+        packet.put("x", x);
+        packet.put("y", y);
         packet.fieldOverlay()
                 .setFill("red")
                 .fillRect(OX / 1000, OY / 1000, 40, 40);
