@@ -32,29 +32,62 @@ public class Autonom extends LinearOpMode {
         double integralSpeed = 0;
         double integralAngle = 0;
         double kP = 0.001;
-        double kPA = 0.001;
+        double kPA = 0.0015;
         double kI = 0.00001;
-        double kD = 0;
+        double kIA = 0.0002;
+        double kD = 0.0001;
+        double kDA = 0.00001;
+        double errDistance = 0;
+        double oldErrDistance = (distance - (rightMotorFront.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0);
+        double oldErrAngle = (angle - rightMotorFront.getCurrentPosition() - leftMotorFront.getCurrentPosition());
+        double errAngle = 0;
+        double difSpeed = 0;
+        double difAngle = 0;
+        runtime.reset();
         do {
-            //proportional component
-            linerSpeed = (distance - (rightMotorFront.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0) * kP;
-            currentAngle = (angle - (rightMotorFront.getCurrentPosition() - leftMotorFront.getCurrentPosition())/2.0) * kPA;
+            errDistance = (distance - (rightMotorFront.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0);
+            errAngle = (angle - rightMotorFront.getCurrentPosition() - leftMotorFront.getCurrentPosition());
+            double deltaErrDistance = errDistance - oldErrDistance;
+            double deltaErrAngle = errAngle - oldErrAngle;
+            oldErrDistance = errDistance;
 
-            //integral component
-            integralSpeed = (distance - (rightMotorFront.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0) * kI;
-            integralAngle = (angle - (rightMotorFront.getCurrentPosition() - leftMotorFront.getCurrentPosition())/2.0) * kI;
+            //proportional component
+            linerSpeed = errDistance * kP;
+            currentAngle = errAngle * kPA;
+
+            //integral component  (|0.25|)
+            integralSpeed += errDistance * kI * runtime.seconds();
+            integralAngle += errAngle * kIA * runtime.seconds();
+            if (integralAngle > 0.25) integralAngle = 0.25;
+            if (integralSpeed > 0.25) integralSpeed = 0.25;
+            if (integralAngle < -0.25) integralAngle = -0.25;
+            if (integralSpeed < -0.25) integralSpeed = -0.25;
 
             //differential component
+            difSpeed = deltaErrDistance/runtime.seconds() * kD;
+            difAngle = deltaErrAngle/runtime.seconds() * kDA;
 
 
-            rightMotorFront.setPower(linerSpeed + currentAngle + integralSpeed);
-            leftMotorFront.setPower(linerSpeed - currentAngle + integralAngle);
+            rightMotorFront.setPower(integralSpeed + linerSpeed + difSpeed + integralAngle + currentAngle + difAngle);
+            leftMotorFront.setPower(integralSpeed + linerSpeed + difSpeed - integralAngle - currentAngle - difAngle);
 
-            telemetry.addData("speed", linerSpeed);
+            telemetry.addData("sec", runtime.seconds());
+            telemetry.addData("liner speed", linerSpeed);
+            telemetry.addData("current angle", currentAngle);
+            telemetry.addData("integral speed", integralSpeed);
+            telemetry.addData("integral angle", integralAngle);
+            telemetry.addData("difSpeed",difSpeed);
+            telemetry.addData("difAngle",difAngle);
+            telemetry.addData("PowerRight",rightMotorFront.getPower());
+            telemetry.addData("PowerLeft",leftMotorFront.getPower());
+            telemetry.addData("ErrAngle", errAngle);
             telemetry.addData("Rrrrr", rightMotorFront.getCurrentPosition());
             telemetry.addData("Lllll", leftMotorFront.getCurrentPosition());
             telemetry.update();
-        } while(Math.abs(linerSpeed) > 0.05 || Math.abs(currentAngle) > 0.05);
+
+            runtime.reset();
+
+        } while((Math.abs(errDistance) > 100 || Math.abs(errAngle) > 100) && opModeIsActive());
    }
 
     public void Move(double dist){
@@ -83,6 +116,7 @@ public class Autonom extends LinearOpMode {
         }
 
         waitForStart();
-        Move(0, 200);
+        Move(0,1000);
+
     }
 }
