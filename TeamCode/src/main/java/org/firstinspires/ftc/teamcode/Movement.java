@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.VariablesDash.*;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -43,7 +44,18 @@ public class Movement {
         }
     }
 
-
+    public void Teleometry(String name, double val, String type){
+        if (type == "dash"){
+            FtcDashboard.getInstance().getTelemetry().addData(name,val);
+        } else if (type == "mobile"){
+            linearOpMode.telemetry.addData(name, val);
+        }
+        linearOpMode.telemetry.update();
+        FtcDashboard.getInstance().getTelemetry().update();
+    }
+    public void Teleometry(String name, double val){
+        Teleometry(name, val, "mobile");
+    }
     public void Move(double distance, double angle) {
         double linerSpeed = 0;
         double currentAngle = 0;
@@ -84,19 +96,20 @@ public class Movement {
             rightMotorFront.setPower(integralSpeed + linerSpeed + difSpeed + integralAngle + currentAngle + difAngle);
             leftMotorFront.setPower(integralSpeed + linerSpeed + difSpeed - integralAngle - currentAngle - difAngle);
 
-            linearOpMode.telemetry.addData("sec", runtime.seconds());
-            linearOpMode.telemetry.addData("liner speed", linerSpeed);
-            linearOpMode.telemetry.addData("current angle", currentAngle);
-            linearOpMode.telemetry.addData("integral speed", integralSpeed);
-            linearOpMode.telemetry.addData("integral angle", integralAngle);
-            linearOpMode.telemetry.addData("difSpeed",difSpeed);
-            linearOpMode.telemetry.addData("difAngle",difAngle);
-            linearOpMode.telemetry.addData("PowerRight",rightMotorFront.getPower());
-            linearOpMode.telemetry.addData("PowerLeft",leftMotorFront.getPower());
-            linearOpMode.telemetry.addData("ErrAngle", errAngle);
-            linearOpMode.telemetry.addData("Rrrrr", rightMotorFront.getCurrentPosition());
-            linearOpMode.telemetry.addData("Lllll", leftMotorFront.getCurrentPosition());
-            linearOpMode.telemetry.update();
+
+            Teleometry("sec", runtime.seconds(),"dash");
+            Teleometry("liner speed", linerSpeed,"dash");
+            Teleometry("current angle", currentAngle,"dash");
+            Teleometry("integral speed", integralSpeed,"dash");
+            Teleometry("integral angle", integralAngle,"dash");
+            Teleometry("difSpeed",difSpeed,"dash");
+            Teleometry("difAngle",difAngle,"dash");
+            Teleometry("PowerRight",rightMotorFront.getPower(),"dash");
+            Teleometry("PowerLeft",leftMotorFront.getPower(),"dash");
+            Teleometry("ErrAngle", errAngle,"dash");
+            Teleometry("Rrrrr", rightMotorFront.getCurrentPosition(),"dash");
+            Teleometry("Lllll", leftMotorFront.getCurrentPosition(),"dash");
+
 
             runtime.reset();
 
