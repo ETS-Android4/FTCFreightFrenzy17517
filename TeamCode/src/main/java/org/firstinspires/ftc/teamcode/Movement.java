@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import static org.firstinspires.ftc.teamcode.VariablesDash.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -8,13 +7,27 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Movement {
+    BNO055IMU gyro = null;
 
+    void initGyro() {
+        gyro = linearOpMode.hardwareMap .get(BNO055IMU.class, "imu");
+        gyro.initialize(new BNO055IMU.Parameters());
+    }
     private LinearOpMode linearOpMode = null;
 
     public Movement(LinearOpMode linearOpMode){
         this.linearOpMode = linearOpMode;
+    }
+    double getGyroHeading() {
+        return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
 
@@ -23,7 +36,9 @@ public class Movement {
     private DcMotorEx rightMotorFront = null;
     private DcMotorEx leftMotorBack = null;
     private DcMotorEx rightMotorBack = null;
-
+    public double smToInc (double getCurrentPosition){
+        return getCurrentPosition/14.42;
+    }
     public void init(){
         //init
         rightMotorFront = linearOpMode.hardwareMap.get(DcMotorEx.class, "R1");
@@ -42,20 +57,9 @@ public class Movement {
             dcMotorEx.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             dcMotorEx.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+        initGyro();
     }
 
-    public void Teleometry(String name, double val, String type){
-        if (type == "dash"){
-            FtcDashboard.getInstance().getTelemetry().addData(name,val);
-        } else if (type == "mobile"){
-            linearOpMode.telemetry.addData(name, val);
-        }
-        linearOpMode.telemetry.update();
-        FtcDashboard.getInstance().getTelemetry().update();
-    }
-    public void Teleometry(String name, double val){
-        Teleometry(name, val, "mobile");
-    }
     public void Move(double distance, double angle) {
         double linerSpeed = 0;
         double currentAngle = 0;
@@ -69,8 +73,9 @@ public class Movement {
         double difAngle = 0;
         runtime.reset();
         do {
-            errDistance = (distance - (rightMotorFront.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0);
-            errAngle = (angle - rightMotorFront.getCurrentPosition() - leftMotorFront.getCurrentPosition());
+            errDistance = (distance - (smToInc(rightMotorFront.getCurrentPosition()) + smToInc(leftMotorFront.getCurrentPosition()))/ 2.0);
+            errAngle = (angle + smToInc(rightMotorFront.getCurrentPosition()) - smToInc(leftMotorFront.getCurrentPosition()));
+            errAngle = (angle - getGyroHeading());
             double deltaErrDistance = errDistance - oldErrDistance;
             double deltaErrAngle = errAngle - oldErrAngle;
             oldErrDistance = errDistance;
@@ -92,28 +97,33 @@ public class Movement {
             difSpeed = deltaErrDistance/runtime.seconds() * kD;
             difAngle = deltaErrAngle/runtime.seconds() * kDA;
 
+            Motor(integralSpeed+linerSpeed+difSpeed, -integralAngle - currentAngle - difAngle);
 
-            rightMotorFront.setPower(integralSpeed + linerSpeed + difSpeed + integralAngle + currentAngle + difAngle);
-            leftMotorFront.setPower(integralSpeed + linerSpeed + difSpeed - integralAngle - currentAngle - difAngle);
+            Telemetry currentTelemetry;
+           // currentTelemetry = linearOpMode.telemetry;
+            currentTelemetry = FtcDashboard.getInstance().getTelemetry();
 
-
-            Teleometry("sec", runtime.seconds(),"dash");
-            Teleometry("liner speed", linerSpeed,"dash");
-            Teleometry("current angle", currentAngle,"dash");
-            Teleometry("integral speed", integralSpeed,"dash");
-            Teleometry("integral angle", integralAngle,"dash");
-            Teleometry("difSpeed",difSpeed,"dash");
-            Teleometry("difAngle",difAngle,"dash");
-            Teleometry("PowerRight",rightMotorFront.getPower(),"dash");
-            Teleometry("PowerLeft",leftMotorFront.getPower(),"dash");
-            Teleometry("ErrAngle", errAngle,"dash");
-            Teleometry("Rrrrr", rightMotorFront.getCurrentPosition(),"dash");
-            Teleometry("Lllll", leftMotorFront.getCurrentPosition(),"dash");
-
+            currentTelemetry.addData("sec", runtime.seconds());
+            currentTelemetry.addData("liner speed", linerSpeed);
+            currentTelemetry.addData("current angle", currentAngle);
+            currentTelemetry.addData("integral speed", integralSpeed);
+            currentTelemetry.addData("integral angle", integralAngle);
+            currentTelemetry.addData("difSpeed",difSpeed);
+            currentTelemetry.addData("difAngle",difAngle);
+            currentTelemetry.addData("PowerRight",rightMotorFront.getPower());
+            currentTelemetry.addData("PowerLeft",leftMotorFront.getPower());
+            currentTelemetry.addData("ErrAngle", errAngle);
+            currentTelemetry.addData("Rrrrr", smToInc(rightMotorFront.getCurrentPosition()));
+            currentTelemetry.addData("Lllll", smToInc(leftMotorFront.getCurrentPosition()));
+            FtcDashboard.getInstance().getTelemetry().update();
 
             runtime.reset();
 
-        } while((Math.abs(errDistance) > 100 || Math.abs(errAngle) > 100) && linearOpMode.opModeIsActive());
+        } while((Math.abs(errDistance) > 10 || Math.abs(errAngle) > 10) && linearOpMode.opModeIsActive());
+    }
+    public void Motor (double power, double angle){
+        rightMotorFront.setPower(power+angle);
+        leftMotorFront.setPower(power-angle);
     }
 
     public void Move(double dist){

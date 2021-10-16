@@ -28,6 +28,7 @@ public class Autonom extends LinearOpMode {
 
     //creating variables
     private Movement movement = new Movement(this);
+    private Manipulator manipulator = new Manipulator(this);
 
     @Override
     public void runOpMode() {
@@ -38,7 +39,7 @@ public class Autonom extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()){
-            movement.Move(1000);
+            movement.Move(100);
             movement.Move(0);
         }
     }
