@@ -7,12 +7,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.opmodes.ButtonSwitch;
+import org.firstinspires.ftc.teamcode.opmodes.Duck;
+import org.firstinspires.ftc.teamcode.opmodes.Global;
 
 @TeleOp
-public class Move_normal extends LinearOpMode {
+public class TeleOP_1 extends LinearOpMode {
     public DcMotor R_1 = null;
     public DcMotor L_1 = null;
+    private Duck duck = new Duck(this);
+    private Movement move = new Movement(this);
+    private ButtonSwitch duckSwitch = new ButtonSwitch();
+    private Global global = new Global(this);
     public double x = 0.0;
     public double y = 0.0;
     public double OX = 0.0;
@@ -25,19 +32,13 @@ public class Move_normal extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        R_1 = hardwareMap.get(DcMotor.class, "R1");
-        L_1 = hardwareMap.get(DcMotor.class, "L1");
-        R_1.setDirection(DcMotorSimple.Direction.REVERSE);
-        L_1.setDirection(DcMotorSimple.Direction.FORWARD);
+        global.init();
 
         waitForStart();
         while (opModeIsActive()) {
-            y = gamepad1.right_stick_x;
-            x = gamepad1.left_stick_y;
-            R_1.setPower(Range.clip((x + y) * RobotConfig.speed, -1.0, 1.0));
-            L_1.setPower(Range.clip((x - y) * RobotConfig.speed, -1.0, 1.0));
-            OX = OX + x;
-            OY = OY + y;
+            move.Motor(gamepad1.left_stick_y, gamepad1.left_stick_x);
+
+            duck.spin(duckSwitch.getState(gamepad1.square));
             Drawing();
         }
     }

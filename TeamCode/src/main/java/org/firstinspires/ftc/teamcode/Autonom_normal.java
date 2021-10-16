@@ -17,6 +17,7 @@ public class Autonom_normal extends LinearOpMode {
     public double y = 0.0;
     public double OX = 0.0;
     public double OY = 0.0;
+    public double L = 100;
 
     @Config
     public static class RobotConfig {
@@ -30,12 +31,21 @@ public class Autonom_normal extends LinearOpMode {
         R_1.setDirection(DcMotorSimple.Direction.REVERSE);
         L_1.setDirection(DcMotorSimple.Direction.FORWARD);
         waitForStart();
-        R_1.setPower(Range.clip((x + y) * Move_normal.RobotConfig.speed, -1.0, 1.0));
-        L_1.setPower(Range.clip((x - y) * Move_normal.RobotConfig.speed, -1.0, 1.0));
+        rotation(-1,90,1.0);
+
+
     }
 
-    public void rotation(int i) {
-
+    public void rotation(double direction, double angle, double speed) {
+        double m1 = L_1.getCurrentPosition();
+        double m2 = R_1.getCurrentPosition();
+        angle = angle/360;
+        while(direction*angle/360*((L_1.getCurrentPosition() - m1) - (R_1.getCurrentPosition() - m2))/L > direction*(m1 - m2)/L){
+            R_1.setPower(Range.clip((speed * ((angle * angle) / angle)) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
+            L_1.setPower(Range.clip((-speed * ((angle * angle) / angle)) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
+        }
+        R_1.setPower(Range.clip((0) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
+        L_1.setPower(Range.clip((0) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
     }
 
     public void Drawing() {
