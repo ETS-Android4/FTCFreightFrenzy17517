@@ -6,11 +6,14 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.opmodes.ButtonSwitch;
-import org.firstinspires.ftc.teamcode.opmodes.Duck;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.BS_1;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.ButtonActivated;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.ButtonSwitch;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Duck;
 import org.firstinspires.ftc.teamcode.opmodes.Global;
+import org.firstinspires.ftc.teamcode.opmodes.Movement;
+import org.firstinspires.ftc.teamcode.opmodes.Tele;
 
 @TeleOp
 public class TeleOP_1 extends LinearOpMode {
@@ -20,6 +23,10 @@ public class TeleOP_1 extends LinearOpMode {
     private Movement move = new Movement(this);
     private ButtonSwitch duckSwitch = new ButtonSwitch();
     private Global global = new Global(this);
+    private BS_1 duck_function = new BS_1(() -> gamepad1.square,(Boolean duckb) -> duck.DuckSpin(duckb));
+    private Tele telemetry_function = new Tele(this);
+    public ButtonActivated BA;
+
     public double x = 0.0;
     public double y = 0.0;
     public double OX = 0.0;
@@ -37,11 +44,12 @@ public class TeleOP_1 extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             move.Motor(gamepad1.left_stick_y, gamepad1.left_stick_x);
-
-            duck.spin(duckSwitch.getState(gamepad1.square));
+            duck_function.activate();
+            telemetry_function.activate();
             Drawing();
         }
     }
+
     public void Drawing() {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();

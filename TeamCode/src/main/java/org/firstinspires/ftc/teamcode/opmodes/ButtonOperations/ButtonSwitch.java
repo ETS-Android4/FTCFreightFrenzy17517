@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.ButtonOperations;
 
 public class ButtonSwitch {
     public boolean lastButtonState;
