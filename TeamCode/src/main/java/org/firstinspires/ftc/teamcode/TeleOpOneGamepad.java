@@ -11,16 +11,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.ButtonActivated;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Duck;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Manipulator;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.ButtonSwitch;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.opmodes.RobotModules;
 import org.firstinspires.ftc.teamcode.opmodes.Tele;
 
 @TeleOp
 public class TeleOpOneGamepad extends LinearOpMode {
     private final RobotModules robotModules = new RobotModules(this);
-    // private BS_1 duck_function = new BS_1(() -> gamepad1.square,(Boolean duckb) -> duck.DuckSpin(duckb));
-    ButtonSwitch manipulatorSwitch = new ButtonSwitch();
-    private Tele telemetry_function = new Tele(this); //TODO is broken
+    private Duck duck = new Duck(this);
+    private SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.square,(Boolean duckb) -> robotModules.duck.DuckSpin(duckb));
+    private ButtonSwitch buttonSwitch = new ButtonSwitch();
+    private Tele telemetry_function = new Tele(this);
     public ButtonActivated BA;
 
     public double x = 0.0;
@@ -35,15 +39,13 @@ public class TeleOpOneGamepad extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            robotModules.movement.setMotorPowers(-gamepad1.left_stick_y * robotSpeed,
-                    gamepad1.right_stick_x * robotSpeed);
-            if (manipulatorSwitch.getState(gamepad1.dpad_up))
-                robotModules.manipulator.MoveServo(Manipulator.ManipulatorPosition.UP);
-            else
-                robotModules.manipulator.MoveServo(Manipulator.ManipulatorPosition.DOWN);
-            //duck_function.activate();
-            //telemetry_function.activate();
-            // Drawing();
+            robotModules.movement.setMotorPowers(-gamepad1.left_stick_y * robotSpeed, gamepad1.right_stick_x * robotSpeed);
+            duck_function.activate();
+            if(gamepad1.triangle)robotModules.manipulator.setPosition(1);
+            if(gamepad1.circle)robotModules.manipulator.setPosition(2);
+            if(gamepad1.cross)robotModules.manipulator.setPosition(3);
+            telemetry_function.activate();
+            Drawing();
         }
     }
 
