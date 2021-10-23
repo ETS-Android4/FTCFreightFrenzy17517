@@ -24,7 +24,7 @@ public class Autonom extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()){
-            movement.Move(100);
+            movement.Move(300);
             movement.Move(0);
         }
     }
