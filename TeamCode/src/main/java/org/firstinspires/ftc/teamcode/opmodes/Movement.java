@@ -66,15 +66,15 @@ public class Movement {
         double integralSpeed = 0;
         double integralAngle = 0;
         double errDistance = 0;
-        double oldErrDistance = (distance - (rightMotorFront.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0);
-        double oldErrAngle = (angle - rightMotorFront.getCurrentPosition() - leftMotorFront.getCurrentPosition());
+        double oldErrDistance = (distance - (Encoder("right") + Encoder("left")) / 2.0);
+        double oldErrAngle = (angle - Encoder("right") - Encoder("left"));
         double errAngle = 0;
         double difSpeed = 0;
         double difAngle = 0;
         runtime.reset();
         do {
-            errDistance = (distance - (smToInc(rightMotorFront.getCurrentPosition()) + smToInc(leftMotorFront.getCurrentPosition()))/ 2.0);
-            errAngle = (angle + smToInc(rightMotorFront.getCurrentPosition()) - smToInc(leftMotorFront.getCurrentPosition()));
+            errDistance = (distance - (smToInc(Encoder("right")) + smToInc(Encoder("left")))/ 2.0);
+            errAngle = (angle + smToInc(Encoder("right")) - smToInc(Encoder("left")));
             errAngle = (angle - getGyroHeading());
             double deltaErrDistance = errDistance - oldErrDistance;
             double deltaErrAngle = errAngle - oldErrAngle;
@@ -113,8 +113,8 @@ public class Movement {
             currentTelemetry.addData("PowerRight",rightMotorFront.getPower());
             currentTelemetry.addData("PowerLeft",leftMotorFront.getPower());
             currentTelemetry.addData("ErrAngle", errAngle);
-            currentTelemetry.addData("Rrrrr", smToInc(rightMotorFront.getCurrentPosition()));
-            currentTelemetry.addData("Lllll", smToInc(leftMotorFront.getCurrentPosition()));
+            currentTelemetry.addData("Rrrrr", smToInc(Encoder("right")));
+            currentTelemetry.addData("Lllll", smToInc(Encoder("left")));
             FtcDashboard.getInstance().getTelemetry().update();
 
             runtime.reset();
@@ -123,7 +123,18 @@ public class Movement {
     }
     public void Motor (double power, double angle){
         rightMotorFront.setPower(power+angle);
+        rightMotorBack.setPower(power + angle);
         leftMotorFront.setPower(power-angle);
+        leftMotorFront.setPower(power - angle);
+    }
+    double Encoder(String direction) {
+        double Enc = 0;
+        if (direction == "left") {
+            Enc = (leftMotorBack.getCurrentPosition() + leftMotorFront.getCurrentPosition())/2;
+        } else {
+            Enc = (rightMotorFront.getCurrentPosition()+rightMotorBack.getCurrentPosition())/2;
+        }
+    return Enc;
     }
 
     public void Move(double dist){
