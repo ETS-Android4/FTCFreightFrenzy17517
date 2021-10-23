@@ -31,7 +31,6 @@ public class TeleOP_1 extends LinearOpMode {
     public double y = 0.0;
     public double OX = 0.0;
     public double OY = 0.0;
-
     @Config
     public static class RobotConfig {
         public static double speed = 1.0;
@@ -42,16 +41,21 @@ public class TeleOP_1 extends LinearOpMode {
         manipulator.initManip();
         move.init();
 
+
         waitForStart();
         while (opModeIsActive()) {
             move.Motor(gamepad1.left_stick_y, gamepad1.right_stick_x);
-            if (gamepad1.dpad_up) manipulator.MoveServo(0.7);
+            if (gamepad1.dpad_up){
+                manipulator.MoveServo(0.25);
+                if (duckSwitch.getState(gamepad1.dpad_up)) manipulator.MoveServo(0.7);
+            }
             if (gamepad1.dpad_down) manipulator.MoveServo(0.05);
             //duck_function.activate();
             //telemetry_function.activate();
            // Drawing();
         }
     }
+
 
     public void Drawing() {
         FtcDashboard dashboard = FtcDashboard.getInstance();
