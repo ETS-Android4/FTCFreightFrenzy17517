@@ -11,7 +11,7 @@ public class Manipulator {
     DigitalChannel endSwitchDown;
 
     enum ManipulatorPosition {
-        UP, DOWN
+        UP, DOWN, CENTRAL
     }
 
     private LinearOpMode linearOpMode;
@@ -27,6 +27,10 @@ public class Manipulator {
     }
 
     public void MoveServo(ManipulatorPosition manipulatorPosition) {
-        liftMotor.setPosition(manipulatorPosition == ManipulatorPosition.UP ? manipulatorUp : manipulatorDown);
+        switch (manipulatorPosition){
+            case UP: liftMotor.setPosition(manipulatorUp);
+            case DOWN: liftMotor.setPosition(manipulatorDown);
+            case CENTRAL: liftMotor.setPosition(manipulatorCentral);
+        }
     }
 }
