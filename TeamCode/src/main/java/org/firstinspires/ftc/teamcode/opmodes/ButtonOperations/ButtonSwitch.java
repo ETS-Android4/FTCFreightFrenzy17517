@@ -5,7 +5,7 @@ public class ButtonSwitch {
     private boolean activate = false;
 
     public boolean getState(boolean buttonState) {
-        if ((buttonState) && (buttonState != lastButtonState)) {
+        if (buttonState && !lastButtonState) {
             activate = !activate;
         }
         lastButtonState = buttonState;
