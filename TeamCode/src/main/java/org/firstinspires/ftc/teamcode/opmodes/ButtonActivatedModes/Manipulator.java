@@ -11,7 +11,8 @@ public class Manipulator {
     }
 
     private DcMotorEx liftMotor = null;
-    void init(){
+
+    public void init(){
         liftMotor = linearOpMode.hardwareMap.get(DcMotorEx.class, "UpDown");
 
         for(DcMotorEx dcMotorEx: linearOpMode.hardwareMap.getAll(DcMotorEx.class)) {
