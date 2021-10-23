@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Manipulator;
+import org.firstinspires.ftc.teamcode.Movement;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Duck;
 
 public class Global {
@@ -11,10 +13,11 @@ public class Global {
     }
     private Duck duck = new Duck(linearOpMode);
     private Movement move = new Movement(linearOpMode);
+    private Manipulator manipulator = new Manipulator(linearOpMode);
 
     public void init(){
         duck.init();
         move.init();
-
+        manipulator.initManip();
     }
 }
