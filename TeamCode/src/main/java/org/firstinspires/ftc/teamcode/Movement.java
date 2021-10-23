@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.VariablesDash.*;
 
@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 
 public class Movement {
     BNO055IMU gyro = null;
@@ -26,6 +28,7 @@ public class Movement {
     public Movement(LinearOpMode linearOpMode){
         this.linearOpMode = linearOpMode;
     }
+
     double getGyroHeading() {
         return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
@@ -41,14 +44,15 @@ public class Movement {
     }
     public void init(){
         //init
+
         rightMotorFront = linearOpMode.hardwareMap.get(DcMotorEx.class, "R1");
         rightMotorBack = linearOpMode.hardwareMap.get(DcMotorEx.class, "R2");
         leftMotorFront = linearOpMode.hardwareMap.get(DcMotorEx.class, "L1");
         leftMotorBack = linearOpMode.hardwareMap.get(DcMotorEx.class, "L2");
 
         //set direction
-        rightMotorFront.setDirection(DcMotorEx.Direction.FORWARD);
-        leftMotorFront.setDirection(DcMotorEx.Direction.REVERSE);
+        rightMotorFront.setDirection(DcMotorEx.Direction.REVERSE);
+        leftMotorFront.setDirection(DcMotorEx.Direction.FORWARD);
         rightMotorBack.setDirection(DcMotorEx.Direction.REVERSE);
         leftMotorBack.setDirection(DcMotorEx.Direction.FORWARD);
 
@@ -58,6 +62,7 @@ public class Movement {
             dcMotorEx.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         initGyro();
+
     }
 
     public void Move(double distance, double angle) {
@@ -119,20 +124,20 @@ public class Movement {
 
             runtime.reset();
 
-        } while((Math.abs(errDistance) > 10 || Math.abs(errAngle) > 10) && linearOpMode.opModeIsActive());
+        } while((Math.abs(errDistance) > 5 || Math.abs(errAngle) > 5) && linearOpMode.opModeIsActive());
     }
     public void Motor (double power, double angle){
-        rightMotorFront.setPower(power+angle);
-        rightMotorBack.setPower(power + angle);
-        leftMotorFront.setPower(power-angle);
-        leftMotorFront.setPower(power - angle);
+        rightMotorFront.setPower(power - angle);
+        rightMotorBack.setPower(power - angle);
+        leftMotorFront.setPower(power + angle);
+        leftMotorBack.setPower(power + angle);
     }
     double Encoder(String direction) {
         double Enc = 0;
         if (direction == "left") {
-            Enc = (leftMotorBack.getCurrentPosition() + leftMotorFront.getCurrentPosition())/2;
+            Enc = (leftMotorBack.getCurrentPosition() + leftMotorFront.getCurrentPosition())/2.0;
         } else {
-            Enc = (rightMotorFront.getCurrentPosition()+rightMotorBack.getCurrentPosition())/2;
+            Enc = (rightMotorFront.getCurrentPosition()+rightMotorBack.getCurrentPosition())/2.0;
         }
     return Enc;
     }

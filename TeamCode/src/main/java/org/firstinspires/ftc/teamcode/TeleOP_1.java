@@ -12,18 +12,18 @@ import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.ButtonActivat
 import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.ButtonSwitch;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Duck;
 import org.firstinspires.ftc.teamcode.opmodes.Global;
-import org.firstinspires.ftc.teamcode.opmodes.Movement;
 import org.firstinspires.ftc.teamcode.opmodes.Tele;
 
 @TeleOp
 public class TeleOP_1 extends LinearOpMode {
     public DcMotor R_1 = null;
     public DcMotor L_1 = null;
-    private Duck duck = new Duck(this);
+  //  private Duck duck = new Duck(this);
+    private Manipulator manipulator = new Manipulator(this);
     private Movement move = new Movement(this);
     private ButtonSwitch duckSwitch = new ButtonSwitch();
     private Global global = new Global(this);
-    private BS_1 duck_function = new BS_1(() -> gamepad1.square,(Boolean duckb) -> duck.DuckSpin(duckb));
+   // private BS_1 duck_function = new BS_1(() -> gamepad1.square,(Boolean duckb) -> duck.DuckSpin(duckb));
     private Tele telemetry_function = new Tele(this);
     public ButtonActivated BA;
 
@@ -39,14 +39,17 @@ public class TeleOP_1 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        global.init();
+        manipulator.initManip();
+        move.init();
 
         waitForStart();
         while (opModeIsActive()) {
-            move.Motor(gamepad1.left_stick_y, gamepad1.left_stick_x);
-            duck_function.activate();
-            telemetry_function.activate();
-            Drawing();
+            move.Motor(gamepad1.left_stick_y, gamepad1.right_stick_x);
+            if (gamepad1.dpad_up) manipulator.MoveServo(0.7);
+            if (gamepad1.dpad_down) manipulator.MoveServo(0.05);
+            //duck_function.activate();
+            //telemetry_function.activate();
+           // Drawing();
         }
     }
 
