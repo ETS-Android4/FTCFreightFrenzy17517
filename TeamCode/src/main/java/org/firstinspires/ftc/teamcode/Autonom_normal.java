@@ -41,11 +41,11 @@ public class Autonom_normal extends LinearOpMode {
         double m2 = R_1.getCurrentPosition();
         angle = angle/360;
         while(direction*angle/360*((L_1.getCurrentPosition() - m1) - (R_1.getCurrentPosition() - m2))/L > direction*(m1 - m2)/L){
-            R_1.setPower(Range.clip((speed * ((angle * angle) / angle)) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
-            L_1.setPower(Range.clip((-speed * ((angle * angle) / angle)) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
+            R_1.setPower(Range.clip((speed * ((angle * angle) / angle)) * VariablesDashboard.TeleOpConfig.robotSpeed, -1.0, 1.0));
+            L_1.setPower(Range.clip((-speed * ((angle * angle) / angle)) * VariablesDashboard.TeleOpConfig.robotSpeed, -1.0, 1.0));
         }
-        R_1.setPower(Range.clip((0) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
-        L_1.setPower(Range.clip((0) * TeleOP_1.RobotConfig.speed, -1.0, 1.0));
+        R_1.setPower(Range.clip((0) * VariablesDashboard.TeleOpConfig.robotSpeed, -1.0, 1.0));
+        L_1.setPower(Range.clip((0) * VariablesDashboard.TeleOpConfig.robotSpeed, -1.0, 1.0));
     }
 
     public void Drawing() {

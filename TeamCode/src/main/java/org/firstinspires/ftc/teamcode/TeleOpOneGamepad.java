@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -7,52 +10,40 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.BS_1;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.ButtonSwitch;
-import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Duck;
-import org.firstinspires.ftc.teamcode.opmodes.Global;
+import org.firstinspires.ftc.teamcode.opmodes.RobotModules;
 import org.firstinspires.ftc.teamcode.opmodes.Tele;
 
 @TeleOp
-public class TeleOP_1 extends LinearOpMode {
-    public DcMotor R_1 = null;
-    public DcMotor L_1 = null;
-  //  private Duck duck = new Duck(this);
-    private Manipulator manipulator = new Manipulator(this);
-    private Movement move = new Movement(this);
-    private ButtonSwitch duckSwitch = new ButtonSwitch();
-    private Global global = new Global(this);
-   // private BS_1 duck_function = new BS_1(() -> gamepad1.square,(Boolean duckb) -> duck.DuckSpin(duckb));
-    private Tele telemetry_function = new Tele(this);
+public class TeleOpOneGamepad extends LinearOpMode {
+    private final RobotModules robotModules = new RobotModules(this);
+    // private BS_1 duck_function = new BS_1(() -> gamepad1.square,(Boolean duckb) -> duck.DuckSpin(duckb));
+    ButtonSwitch manipulatorSwitch = new ButtonSwitch();
+    private Tele telemetry_function = new Tele(this); //TODO is broken
     public ButtonActivated BA;
 
     public double x = 0.0;
     public double y = 0.0;
     public double OX = 0.0;
     public double OY = 0.0;
-    @Config
-    public static class RobotConfig {
-        public static double speed = 1.0;
-    }
 
     @Override
     public void runOpMode() {
-        manipulator.initManip();
-        move.init();
 
+        robotModules.init();
 
         waitForStart();
         while (opModeIsActive()) {
-            move.Motor(gamepad1.left_stick_y, gamepad1.right_stick_x);
-            if (gamepad1.dpad_up){
-                manipulator.MoveServo(0.25);
-                if (duckSwitch.getState(gamepad1.dpad_up)) manipulator.MoveServo(0.7);
-            }
-            if (gamepad1.dpad_down) manipulator.MoveServo(0.05);
+            robotModules.movement.setMotorPowers(-gamepad1.left_stick_y * robotSpeed,
+                    gamepad1.right_stick_x * robotSpeed);
+            if (manipulatorSwitch.getState(gamepad1.dpad_up))
+                robotModules.manipulator.MoveServo(Manipulator.ManipulatorPosition.UP);
+            else
+                robotModules.manipulator.MoveServo(Manipulator.ManipulatorPosition.DOWN);
             //duck_function.activate();
             //telemetry_function.activate();
-           // Drawing();
+            // Drawing();
         }
     }
 

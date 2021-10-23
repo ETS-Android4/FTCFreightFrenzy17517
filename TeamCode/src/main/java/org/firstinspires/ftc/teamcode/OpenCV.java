@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class OpenCV
 {
     enum FreightPosition{
-        LEFT, RIGHT,CENTER,UNKNOWN
+        LEFT, RIGHT,CENTER, UNKNOWN
     }
     private OpenCvWebcam camera;
     private final int width = 320;
