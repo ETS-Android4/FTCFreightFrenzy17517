@@ -11,5 +11,6 @@ public class VariablesDash {
     public static double kIA = 0.002;
     public static double kD = 0.001;
     public static double kDA = 0.0001;
+    public static double posManip = 0.05;
 
 }
