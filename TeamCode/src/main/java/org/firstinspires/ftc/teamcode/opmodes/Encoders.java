@@ -10,26 +10,31 @@ public class Encoders {
     private int angle;
     private double i;
 
-    public Encoders(LinearOpMode linearOpMode) { this.linearOpMode = linearOpMode; }
+    public Encoders(LinearOpMode linearOpMode) {
+        this.linearOpMode = linearOpMode;
+    }
 
-    public void init(){
+    public void init() {
         R1 = linearOpMode.hardwareMap.get(DcMotor.class, "R1");
         L1 = linearOpMode.hardwareMap.get(DcMotor.class, "L1");
     }
 
-    public int Get_1(){
+    public int Get_1() {
         return R1.getCurrentPosition();
     }
 
-    public int Get_2(){
+    public int Get_2() {
         return L1.getCurrentPosition();
     }
 
-    public int get_angle(){
-        angle = (Get_2() - Get_1())/(480);
-        i = angle/360;
-        if(angle < 0){angle += i*360;}
-        else {angle -= i*360;}
+    public int get_angle() {
+        angle = (Get_2() - Get_1()) / (480);
+        i = angle / 360;
+        if (angle < 0) {
+            angle += i * 360;
+        } else {
+            angle -= i * 360;
+        }
         return angle;
     }
 }

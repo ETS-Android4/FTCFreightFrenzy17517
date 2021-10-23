@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
+
 import com.acmerobotics.dashboard.FtcDashboard;
-import static org.firstinspires.ftc.teamcode.VariablesDash.*;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.opmodes.Global;
+import org.firstinspires.ftc.teamcode.opmodes.RobotModules;
 
 @Autonomous
 public class Autonom extends LinearOpMode {
@@ -13,20 +14,19 @@ public class Autonom extends LinearOpMode {
     FtcDashboard dashboard;
 
     //creating variables
-    private Movement movement = new Movement(this);
-    private Manipulator manipulator = new Manipulator(this);
-    private Global global = new Global(this);
+
+    private final RobotModules robotModules = new RobotModules(this);
+
     @Override
     public void runOpMode() {
 
         dashboard = FtcDashboard.getInstance();
 
-        movement.init();
-        manipulator.initManip();
+        robotModules.init();
 
         waitForStart();
-        while (opModeIsActive()) {
-            manipulator.MoveServo(posManip);
+        {
+
         }
     }
 }
