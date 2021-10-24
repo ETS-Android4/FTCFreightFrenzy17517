@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.ButtonOperations;
+package org.firstinspires.ftc.teamcode.misc.ButtonOperations;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;

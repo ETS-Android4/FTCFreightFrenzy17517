@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes;
+package org.firstinspires.ftc.teamcode.robot;
 
 
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 
 public class Duck implements ButtonActivated {
     private DcMotor duckMotor = null;
