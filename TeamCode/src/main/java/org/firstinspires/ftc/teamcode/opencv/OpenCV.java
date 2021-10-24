@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opencv;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.misc.FreightPosition;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -20,7 +19,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
 // OpenCV.getPosition()
 public class OpenCV
 {
-
+    enum FreightPosition{
+        LEFT, RIGHT,CENTER, UNKNOWN
+    }
     private OpenCvWebcam camera;
     private final int width = 320;
     private final int height = 240;
