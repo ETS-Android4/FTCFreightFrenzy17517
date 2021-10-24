@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode;
-
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
-import org.firstinspires.ftc.teamcode.opmodes.RobotModules;
+
+import org.firstinspires.ftc.teamcode.VariablesDashboard;
+import org.firstinspires.ftc.teamcode.robot.RobotModules;
 
 @Autonomous
 public class AutonomRedTeam extends LinearOpMode {

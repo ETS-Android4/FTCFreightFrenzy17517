@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,8 +30,8 @@ public class Encoders {
     public int get_angle() {
         angle = (Get_2() - Get_1()) / (480);
         i = angle / 360;
+        angle += i * 360;
         if (angle < 0) {
-            angle += i * 360;
         } else {
             angle -= i * 360;
         }
