@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opencv;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -14,7 +14,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
-
 
 // OpenCV.init(HardwareMap)
 // OpenCV.getPosition()
