@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Movement {
     BNO055IMU gyro = null;
 
-    void initGyro() {
+    public void initGyro() {
         gyro = linearOpMode.hardwareMap.get(BNO055IMU.class, "imu");
         gyro.initialize(new BNO055IMU.Parameters());
     }
@@ -34,9 +34,11 @@ public class Movement {
     }
 
     double getGyroHeading() {
-        return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        return -gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
+    public void Deley(){
 
+    }
 
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx leftMotorFront = null;
@@ -124,7 +126,9 @@ public class Movement {
         double deltaErrDistance = 0;
         double deltaErrAngle = 0;
         double timestep = 0;
-        while ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive()) {
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive() && timer.seconds() < 3) {
             timestep = runtime.seconds();
             errDistance = getDistanceError(distance);
             errAngle = getAngleError(angle);
@@ -156,6 +160,7 @@ public class Movement {
                 // currentTelemetry = linearOpMode.telemetry;
                 currentTelemetry = FtcDashboard.getInstance().getTelemetry();
                 currentTelemetry.addData("sec", timestep);
+                currentTelemetry.addData("gyro", errAngle);
                 currentTelemetry.addData("liner speed", proportionalLinear);
                 currentTelemetry.addData("current angle", proportionalAngular);
                 currentTelemetry.addData("integral speed", integralLinear);
@@ -164,12 +169,13 @@ public class Movement {
                 currentTelemetry.addData("difAngle", differentialAngular);
                 currentTelemetry.addData("PowerRight", rightMotorFront.getPower());
                 currentTelemetry.addData("PowerLeft", leftMotorFront.getPower());
-                currentTelemetry.addData("ErrAngle", errAngle);
+                currentTelemetry.addData("Errdist", errDistance);
                 currentTelemetry.addData("Rrrrr", getRightEncoder());
                 currentTelemetry.addData("Lllll", getLeftEncoder());
                 FtcDashboard.getInstance().getTelemetry().update();
             }
         }
+        setMotorPowers(0,0);
     }
 
     public void setMotorPowers(double power, double angle) {
