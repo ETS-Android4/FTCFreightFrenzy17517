@@ -21,8 +21,16 @@ public class Duck implements ButtonActivated {
         DuckSpin(n);
     }
 
+    private int direction = 1;
+
     public void DuckSpin(boolean doSpin){
-        if(doSpin) duckMotor.setPower(Range.clip(1,-1,1));
+        if(doSpin) {
+            duckMotor.setPower(Range.clip(direction*.5,-1,1));
+
+        }
         else duckMotor.setPower(Range.clip(0,-1,1));
+    }
+    public  void setDirection(int direction){
+        this.direction = direction;
     }
 }
