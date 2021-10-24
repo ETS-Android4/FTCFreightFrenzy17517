@@ -27,18 +27,16 @@ public class AutonomBlueTeam extends LinearOpMode {
 
         waitForStart();
         {
-
             robotModules.movement.Move(-38 ,-40);
             robotModules.movement.Move(-45,-22);
             robotModules.duck.setDirection(-1);
             robotModules.duck.DuckSpin(true);
-            sleep(5000);
+            sleep(4500);
             robotModules.movement.Move(-45,-80);
             robotModules.movement.Move(-85,-80);
             robotModules.movement.Move(-100,-95);
             //robotModules.movement.Move(56,-90);
             //robotModules.movement.Move(120, 90);
-
         }
     }
 }
