@@ -25,7 +25,7 @@ public class Duck implements ButtonActivated {
 
     public void DuckSpin(boolean doSpin){
         if(doSpin) {
-            duckMotor.setPower(Range.clip(direction*.6,-1,1));
+            duckMotor.setPower(Range.clip(direction*.5,-1,1));
 
         }
         else duckMotor.setPower(Range.clip(0,-1,1));
