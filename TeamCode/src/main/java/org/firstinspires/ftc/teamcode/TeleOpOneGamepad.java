@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Duck;
-import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.Manipulator;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.ButtonSwitch;
 import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.opmodes.RobotModules;
@@ -44,7 +40,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
             if(gamepad1.triangle)robotModules.manipulator.setPosition(1);
             if(gamepad1.circle)robotModules.manipulator.setPosition(2);
             if(gamepad1.cross)robotModules.manipulator.setPosition(3);
-            telemetry_function.activate();
+           // telemetry_function.activate();
             Drawing();
         }
     }
