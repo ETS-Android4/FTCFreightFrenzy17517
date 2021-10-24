@@ -4,6 +4,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 public class SmartButtonSwitch {
+    public boolean lastButtonState;
+    public boolean buttonState;
     private boolean activate = false;
     private ButtonSwitch buttonSwitch = new ButtonSwitch();
     BooleanSupplier supplier;
