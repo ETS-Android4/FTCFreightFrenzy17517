@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.ButtonOperations;
+package org.firstinspires.ftc.teamcode.misc.ButtonOperations;
 
 public class SinglePressButton {
     public boolean lastButtonState;

@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes;
+package org.firstinspires.ftc.teamcode.robot;
 
 
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 
 public class Duck implements ButtonActivated {
     private DcMotor duckMotor = null;
@@ -25,7 +27,7 @@ public class Duck implements ButtonActivated {
 
     public void DuckSpin(boolean doSpin){
         if(doSpin) {
-            duckMotor.setPower(Range.clip(direction*.6,-1,1));
+            duckMotor.setPower(Range.clip(direction*.5,-1,1));
 
         }
         else duckMotor.setPower(Range.clip(0,-1,1));

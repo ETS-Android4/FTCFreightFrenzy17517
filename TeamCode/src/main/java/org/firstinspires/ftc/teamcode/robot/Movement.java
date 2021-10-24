@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.robot;
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
 import static java.lang.Math.PI;
@@ -35,9 +35,6 @@ public class Movement {
 
     double getGyroHeading() {
         return -gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-    }
-    public void Deley(){
-
     }
 
     private final ElapsedTime runtime = new ElapsedTime();
