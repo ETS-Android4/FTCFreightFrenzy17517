@@ -24,7 +24,7 @@ public class ArucoDetect {
     double cx = 402.145;
     double cy = 221.506;
     double tagsize = 0.166;
-    int timePosition = 0;
+    double timePosition = 0;
     int numFramesWithoutDetection = 0;
     final float DECIMATION_HIGH = 3;
     final float DECIMATION_LOW = 2;
@@ -63,15 +63,15 @@ public class ArucoDetect {
                 {
                     aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                 }
-                timePosition = (int) detections.get(0).pose.x;
-                if (inRange(0, 267)) return FreightPosition.LEFT;
-                if (inRange(267, 534)) return FreightPosition.CENTER;
-                if (inRange(534, 800)) return FreightPosition.RIGHT;
+                timePosition = detections.get(0).pose.x*FEET_PER_METER * detections.get(0).pose.z*FEET_PER_METER;
+                if (inRange(-10, -0.5)) return FreightPosition.LEFT;
+                if (inRange(-0.5, 0.5)) return FreightPosition.CENTER;
+                if (inRange(0.5, 10)) return FreightPosition.RIGHT;
             }
         }
         return FreightPosition.UNKNOWN;
     }
-    public boolean inRange(int down, int up)
+    public boolean inRange(double down, double up)
     {
         return timePosition > up && timePosition < down;
     }
