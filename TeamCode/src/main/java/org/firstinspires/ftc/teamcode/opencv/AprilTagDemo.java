@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -31,9 +32,12 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvInternalCamera2;
 
 import java.util.ArrayList;
 
+@TeleOp
 public class AprilTagDemo extends LinearOpMode
 {
     OpenCvCamera camera;
@@ -127,7 +131,7 @@ public class AprilTagDemo extends LinearOpMode
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                     }
 
-                    for(AprilTagDetection    detection : detections)
+                    for(AprilTagDetection detection : detections)
                     {
                         dashboardTelemetry.addData("\nDetected tag ID=%d", detection.id);
                         dashboardTelemetry.addData("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER);
