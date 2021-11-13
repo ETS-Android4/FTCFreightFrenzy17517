@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Movement;
+import org.firstinspires.ftc.teamcode.robot.Movement;
 
 import java.util.Arrays;
 
