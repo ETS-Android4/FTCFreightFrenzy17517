@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
 
@@ -7,12 +7,11 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonActivatedModes.ButtonActivated;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.ButtonSwitch;
+import org.firstinspires.ftc.teamcode.opmodes.ButtonOperations.SmartButtonSwitch;
+import org.firstinspires.ftc.teamcode.opmodes.Tele;
 import org.firstinspires.ftc.teamcode.robot.Duck;
-import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
-import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
-import org.firstinspires.ftc.teamcode.robot.RobotModules;
-import org.firstinspires.ftc.teamcode.robot.Tele;
 
 @TeleOp
 public class TeleOpOneGamepad extends LinearOpMode {
