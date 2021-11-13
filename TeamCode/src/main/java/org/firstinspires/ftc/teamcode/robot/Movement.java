@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
 import static java.lang.Math.PI;
@@ -9,7 +9,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
@@ -17,11 +16,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.robot.RobotModule;
 
 
-public class Movement {
+public class Movement implements RobotModule {
     BNO055IMU gyro = null;
-
+    public boolean line(){
+        return queuebool;
+    }
     public void initGyro() {
         gyro = linearOpMode.hardwareMap.get(BNO055IMU.class, "imu");
         gyro.initialize(new BNO055IMU.Parameters());
@@ -37,6 +39,11 @@ public class Movement {
         return -gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
+    public void Deley() {
+
+    }
+    private double distance = 0;
+    private double angle = 0;
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx leftMotorFront = null;
     private DcMotorEx rightMotorFront = null;
@@ -89,6 +96,7 @@ public class Movement {
     }
 
     public void init() {
+        initGyro();
         assignHardware();
         setDirections();
         resetEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -107,8 +115,14 @@ public class Movement {
             do error += 360.0; while (error < -180.0);
         return error;
     }
+    public boolean queuebool = true;
 
-    public void Move(double distance, double angle) {
+
+    public void Move(double di, double ag){
+        distance = di;
+        angle = ag;
+    }
+    public void update() {
         runtime.reset();
         double errDistance = getDistanceError(distance);
         double errAngle = getAngleError(angle);
@@ -125,10 +139,11 @@ public class Movement {
         double timestep = 0;
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
-        while ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive() && timer.seconds() < 3) {
-            timestep = runtime.seconds();
-            errDistance = getDistanceError(distance);
-            errAngle = getAngleError(angle);
+        timestep = runtime.seconds();
+        errDistance = getDistanceError(distance);
+        errAngle = getAngleError(angle);
+        if ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive() && timer.seconds() < 3) {
+            queuebool = false;
             runtime.reset();
             {   //proportional component
                 proportionalLinear = errDistance * kP_Distance;
@@ -171,8 +186,10 @@ public class Movement {
                 currentTelemetry.addData("Lllll", getLeftEncoder());
                 FtcDashboard.getInstance().getTelemetry().update();
             }
+        } else{
+            setMotorPowers(0, 0);
+            queuebool = true;
         }
-        setMotorPowers(0,0);
     }
 
     public void setMotorPowers(double power, double angle) {

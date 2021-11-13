@@ -23,7 +23,6 @@ public class VariablesDashboard {
     public static class ManipulatorConfig{
         public static double manipulatorUp = 0.7;
         public static double manipulatorDown = 0.05;
-        public static double manipulatorCentral = 0.27;
     }
 
     @Config
