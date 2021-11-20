@@ -21,12 +21,18 @@ public class VariablesDashboard {
     }
     @Config
     public static class ManipulatorConfig{
-        public static double manipulatorUp = 0.7;
-        public static double manipulatorDown = 0.05;
+        public static double manipulatorUp = 0.38;
+        public static double manipulatorDown = 0.78;
     }
 
     @Config
     public static class TeleOpConfig {
         public static double robotSpeed = 1.0;
+    }
+    @Config
+    public static class Elevator{
+        public static double DownTargetElevator = 0;
+        public static double MiddleTargetElevator = 0;
+        public static double UpTargetElevator = 0;
     }
 }

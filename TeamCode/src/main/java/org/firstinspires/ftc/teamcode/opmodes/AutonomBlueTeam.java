@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
 
+import org.firstinspires.ftc.teamcode.VariablesDashboard;
+import org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
 
 @Autonomous
@@ -17,13 +18,11 @@ public class AutonomBlueTeam extends LinearOpMode {
 
     Runnable actions[] = {
             //() -> {robotModules.movement.Move(1.0,2.0);},
-            () -> {robotModules.init();},
             () -> {robotModules.init();}
     };
     public int queue = 0;
     @Override
     public void runOpMode() {
-
 
         dashboard = FtcDashboard.getInstance();
 
