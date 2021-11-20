@@ -25,9 +25,15 @@ public class RobotModules {
         allModules = new RobotModule[]{
                 duck,
                 elevator,
+                brush,
                 movement,
-                brush
+
         };
+    }
+    public void updateForTeleop(){
+        for(int i=0;i < allModules.length-1;i++){
+            allModules[i].update();
+        }
     }
 
     public void init(){

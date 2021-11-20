@@ -25,7 +25,7 @@ public class Elevator implements RobotModule {
     }
     private double target = 0;
     private boolean upDown = false;
-    private DcMotorEx motorLift = null;
+    public DcMotorEx motorLift = null;
     private Servo servoLift = null;
     public void init() {
         motorLift = linearOpMode.hardwareMap.get(DcMotorEx.class, "E1");
