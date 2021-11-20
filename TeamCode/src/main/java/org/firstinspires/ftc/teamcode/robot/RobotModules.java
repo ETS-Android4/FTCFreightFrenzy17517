@@ -39,6 +39,6 @@ public class RobotModules {
             robotModule.update();
     }
     public boolean line(){
-        return Arrays.stream(allModules).allMatch(robotModule -> robotModule.line() == true);
+        return Arrays.stream(allModules).allMatch(RobotModule::line);
     }
 }
