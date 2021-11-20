@@ -37,8 +37,8 @@ public class TeleOpOneGamepad extends LinearOpMode {
         while (opModeIsActive()) {
             robotModules.movement.setMotorPowers(-gamepad1.left_stick_y * robotSpeed, gamepad1.right_stick_x * robotSpeed);
             duck_function.activate();
-            if(gamepad1.triangle)robotModules.manipulator.MoveServo(true);
-            if(gamepad1.cross)robotModules.manipulator.MoveServo(false);
+            if(gamepad1.triangle) RobotModules.elevator.MoveServoForElevator(true);
+            if(gamepad1.cross)RobotModules.elevator.MoveServoForElevator(false);
             telemetry_function.activate();
             Drawing();
         }

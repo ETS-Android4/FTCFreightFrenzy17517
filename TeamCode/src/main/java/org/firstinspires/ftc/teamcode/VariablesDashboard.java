@@ -23,7 +23,7 @@ public class VariablesDashboard {
     public static class ManipulatorConfig{
         public static double positionServoUp = 0.38;
         public static double positionServoDown = 0.78;
-        public static double positonServoForElevator = 0.48;
+        public static double positonServoForElevator = 0.42;
     }
 
     @Config
@@ -32,8 +32,9 @@ public class VariablesDashboard {
     }
     @Config
     public static class Elevator{
-        public static double DownTargetElevator = 0;
-        public static double MiddleTargetElevator = 1600;
-        public static double UpTargetElevator = 3900;
+        public static double downTargetElevator = 0;
+        public static double middleTargetElevator = 1600;
+        public static double upTargetElevator = 3900;
+        public static double bucketServoDelay = 1;
     }
 }

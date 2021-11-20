@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.VariablesDashboard;
+import org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
+import org.firstinspires.ftc.teamcode.robot.Elevator;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
 
 @Autonomous
@@ -12,11 +14,17 @@ public class AutonomRedTeam extends LinearOpMode {
 
     FtcDashboard dashboard;
 
-    //creating variables
-
     private final RobotModules robotModules = new RobotModules(this);
     private VariablesDashboard vb = new VariablesDashboard();
 
+    Runnable actions[] = {
+            () -> {RobotModules.duck.DuckSpin(true);},
+            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
+            () -> {RobotModules.elevator.MoveServoForElevator(true);},
+            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);
+                RobotModules.elevator.MoveServoForElevator(false);}
+    };
+    public int queue = 0;
     @Override
     public void runOpMode() {
 
@@ -25,14 +33,22 @@ public class AutonomRedTeam extends LinearOpMode {
         robotModules.init();
 
         waitForStart();
-        {
-            robotModules.movement.Move(-47 ,-68);
-            robotModules.duck.setDirection(1);
-            robotModules.duck.DuckSpin(true);
-            sleep(4200);
-            robotModules.movement.Move(-40,-15);
-            robotModules.movement.Move(60,-4);
-            robotModules.movement.Move(230,0);
+        queue = 0;
+        while(opModeIsActive() && queue < actions.length) {
+            Runnable action = actions[queue];
+            action.run();
+            robotModules.update();
+            if (robotModules.line()) {
+                queue++;
+            }
         }
+        /*{
+            robotModules.movement.Move(-37.5 ,-40);
+            robotModules.movement.Move(-45,-30);
+            robotModules.duck.setDirection(-1);
+            robotModules.duck.DuckSpin(true);
+            sleep(7000);
+            robotModules.movement.Move(-60,-90);
+        }*/
     }
 }
