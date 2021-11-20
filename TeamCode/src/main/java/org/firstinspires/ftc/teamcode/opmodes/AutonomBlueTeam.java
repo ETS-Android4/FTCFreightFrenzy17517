@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.VariablesDashboard;
 import org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
+import org.firstinspires.ftc.teamcode.robot.Elevator;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
 
 @Autonomous
@@ -17,8 +18,11 @@ public class AutonomBlueTeam extends LinearOpMode {
     private VariablesDashboard vb = new VariablesDashboard();
 
     Runnable actions[] = {
-            //() -> {robotModules.movement.Move(1.0,2.0);},
-            () -> {robotModules.init();}
+            () -> {RobotModules.duck.DuckSpin(true);},
+            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
+            () -> {RobotModules.elevator.MoveServoForElevator(true);},
+            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);
+                   RobotModules.elevator.MoveServoForElevator(false);}
     };
     public int queue = 0;
     @Override
@@ -38,13 +42,13 @@ public class AutonomBlueTeam extends LinearOpMode {
                 queue++;
             }
         }
-        {
+        /*{
             robotModules.movement.Move(-37.5 ,-40);
             robotModules.movement.Move(-45,-30);
             robotModules.duck.setDirection(-1);
             robotModules.duck.DuckSpin(true);
             sleep(7000);
             robotModules.movement.Move(-60,-90);
-        }
+        }*/
     }
 }

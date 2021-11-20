@@ -11,14 +11,12 @@ public class RobotModules {
     public static Duck duck;
     public static Elevator elevator;
     public static Movement movement;
-    public static Manipulator manipulator;
 
     private final RobotModule[] allModules;
 
     public RobotModules(LinearOpMode linearOpMode){
         RobotModules.linearOpMode = linearOpMode;
         duck = new Duck(linearOpMode);
-        manipulator = new Manipulator(linearOpMode);
         elevator = new Elevator(linearOpMode);
         movement = new Movement(linearOpMode);
 
@@ -26,7 +24,6 @@ public class RobotModules {
                 duck,
                 elevator,
                 movement,
-                manipulator
         };
     }
 
