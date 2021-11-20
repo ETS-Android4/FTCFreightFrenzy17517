@@ -27,14 +27,20 @@ public class RobotModules {
         allModules = new RobotModule[]{
                 duck,
                 elevator,
+                brush,
                 movement,
-                brush
+
         };
         allModulesTeleop = new RobotModule[]{
                 brush,
                 duck,
                 elevator
         };
+    }
+    public void updateForTeleop(){
+        for(int i=0;i < allModules.length-1;i++){
+            allModules[i].update();
+        }
     }
 
     public void init() {
