@@ -52,6 +52,7 @@ public class Elevator implements RobotModule {
         if(upDown){
             motorLift.setPower(error * KP);
             queuebool = false;
+            RobotModules.manipulator.MoveServoForElevator();
         } else {
             queuebool = true;
         }
