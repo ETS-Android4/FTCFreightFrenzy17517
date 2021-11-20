@@ -19,8 +19,11 @@ public class AutonomRedTeam extends LinearOpMode {
 
     Runnable actions[] = {
             () -> {RobotModules.brush.brushMotorMove(true);},
-            () -> {RobotModules.movement.Move(-40);},
-            () -> {RobotModules.brush.brushMotorMove(false);}
+            () -> {RobotModules.movement.Move(80);},
+            () -> {sleep(1000000);}
+            /*() -> {RobotModules.brush.brushMotorMove(false);},
+            () -> {RobotModules.movement.Move(-80,90);},
+            () -> {RobotModules.movement.Move(-150,90);}*/
     };
     public int queue = 0;
     @Override
