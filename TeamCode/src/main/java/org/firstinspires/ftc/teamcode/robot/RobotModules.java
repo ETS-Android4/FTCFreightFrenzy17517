@@ -7,16 +7,16 @@ import org.firstinspires.ftc.teamcode.robot.Movement;
 import java.util.Arrays;
 
 public class RobotModules {
-    private final LinearOpMode linearOpMode;
-    public final Duck duck;
-    public final Elevator elevator;
-    public final Movement movement;
-    public final Manipulator manipulator;
+    private static LinearOpMode linearOpMode;
+    public static Duck duck;
+    public static Elevator elevator;
+    public static Movement movement;
+    public static Manipulator manipulator;
 
     private final RobotModule[] allModules;
 
     public RobotModules(LinearOpMode linearOpMode){
-        this.linearOpMode = linearOpMode;
+        RobotModules.linearOpMode = linearOpMode;
         duck = new Duck(linearOpMode);
         manipulator = new Manipulator(linearOpMode);
         elevator = new Elevator(linearOpMode);
