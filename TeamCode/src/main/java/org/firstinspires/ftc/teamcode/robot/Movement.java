@@ -116,12 +116,15 @@ public class Movement implements RobotModule {
         return error;
     }
     public boolean queuebool = true;
-
-
+    public double timerForMovement = 3;
+    public void forTeleOp(){
+        timerForMovement = 0;
+    }
     public void Move(double di, double ag){
         distance = di;
         angle = ag;
     }
+
     public void update() {
         runtime.reset();
         double errDistance = getDistanceError(distance);
@@ -142,7 +145,7 @@ public class Movement implements RobotModule {
         timestep = runtime.seconds();
         errDistance = getDistanceError(distance);
         errAngle = getAngleError(angle);
-        if ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive() && timer.seconds() < 3) {
+        if ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive() && timer.seconds() <= timerForMovement) {
             queuebool = false;
             runtime.reset();
             {   //proportional component

@@ -18,11 +18,9 @@ public class AutonomRedTeam extends LinearOpMode {
     private VariablesDashboard vb = new VariablesDashboard();
 
     Runnable actions[] = {
-            () -> {RobotModules.duck.DuckSpin(true);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);
-                RobotModules.elevator.MoveServoForElevator(false);}
+            () -> {RobotModules.brush.brushMotorMove(true);},
+            () -> {RobotModules.movement.Move(-40);},
+            () -> {RobotModules.brush.brushMotorMove(false);}
     };
     public int queue = 0;
     @Override
