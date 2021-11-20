@@ -21,9 +21,9 @@ public class VariablesDashboard {
     }
     @Config
     public static class ManipulatorConfig{
-        public static double manipulatorUp = 0.38;
-        public static double manipulatorDown = 0.78;
-        public static double positonServoForElevator = 0.4;
+        public static double positionServoUp = 0.38;
+        public static double positionServoDown = 0.78;
+        public static double positonServoForElevator = 0.48;
     }
 
     @Config
