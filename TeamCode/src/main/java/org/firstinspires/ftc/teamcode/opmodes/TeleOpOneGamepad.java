@@ -11,7 +11,9 @@ import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.Tele;
 import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
+import org.firstinspires.ftc.teamcode.robot.Arsen;
 import org.firstinspires.ftc.teamcode.robot.Duck;
+import org.firstinspires.ftc.teamcode.robot.Elevator;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
 
 @TeleOp
@@ -19,6 +21,8 @@ public class TeleOpOneGamepad extends LinearOpMode {
     private final RobotModules robotModules = new RobotModules(this);
     private Duck duck = new Duck(this);
     private SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.square,(Boolean duckb) -> robotModules.duck.DuckSpin(duckb));
+    private SmartButtonSwitch elevator_function = new SmartButtonSwitch(() -> gamepad1.triangle,(Boolean elev) -> robotModules.elevator.MoveServoForElevator(elev));
+    private SmartButtonSwitch intake_function = new SmartButtonSwitch(() -> gamepad1.circle,(Boolean intake) -> robotModules.intake.brushMotorMove(intake));
     private ButtonSwitch buttonSwitch = new ButtonSwitch();
     private Tele telemetry_function = new Tele(this);
     public ButtonActivated BA;
@@ -37,13 +41,23 @@ public class TeleOpOneGamepad extends LinearOpMode {
         while (opModeIsActive()) {
             RobotModules.movement.setMotorPowers(-gamepad1.left_stick_y * robotSpeed, gamepad1.right_stick_x * robotSpeed);
             duck_function.activate();
-            if(gamepad1.triangle) RobotModules.elevator.MoveServoForElevator(true);
-            if(gamepad1.cross)RobotModules.elevator.MoveServoForElevator(false);
+            elevator_function.activate();
+            intake_function.activate();
             telemetry_function.activate();
+            lift_function();
+            robotModules.update();
             Drawing();
         }
     }
 
+
+
+
+    private void lift_function(){
+        if(gamepad1.dpad_up){ robotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP); }
+        if(gamepad1.dpad_left){ robotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE); }
+        if(gamepad1.dpad_down){ robotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN); }
+    }
 
     public void Drawing() {
         FtcDashboard dashboard = FtcDashboard.getInstance();

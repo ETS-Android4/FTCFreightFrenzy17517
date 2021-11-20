@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robot.Movement;
-
 import java.util.Arrays;
 
 public class RobotModules {
@@ -11,7 +9,7 @@ public class RobotModules {
     public static Duck duck;
     public static Elevator elevator;
     public static Movement movement;
-    public static Brush brush;
+    public static Arsen intake;
 
     private final RobotModule[] allModules;
 
@@ -20,13 +18,13 @@ public class RobotModules {
         duck = new Duck(linearOpMode);
         elevator = new Elevator(linearOpMode);
         movement = new Movement(linearOpMode);
-        brush = new Brush(linearOpMode);
+        intake = new Arsen(linearOpMode);
 
         allModules = new RobotModule[]{
                 duck,
                 elevator,
                 movement,
-                brush
+                intake
         };
     }
 
