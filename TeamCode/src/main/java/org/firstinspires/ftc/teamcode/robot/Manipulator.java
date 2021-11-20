@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.manipulatorDown;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.manipulatorUp;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Manipulator implements RobotModule {
 
-    private Servo liftMotor = null;
+    private Servo servoElevator = null;
     private LinearOpMode linearOpMode = null;
 
     public Manipulator(LinearOpMode linearOpMode) {
@@ -20,24 +20,24 @@ public class Manipulator implements RobotModule {
         return queuebool;
     }
     public void init() {
-        liftMotor = linearOpMode.hardwareMap.get(Servo.class, "UpDown");
+        servoElevator = linearOpMode.hardwareMap.get(Servo.class, "UpDown");
     }
 
     public boolean positionUpDown = false;
     public void MoveServo(boolean upDown) {
         positionUpDown = upDown;
     }
+    public void MoveServoForElevator(){
+        servoElevator.setPosition(positonServoForElevator);
+    }
     public void update() {
-        if (positionUpDown){
-            if(liftMotor.getPosition() < manipulatorUp) {
-                queuebool = false;
-                liftMotor.setPosition(manipulatorUp);
-            } else{
-                queuebool = true;
-            }
-        } else {
-            liftMotor.setPosition(manipulatorDown);
+        if (positionUpDown) {
+            queuebool = false;
+            servoElevator.setPosition(manipulatorUp);
+        }
+         else{
+            servoElevator.setPosition(manipulatorDown);
             queuebool = true;
+         }
         }
     }
-}
