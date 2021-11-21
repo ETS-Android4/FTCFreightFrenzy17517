@@ -9,11 +9,14 @@ import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfi
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positionServoUp;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positonServoForElevator;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Elevator implements RobotModule {
 
@@ -25,7 +28,7 @@ public class Elevator implements RobotModule {
     }
     private double target = 0;
     private boolean upDown = false;
-    private DcMotorEx motorLift = null;
+    public DcMotorEx motorLift = null;
     private Servo servoLift = null;
     public void init() {
         motorLift = linearOpMode.hardwareMap.get(DcMotorEx.class, "E1");
@@ -34,6 +37,10 @@ public class Elevator implements RobotModule {
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLift.setDirection(DcMotorEx.Direction.REVERSE);
+    }
+    public void resetEncoderElevator(){
+        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public boolean queuebool = true;
     public boolean line(){
@@ -71,7 +78,14 @@ public class Elevator implements RobotModule {
                 positionServoDown:(target == downTargetElevator ?positionServoUp:positonServoForElevator));
         double error = target - motorLift.getCurrentPosition();
         double KP = 0.01;
-        if(abs(error) > 10){
+        Telemetry currentTelemetry;
+        // currentTelemetry = linearOpMode.telemetry;
+        currentTelemetry = FtcDashboard.getInstance().getTelemetry();
+        currentTelemetry.addData("error ", error);
+        currentTelemetry.addData("sec", servoTimer.seconds());
+        FtcDashboard.getInstance().getTelemetry().update();
+
+        if(abs(error) > 20){
             motorLift.setPower(error * KP);
             queuebool = false;
         } else {
