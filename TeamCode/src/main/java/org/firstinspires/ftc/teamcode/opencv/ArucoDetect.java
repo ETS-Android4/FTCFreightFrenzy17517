@@ -64,9 +64,9 @@ public class ArucoDetect {
                     aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                 }
                 timePosition = detections.get(0).pose.x*FEET_PER_METER * detections.get(0).pose.z*FEET_PER_METER;
-                if (inRange(-10, -0.5)) return FreightPosition.LEFT;
-                if (inRange(-0.5, 0.5)) return FreightPosition.CENTER;
-                if (inRange(0.5, 10)) return FreightPosition.RIGHT;
+                if (inRange(-10, -1)) return FreightPosition.LEFT;
+                if (inRange(-1, 1)) return FreightPosition.CENTER;
+                if (inRange(1, 10)) return FreightPosition.RIGHT;
             }
         }
         return FreightPosition.UNKNOWN;
