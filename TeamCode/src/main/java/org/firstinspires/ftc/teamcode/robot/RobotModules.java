@@ -15,6 +15,7 @@ public class RobotModules {
 
     private final RobotModule[] allModules;
     private final RobotModule[] allModulesTeleop;
+    public Brush intake;
 
     public RobotModules(LinearOpMode linearOpMode) {
         RobotModules.linearOpMode = linearOpMode;
