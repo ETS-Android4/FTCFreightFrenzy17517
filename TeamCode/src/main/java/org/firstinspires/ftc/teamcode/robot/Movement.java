@@ -31,6 +31,8 @@ public class Movement implements RobotModule {
 
     private LinearOpMode linearOpMode = null;
 
+    private boolean manualControl = true;
+
     public Movement(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
     }
@@ -77,7 +79,7 @@ public class Movement implements RobotModule {
         leftMotorBack.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
-    private void resetEncoders(DcMotor.RunMode runMode) {
+    public void resetEncoders(DcMotor.RunMode runMode) {
         leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,11 +118,18 @@ public class Movement implements RobotModule {
         return error;
     }
     public boolean queuebool = true;
-
+    public double timerForMovement = 3;
+    public void forTeleOp(){
+        timerForMovement = 0;
+    }
+    ElapsedTime timer = new ElapsedTime();
     public void Move(double di, double ag){
+        manualControl = false;
+        timer.reset();
         distance = di;
         angle = ag;
     }
+
     public void update() {
         runtime.reset();
         double errDistance = getDistanceError(distance);
@@ -136,62 +145,51 @@ public class Movement implements RobotModule {
         double deltaErrDistance = 0;
         double deltaErrAngle = 0;
         double timestep = 0;
-        ElapsedTime timer = new ElapsedTime();
-        timer.reset();
+        double speed = 1;
+        double speedAngle = 1;
         timestep = runtime.seconds();
         errDistance = getDistanceError(distance);
         errAngle = getAngleError(angle);
-        if ((abs(errDistance) > minErrorDistance || abs(errAngle) > minErrorAngle) && linearOpMode.opModeIsActive() && timer.seconds() < 3) {
-            queuebool = false;
-            runtime.reset();
-            {   //proportional component
-                proportionalLinear = errDistance * kP_Distance;
-                proportionalAngular = errAngle * kP_Angle;
-            }
-            {   //integral component  (|0.25|)
-                integralLinear += errDistance * kI_Distance * timestep;
-                integralAngular += errAngle * kI_Angle * timestep;
-                if (abs(integralAngular) > maxIntegralAngle)
-                    integralAngular = maxIntegralAngle * signum(integralAngular);
-                if (abs(integralLinear) > maxIntegralDistance)
-                    integralLinear = maxIntegralDistance * signum(integralLinear);
-            }
-            {   //differential component
-                deltaErrDistance = errDistance - oldErrDistance;
-                deltaErrAngle = errAngle - oldErrAngle;
-                oldErrDistance = errDistance;
-                oldErrAngle = errAngle;
-                differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
-                differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
-            }
-            setMotorPowers(integralLinear + proportionalLinear + differentialLinear,
-                    integralAngular + proportionalAngular + differentialAngular);
-            {
-                Telemetry currentTelemetry;
-                // currentTelemetry = linearOpMode.telemetry;
-                currentTelemetry = FtcDashboard.getInstance().getTelemetry();
-                currentTelemetry.addData("sec", timestep);
-                currentTelemetry.addData("gyro", errAngle);
-                currentTelemetry.addData("liner speed", proportionalLinear);
-                currentTelemetry.addData("current angle", proportionalAngular);
-                currentTelemetry.addData("integral speed", integralLinear);
-                currentTelemetry.addData("integral angle", integralAngular);
-                currentTelemetry.addData("differentialLinear", differentialLinear);
-                currentTelemetry.addData("difAngle", differentialAngular);
-                currentTelemetry.addData("PowerRight", rightMotorFront.getPower());
-                currentTelemetry.addData("PowerLeft", leftMotorFront.getPower());
-                currentTelemetry.addData("Errdist", errDistance);
-                currentTelemetry.addData("Rrrrr", getRightEncoder());
-                currentTelemetry.addData("Lllll", getLeftEncoder());
-                FtcDashboard.getInstance().getTelemetry().update();
-            }
-        } else{
-            setMotorPowers(0, 0);
-            queuebool = true;
+        runtime.reset();
+        {   //proportional component
+            proportionalLinear = errDistance * kP_Distance;
+            proportionalAngular = errAngle * kP_Angle;
         }
+        {   //integral component  (|0.25|)
+            integralLinear += errDistance * kI_Distance * timestep;
+            integralAngular += errAngle * kI_Angle * timestep;
+            if (abs(integralAngular) > maxIntegralAngle)
+                integralAngular = maxIntegralAngle * signum(integralAngular);
+            if (abs(integralLinear) > maxIntegralDistance)
+                integralLinear = maxIntegralDistance * signum(integralLinear);
+        }
+        {   //differential component
+            deltaErrDistance = errDistance - oldErrDistance;
+            deltaErrAngle = errAngle - oldErrAngle;
+            oldErrDistance = errDistance;
+            oldErrAngle = errAngle;
+            differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
+            differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
+        }
+        if(!manualControl)
+        setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear)*speed,
+                (integralAngular + proportionalAngular + differentialAngular)*speedAngle);
+       /* {
+            Telemetry currentTelemetry;
+            // currentTelemetry = linearOpMode.telemetry;
+            currentTelemetry = FtcDashboard.getInstance().getTelemetry();
+            currentTelemetry.addData("dis", distance);
+            FtcDashboard.getInstance().getTelemetry().update();
+        } */
+        queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || !linearOpMode.opModeIsActive() || !(timer.seconds() <= timerForMovement);
     }
 
     public void setMotorPowers(double power, double angle) {
+        manualControl = true;
+        setMotorPowersPrivate(power,angle);
+    }
+
+    private void setMotorPowersPrivate(double power, double angle) {
         rightMotorFront.setPower(power - angle);
         rightMotorBack.setPower(power - angle);
         leftMotorFront.setPower(power + angle);

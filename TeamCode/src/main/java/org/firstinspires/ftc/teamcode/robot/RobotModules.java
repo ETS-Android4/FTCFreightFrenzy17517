@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robot.Movement;
+import org.firstinspires.ftc.teamcode.R;
 
 import java.util.Arrays;
 
@@ -14,8 +14,9 @@ public class RobotModules {
     public static Brush brush;
 
     private final RobotModule[] allModules;
+    private final RobotModule[] allModulesTeleop;
 
-    public RobotModules(LinearOpMode linearOpMode){
+    public RobotModules(LinearOpMode linearOpMode) {
         RobotModules.linearOpMode = linearOpMode;
         duck = new Duck(linearOpMode);
         elevator = new Elevator(linearOpMode);
@@ -25,26 +26,32 @@ public class RobotModules {
         allModules = new RobotModule[]{
                 duck,
                 elevator,
-                brush,
                 movement,
-
+                brush
+        };
+        allModulesTeleop = new RobotModule[]{
+                brush,
+                duck,
+                elevator
         };
     }
-    public void updateForTeleop(){
-        for(int i=0;i < allModules.length-1;i++){
-            allModules[i].update();
-        }
-    }
 
-    public void init(){
-        for(RobotModule robotModule: allModules)
+    public void init() {
+        for (RobotModule robotModule : allModules)
             robotModule.init();
     }
-    public void update(){
-        for(RobotModule robotModule: allModules)
+
+    public void updateForTeleop() {
+        for (RobotModule robotModule : allModulesTeleop)
             robotModule.update();
     }
-    public boolean line(){
+
+    public void update() {
+        for (RobotModule robotModule : allModules)
+            robotModule.update();
+    }
+
+    public boolean line() {
         return Arrays.stream(allModules).allMatch(RobotModule::line);
     }
 }
