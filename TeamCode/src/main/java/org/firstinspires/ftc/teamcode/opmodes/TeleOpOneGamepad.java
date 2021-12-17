@@ -56,7 +56,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
             // Others
             RobotModules.brush.brushMotorMove(t && buttonSwitch.getState(gamepad1.triangle));
             lift_function();
-            cube_fix(true);
+            //cube_fix(true);
             robotModules.updateForTeleop();
             /*Drawing();*/
         }
