@@ -37,8 +37,8 @@ public class VariablesDashboard {
     @Config
     public static class Elevator{
         public static double downTargetElevator = 0;
-        public static double middleTargetElevator = 1600;
-        public static double upTargetElevator = 3900;
+        public static double middleTargetElevator = 1600/3.0;
+        public static double upTargetElevator = 1300;
         public static double bucketServoDelay = 1.5;
     }
 }
