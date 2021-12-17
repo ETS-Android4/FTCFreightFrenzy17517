@@ -11,12 +11,11 @@ import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfi
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Elevator implements RobotModule {
 
@@ -30,10 +29,13 @@ public class Elevator implements RobotModule {
     private boolean upDown = false;
     public DcMotorEx motorLift = null;
     private Servo servoLift = null;
+    private DistanceSensor distance = null;
+
     public void init() {
         motorLift = linearOpMode.hardwareMap.get(DcMotorEx.class, "E1");
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         servoElevator = linearOpMode.hardwareMap.get(Servo.class, "UpDown");
+        distance = linearOpMode.hardwareMap.get(DistanceSensor.class, "distance");
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLift.setDirection(DcMotorEx.Direction.REVERSE);
@@ -71,10 +73,10 @@ public class Elevator implements RobotModule {
                 target = upTargetElevator;
             break;
         }
-        queuebool = false;
+        queuebool = false;  //7
     }
     public void update(){
-        servoElevator.setPosition(ejectMinerals?
+       servoElevator.setPosition(ejectMinerals?
                 positionServoDown:(target == downTargetElevator ?positionServoUp:positonServoForElevator));
         double error = target - motorLift.getCurrentPosition();
         double KP = 0.01;

@@ -9,8 +9,10 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -51,6 +53,7 @@ public class Movement implements RobotModule {
     private DcMotorEx rightMotorFront = null;
     private DcMotorEx leftMotorBack = null;
     private DcMotorEx rightMotorBack = null;
+    private DcMotorEx ledMotor = null;
 
     private static final double WHEEL_DIAMETER_CM = 10.6;
     private static final int ENCODER_RESOLUTION = 24;
@@ -131,6 +134,7 @@ public class Movement implements RobotModule {
     }
 
     public void update() {
+        ledMotor.setPower(1);
         runtime.reset();
         double errDistance = getDistanceError(distance);
         double errAngle = getAngleError(angle);
