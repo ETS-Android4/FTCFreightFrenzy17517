@@ -13,17 +13,20 @@ import org.firstinspires.ftc.teamcode.robot.Brush;
 import org.firstinspires.ftc.teamcode.robot.Duck;
 import org.firstinspires.ftc.teamcode.robot.Elevator;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
+import org.firstinspires.ftc.teamcode.robot.Sensor_system;
 
 @TeleOp
 public class TeleOpOneGamepad extends LinearOpMode {
     private final RobotModules robotModules = new RobotModules(this);
     private Duck duck = new Duck(this);
     private SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.circle,(Boolean duckb) -> robotModules.duck.DuckSpin(duckb));
-    private SmartButtonSwitch elevator_function = new SmartButtonSwitch(() -> gamepad1.square,(Boolean elev) -> robotModules.elevator.MoveServoForElevator(elev));
+    private SmartButtonSwitch servo_elevator_function = new SmartButtonSwitch(() -> gamepad1.square,(Boolean elev) -> robotModules.elevator.MoveServoForElevator(elev));
     private SmartButtonSwitch intake_function = new SmartButtonSwitch(() -> gamepad1.triangle,(Boolean intake) -> robotModules.brush.brushMotorMove(intake));
     private ButtonSwitch buttonSwitch = new ButtonSwitch();
     private ButtonSwitch buttonSwitch1 = new ButtonSwitch();
-    // private Tele telemetry_function = new Tele(this);
+    private Sensor_system sensor_system = new Sensor_system(this);
+    private Brush getBrush = new Brush(this);
+
     public ButtonActivated BA;
     private Brush brush;
 
@@ -43,21 +46,36 @@ public class TeleOpOneGamepad extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            // Local conditions
             if(gamepad1.left_bumper){ obnul(u); }
-            RobotModules.movement.setMotorPowers(-gamepad1.left_stick_y * pl, gamepad1.right_stick_x * pl);
+            RobotModules.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * pl);
+            // Switch functions
             duck_function.activate();
-            elevator_function.activate();
-            intake_function.activate();
-            robotModules.updateForTeleop();
+            servo_elevator_function.activate();
+            /*intake_function.activate();*/
+            // Others
             RobotModules.brush.brushMotorMove(t && buttonSwitch.getState(gamepad1.triangle));
             lift_function();
-            if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; }
-            //Drawing();
+            cube_fix(true);
+            robotModules.updateForTeleop();
+            /*Drawing();*/
         }
     }
 
 
+    private void cube_fix(boolean activation_bool){
+        if(activation_bool) {
+            if (sensor_system.block_status()) {
+                getBrush.ledMotor.setPower(1.0);
 
+                RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);
+            } else {
+                getBrush.ledMotor.setPower(0.0);
+            }
+        }
+    }
+
+    private double get_speed(){ if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; } return pl; }
 
     private void obnul(boolean i){
         if(i){ while(gamepad1.left_bumper){ robotModules.elevator.motorLift.setPower(-1); u = false; } robotModules.elevator.resetEncoderElevator();}
