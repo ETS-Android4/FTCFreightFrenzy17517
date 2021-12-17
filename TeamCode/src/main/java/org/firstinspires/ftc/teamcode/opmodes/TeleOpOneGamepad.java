@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -48,12 +47,12 @@ public class TeleOpOneGamepad extends LinearOpMode {
             RobotModules.movement.setMotorPowers(-gamepad1.left_stick_y * pl, gamepad1.right_stick_x * pl);
             duck_function.activate();
             elevator_function.activate();
-           // intake_function.activate();
+            intake_function.activate();
             robotModules.updateForTeleop();
             RobotModules.brush.brushMotorMove(t && buttonSwitch.getState(gamepad1.triangle));
             lift_function();
             if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; }
-            Drawing();
+            //Drawing();
         }
     }
 
@@ -70,7 +69,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
         if(gamepad1.dpad_down){ RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN); t = true;}
     }
 
-    public void Drawing() {
+    /*public void Drawing() {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("x", x);
@@ -79,5 +78,5 @@ public class TeleOpOneGamepad extends LinearOpMode {
                 .setFill("red")
                 .fillRect(OX / 1000, OY / 1000, 40, 40);
         dashboard.sendTelemetryPacket(packet);
-    }
+    }*/
 }
