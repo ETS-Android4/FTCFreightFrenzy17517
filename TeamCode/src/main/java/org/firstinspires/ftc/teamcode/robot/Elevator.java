@@ -61,6 +61,10 @@ public class Elevator implements RobotModule {
         this.ejectMinerals = ejectMinerals;
     }
 
+    public double getElevatorPosition(){
+        return motorLift.getTargetPosition();
+    }
+
     public enum ElevatorPosition{
         DOWN, MIDDLE, UP
     }
