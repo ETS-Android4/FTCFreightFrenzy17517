@@ -28,6 +28,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
     private Sensor_system sensor_system = new Sensor_system(this);
     private Brush getBrush = new Brush(this);
 
+
     public ButtonActivated BA;
     private Brush brush;
 
@@ -81,7 +82,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
     private double get_speed(){ if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; } return pl; }
 
     private void obnul(boolean i){
-        if(i){ while(gamepad1.left_bumper){ robotModules.elevator.motorLift.setPower(-1); u = false; } robotModules.elevator.resetEncoderElevator();}
+        if(i){ while(gamepad1.left_bumper && !RobotModules.elevator.limitSwitch.getState()){ robotModules.elevator.motorLift.setPower(-1); u = false; } robotModules.elevator.resetEncoderElevator();}
     }
 
     private void lift_function(){
