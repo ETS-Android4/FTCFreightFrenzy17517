@@ -64,6 +64,11 @@ public class AutonomBlueTeam extends LinearOpMode {
     //        () -> {RobotModules.movement.Move(-20,90);},
      //       () -> {RobotModules.movement.Move(100,90);},
     };
+    Runnable actions4[]={
+            ()->{RobotModules.brush.brushMotorMove(true);},
+            ()->{RobotModules.movement.Move(1000);},
+            ()->{RobotModules.brush.brushMotorMove(false);}
+    };
     public int queue = 0;
     @Override
     public void runOpMode() {
@@ -74,8 +79,8 @@ public class AutonomBlueTeam extends LinearOpMode {
 
         waitForStart();
         queue = 0;
-        while(opModeIsActive() && queue < actions3.length) {
-            Runnable action = actions3[queue];
+        while(opModeIsActive() && queue < actions4.length) {
+            Runnable action = actions4[queue];
             action.run();
             robotModules.update();
             if (robotModules.line()) {
