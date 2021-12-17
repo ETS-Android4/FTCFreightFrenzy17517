@@ -134,7 +134,6 @@ public class Movement implements RobotModule {
     }
 
     public void update() {
-        ledMotor.setPower(1);
         runtime.reset();
         double errDistance = getDistanceError(distance);
         double errAngle = getAngleError(angle);
