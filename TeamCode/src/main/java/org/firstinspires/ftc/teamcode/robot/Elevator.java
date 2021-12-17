@@ -30,7 +30,7 @@ public class Elevator implements RobotModule {
     public DcMotorEx motorLift = null;
     private Servo servoLift = null;
     private DistanceSensor distance = null;
-    private DigitalChannel limitSwitch = null;
+    public DigitalChannel limitSwitch = null;
 
     public void init() {
         limitSwitch = linearOpMode.hardwareMap.get(DigitalChannel.class, "limitSwitch");
