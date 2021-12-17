@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
+import static org.firstinspires.ftc.teamcode.robot.Elevator.ElevatorPosition.UP;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -30,6 +31,9 @@ public class TeleOpOneGamepad extends LinearOpMode {
     public ButtonActivated BA;
     private Brush brush;
 
+    public boolean cube_bool_1 = false;
+    public boolean cube_bool_2 = false;
+
     public boolean t = true;
     public boolean u = true;
     public double x = 0.0;
@@ -56,21 +60,20 @@ public class TeleOpOneGamepad extends LinearOpMode {
             // Others
             RobotModules.brush.brushMotorMove(t && buttonSwitch.getState(gamepad1.triangle));
             lift_function();
-            //cube_fix(true);
+            cube_fix(true);
             robotModules.updateForTeleop();
             /*Drawing();*/
         }
     }
 
-
     private void cube_fix(boolean activation_bool){
         if(activation_bool) {
             if (sensor_system.block_status()) {
                 getBrush.ledMotor.setPower(1.0);
-
-                RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);
+                cube_bool_1 = true;
             } else {
                 getBrush.ledMotor.setPower(0.0);
+                cube_bool_2 = true;
             }
         }
     }
@@ -82,9 +85,9 @@ public class TeleOpOneGamepad extends LinearOpMode {
     }
 
     private void lift_function(){
-        if(gamepad1.dpad_up){ RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP); t = false;}
+        if(gamepad1.dpad_up || cube_bool_1){ cube_bool_1 = false; RobotModules.elevator.ElevatorPosition(UP); t = false;}
         if(gamepad1.dpad_left){ RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE); t = false;}
-        if(gamepad1.dpad_down){ RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN); t = true;}
+        if(gamepad1.dpad_down || cube_bool_2){ cube_bool_2 = false; RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN); t = true;}
     }
 
     /*public void Drawing() {
