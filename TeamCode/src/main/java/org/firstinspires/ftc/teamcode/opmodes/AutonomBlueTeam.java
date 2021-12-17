@@ -66,8 +66,11 @@ public class AutonomBlueTeam extends LinearOpMode {
     };
     Runnable actions4[]={
             ()->{RobotModules.brush.brushMotorMove(true);},
-            ()->{RobotModules.movement.Move(1000);},
-            ()->{RobotModules.brush.brushMotorMove(false);}
+            ()->{RobotModules.movement.Move(100);},
+            ()->{RobotModules.brush.brushMotorMove(false);},
+            ()->{RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);},
+            ()->{RobotModules.elevator.MoveServoForElevator(true);},
+            ()->{RobotModules.elevator.MoveServoForElevator(false);}
     };
     public int queue = 0;
     @Override
@@ -76,7 +79,7 @@ public class AutonomBlueTeam extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
 
         robotModules.init();
-
+        RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);
         waitForStart();
         queue = 0;
         while(opModeIsActive() && queue < actions4.length) {

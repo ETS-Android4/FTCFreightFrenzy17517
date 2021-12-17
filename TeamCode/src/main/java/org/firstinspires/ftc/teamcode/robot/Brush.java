@@ -45,9 +45,6 @@ public class Brush implements RobotModule{
             ledMotor.setPower(0);
         }
     }
-    public void updateTele(boolean t1){
-        if(t1){update();}
-    }
     public boolean line(){
         return true;
     }
