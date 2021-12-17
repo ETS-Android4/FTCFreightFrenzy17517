@@ -30,8 +30,11 @@ public class Elevator implements RobotModule {
     public DcMotorEx motorLift = null;
     private Servo servoLift = null;
     private DistanceSensor distance = null;
+    private DigitalChannel limitSwitch = null;
 
     public void init() {
+        limitSwitch = linearOpMode.hardwareMap.get(DigitalChannel.class, "limitSwitch");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
         motorLift = linearOpMode.hardwareMap.get(DcMotorEx.class, "E1");
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         servoElevator = linearOpMode.hardwareMap.get(Servo.class, "UpDown");
@@ -81,11 +84,15 @@ public class Elevator implements RobotModule {
         double error = target - motorLift.getCurrentPosition();
         double KP = 0.01;
         Telemetry currentTelemetry;
-        // currentTelemetry = linearOpMode.telemetry;
-        currentTelemetry = FtcDashboard.getInstance().getTelemetry();
-        currentTelemetry.addData("error ", error);
-        currentTelemetry.addData("sec", servoTimer.seconds());
-        FtcDashboard.getInstance().getTelemetry().update();
+        currentTelemetry = linearOpMode.telemetry;
+        if(limitSwitch.getState()){
+            motorLift.setPower(0);
+            resetEncoderElevator();
+        }
+        //currentTelemetry = FtcDashboard.getInstance().getTelemetry();
+        currentTelemetry.addData("con", limitSwitch.getState());
+        //currentTelemetry.addData("sec", servoTimer.seconds());
+        currentTelemetry.update();
 
         if(abs(error) > 20){
             motorLift.setPower(error * KP);
