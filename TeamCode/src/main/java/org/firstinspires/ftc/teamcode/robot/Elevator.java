@@ -35,7 +35,7 @@ public class Elevator implements RobotModule {
         motorLift = linearOpMode.hardwareMap.get(DcMotorEx.class, "E1");
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         servoElevator = linearOpMode.hardwareMap.get(Servo.class, "UpDown");
-        distance = linearOpMode.hardwareMap.get(DistanceSensor.class, "Distance");  //DistanceUnit.CM
+        distance = linearOpMode.hardwareMap.get(DistanceSensor.class, "distance");
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLift.setDirection(DcMotorEx.Direction.REVERSE);
@@ -73,11 +73,10 @@ public class Elevator implements RobotModule {
                 target = upTargetElevator;
             break;
         }
-        queuebool = false;
+        queuebool = false;  //7
     }
     public void update(){
-        linearOpMode.telemetry.addData("distamce",distance.getDistance( DistanceUnit.CM));
-      /*  servoElevator.setPosition(ejectMinerals?
+       servoElevator.setPosition(ejectMinerals?
                 positionServoDown:(target == downTargetElevator ?positionServoUp:positonServoForElevator));
         double error = target - motorLift.getCurrentPosition();
         double KP = 0.01;
@@ -95,5 +94,5 @@ public class Elevator implements RobotModule {
             motorLift.setPower(0);
             queuebool = (servoTimer.seconds() > bucketServoDelay);
         }
-    */}
+    }
 }
