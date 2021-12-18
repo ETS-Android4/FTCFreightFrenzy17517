@@ -25,7 +25,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
     private SmartButtonSwitch intake_function = new SmartButtonSwitch(() -> gamepad1.triangle,(Boolean intake) -> robotModules.brush.brushMotorMove(intake));
     private ButtonSwitch buttonSwitch = new ButtonSwitch();
     private ButtonSwitch buttonSwitch1 = new ButtonSwitch();
-    private Sensor_system sensor_system = new Sensor_system(this);
+   // private Sensor_system sensor_system = new Sensor_system(this);
     private Brush getBrush = new Brush(this);
 
 
@@ -69,7 +69,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
 
     private void cube_fix(boolean activation_bool){
         if(activation_bool) {
-            if (sensor_system.block_status()) {
+            if (brush.freightIsDetected) {
                 getBrush.ledMotor.setPower(1.0);
                 cube_bool_1 = true;
             } else {

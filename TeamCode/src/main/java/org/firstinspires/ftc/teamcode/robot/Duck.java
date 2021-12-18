@@ -15,55 +15,62 @@ public class Duck implements RobotModule {
     private DcMotor duckMotor = null;
     private LinearOpMode linearOpMode = null;
 
-    public Duck(LinearOpMode linearOpMode){
+    public Duck(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
     }
 
-    public void init(){
+    public void init() {
         duckMotor = linearOpMode.hardwareMap.get(DcMotor.class, "DuckMotor");
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    public enum PositionOnField{
+    public enum PositionOnField {
         RED, BLUE
     }
+
     public double direction = 1;
-    public void redOrBlue(Duck.PositionOnField direction){
-        switch (direction){
+
+    public void redOrBlue(Duck.PositionOnField direction) {
+        switch (direction) {
             case RED:
-              directionDuck = 1;
-            break;
+                directionDuck = 1;
+                break;
             case BLUE:
-              directionDuck = -1;
-            break;
+                directionDuck = -1;
+                break;
         }
 
     }
+
     private boolean doSpin = false;
     private double time = 5;
-    public void Teleop(){
+
+    public void Teleop() {
         time = 1.9;
-        positonServoForElevator = 0.6;
     }
-    public void DuckSpin(boolean ds){
-        if(doSpin!=ds)duckTimer.reset();
+
+    public void DuckSpin(boolean ds) {
+        if (doSpin != ds) duckTimer.reset();
         doSpin = ds;
     }
-    public  void setDirection(int direction){
+
+    public void setDirection(int direction) {
         this.direction = direction;
     }
+
     public boolean queuebool = true;
     private ElapsedTime duckTimer = new ElapsedTime();
-    public boolean line(){
+
+    public boolean line() {
         return queuebool;
     }
-    public void update(){
-        if(doSpin && duckTimer.seconds()<time) {
 
-            duckMotor.setPower(Range.clip(directionDuck*0.555,-1,1));
+    public void update() {
+        if (doSpin && duckTimer.seconds() < time) {
+
+            duckMotor.setPower(Range.clip(directionDuck * 0.555, -1, 1));
             queuebool = false;
-        }
-        else {
+        } else {
             queuebool = true;
             duckMotor.setPower(0);
         }
