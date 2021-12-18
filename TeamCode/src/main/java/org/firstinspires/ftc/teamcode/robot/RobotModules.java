@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.R;
 
 import java.util.Arrays;
@@ -48,6 +49,7 @@ public class RobotModules {
     }
 
     public void update() {
+        if(brush.distance.getDistance(DistanceUnit.CM) < 8) brush.ledMotor.setPower(1);
         for (RobotModule robotModule : allModules)
             robotModule.update();
     }

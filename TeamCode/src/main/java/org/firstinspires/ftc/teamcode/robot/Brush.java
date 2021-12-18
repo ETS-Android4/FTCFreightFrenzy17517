@@ -9,15 +9,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.TeleOpOneGamepad;
 
 
-public class Brush implements RobotModule{
+public class Brush implements RobotModule {
     private DcMotorEx brushMotor = null;
     private LinearOpMode linearOpMode = null;
-    private DistanceSensor distance = null;
+    public DistanceSensor distance = null;
     public DcMotorEx ledMotor = null;
+    public boolean freightIsDetected = false;
+
 
     public Brush(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
     }
+
     public void init() {
         brushMotor = linearOpMode.hardwareMap.get(DcMotorEx.class, "BrushMotor");
         brushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -25,27 +28,24 @@ public class Brush implements RobotModule{
         brushMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brushMotor.setDirection(DcMotorEx.Direction.REVERSE);
         distance = linearOpMode.hardwareMap.get(DistanceSensor.class, "distance");
-        ledMotor = linearOpMode.hardwareMap.get(DcMotorEx.class,"Led");
+        ledMotor = linearOpMode.hardwareMap.get(DcMotorEx.class, "Led");
 
     }
+
     public boolean intake = false;
-    public void brushMotorMove(boolean intake){
+
+    public void brushMotorMove(boolean intake) {
         this.intake = intake;
     }
-    public void update(){
-        if(intake && distance.getDistance(DistanceUnit.CM) > 8){
-            brushMotor.setPower(1);
-            ledMotor.setPower(0);
-        }
-        else if (intake && distance.getDistance(DistanceUnit.CM ) < 8){
-            brushMotor.setPower(-1);
-            ledMotor.setPower(1);
-        } else {
-            brushMotor.setPower(0);
-            ledMotor.setPower(0);
-        }
+
+    public void update() {
+        boolean freightIsDetected = distance.getDistance(DistanceUnit.CM) < 8;
+        double brushPower = freightIsDetected ? -1 : 1;
+        brushMotor.setPower(intake ? brushPower : 0);
+        ledMotor.setPower(freightIsDetected ? 1 : 0);
     }
-    public boolean line(){
+
+    public boolean line() {
         return true;
     }
 }

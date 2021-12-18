@@ -4,14 +4,14 @@ import com.acmerobotics.dashboard.config.Config;
 
 public class VariablesDashboard {
     @Config
-    public static class Duck{
+    public static class Duck {
         public static double directionDuck = 1;
     }
 
     @Config
     public static class MovementConfig {
-        public static double dist=0;
-        public static double angle=0;
+        public static double dist = 0;
+        public static double angle = 0;
         public static double kP_Distance = 0.04;
         public static double kP_Angle = 0.055;
         public static double kI_Distance = 0.001;
@@ -23,8 +23,9 @@ public class VariablesDashboard {
         public static double minErrorDistance = 5.0;
         public static double minErrorAngle = 2.5;
     }
+
     @Config
-    public static class ManipulatorConfig{
+    public static class ManipulatorConfig {
         public static double positionServoUp = 0.38;
         public static double positionServoDown = 0.8;
         public static double positonServoForElevator = 0.4;
@@ -34,10 +35,11 @@ public class VariablesDashboard {
     public static class TeleOpConfig {
         public static double robotSpeed = 1.0;
     }
+
     @Config
-    public static class Elevator{
+    public static class Elevator {
         public static double downTargetElevator = 0;
-        public static double middleTargetElevator = 1600/3.0;
+        public static double middleTargetElevator = 650;
         public static double upTargetElevator = 1300;
         public static double bucketServoDelay = 1.5;
     }

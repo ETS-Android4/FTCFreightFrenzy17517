@@ -23,9 +23,11 @@ import org.firstinspires.ftc.teamcode.robot.RobotModule;
 
 public class Movement implements RobotModule {
     BNO055IMU gyro = null;
-    public boolean line(){
+
+    public boolean line() {
         return queuebool;
     }
+
     public void initGyro() {
         gyro = linearOpMode.hardwareMap.get(BNO055IMU.class, "imu");
         gyro.initialize(new BNO055IMU.Parameters());
@@ -46,6 +48,7 @@ public class Movement implements RobotModule {
     public void Deley() {
 
     }
+
     private double distance = 0;
     private double angle = 0;
     private final ElapsedTime runtime = new ElapsedTime();
@@ -120,13 +123,17 @@ public class Movement implements RobotModule {
             do error += 360.0; while (error < -180.0);
         return error;
     }
+
     public boolean queuebool = true;
     public double timerForMovement = 3;
-    public void forTeleOp(){
+
+    public void forTeleOp() {
         timerForMovement = 0;
     }
+
     ElapsedTime timer = new ElapsedTime();
-    public void Move(double di, double ag){
+
+    public void Move(double di, double ag) {
         manualControl = false;
         timer.reset();
         distance = di;
@@ -174,9 +181,9 @@ public class Movement implements RobotModule {
             differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
             differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
         }
-        if(!manualControl)
-        setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear)*speed,
-                (integralAngular + proportionalAngular + differentialAngular)*speedAngle);
+        if (!manualControl)
+            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed,
+                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle);
        /* {
             Telemetry currentTelemetry;
             // currentTelemetry = linearOpMode.telemetry;
@@ -189,7 +196,7 @@ public class Movement implements RobotModule {
 
     public void setMotorPowers(double power, double angle) {
         manualControl = true;
-        setMotorPowersPrivate(power,angle);
+        setMotorPowersPrivate(power, angle);
     }
 
     private void setMotorPowersPrivate(double power, double angle) {
