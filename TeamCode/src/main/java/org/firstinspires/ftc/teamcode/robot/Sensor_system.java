@@ -24,12 +24,12 @@ public class Sensor_system {
     public Sensor_system(LinearOpMode linearOpMode){ this.linearOpMode = linearOpMode; }
 
     public void init(){
-        distanceSensor = linearOpMode.hardwareMap.get(DistanceSensor.class, "DS");
+        distanceSensor = linearOpMode.hardwareMap.get(DistanceSensor.class, "distance");
         distanceSensor.resetDeviceConfigurationForOpMode();
     }
 
     public boolean block_status(){
-        if(distanceSensor.getDistance(DistanceUnit.CM) <= 1){ return true; }
+        if(distanceSensor.getDistance(DistanceUnit.CM) <= 8){ return true; }
         else{ return false; }
     }
 }
