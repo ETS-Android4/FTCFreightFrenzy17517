@@ -20,7 +20,13 @@ public class AutonomBlueTeam extends LinearOpMode {
     private final RobotModules robotModules = new RobotModules(this);
     private VariablesDashboard vb = new VariablesDashboard();
 
-    Runnable actions[] = {
+    Runnable downPosition[] = {
+            () -> {dashboard.getTelemetry().addData("PositoinDuck", RobotModules.arucoDetect.stopCamera());
+                dashboard.getTelemetry().addData("timePosition", RobotModules.arucoDetect.timePosition);
+                dashboard.getTelemetry().update();},
+
+            () -> {sleep(10000);}
+            /*
             () -> {RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);},
             () -> {RobotModules.movement.Move(-38);
                    RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
@@ -33,18 +39,30 @@ public class AutonomBlueTeam extends LinearOpMode {
             () -> {RobotModules.movement.Move(-83,120);},
             () -> {RobotModules.duck.DuckSpin(true);},
             () -> {RobotModules.movement.Move(140,130);}
+            */
     };
-    Runnable actions2[] ={
-            () -> {RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);},
+    Runnable middlePosition[] ={
+            () -> {dashboard.getTelemetry().addData("PositoinDuck", RobotModules.arucoDetect.stopCamera());
+            dashboard.getTelemetry().addData("timePosition", RobotModules.arucoDetect.timePosition);
+            dashboard.getTelemetry().update();},
+
+            () -> {sleep(10000);}
+            /*() -> {RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);},
             () -> {RobotModules.movement.Move(-20,0);},
             () -> {RobotModules.movement.Move(-20,180);},
             () -> {RobotModules.movement.Move(-20,165);},
             () -> {RobotModules.movement.Move(-63,165);},
             () -> {RobotModules.duck.DuckSpin(true);},
             () -> {RobotModules.movement.Move(-27,180);},
+            */
     };
-    Runnable actions3[] ={
-            () -> {RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);},
+    Runnable upPosition[] ={
+            () -> {dashboard.getTelemetry().addData("PositoinDuck", RobotModules.arucoDetect.stopCamera());
+                dashboard.getTelemetry().addData("timePosition", RobotModules.arucoDetect.timePosition);
+                dashboard.getTelemetry().update();},
+
+            () -> {sleep(10000);}
+            /*() -> {RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);},
             () -> {RobotModules.movement.Move(-40);
                 RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
@@ -53,18 +71,9 @@ public class AutonomBlueTeam extends LinearOpMode {
             () -> {RobotModules.movement.Move(-30,0);},
             () -> {RobotModules.movement.Move(-30,90);},
             () -> {RobotModules.movement.Move(120,90);},
-             //      RobotModules.brush.brushMotorMove(true);},
-           // () -> {RobotModules.movement.Move(-20,90);},
-//            () -> {RobotModules.movement.Move(-25,0);
- //               RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
- //           () -> {RobotModules.elevator.MoveServoForElevator(true);},
- //           () -> {RobotModules.elevator.MoveServoForElevator(false);},
-  //          () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-   //         () -> {RobotModules.movement.Move(-30,0);},
-    //        () -> {RobotModules.movement.Move(-20,90);},
-     //       () -> {RobotModules.movement.Move(100,90);},
+            */
     };
-    Runnable actions4[]={
+    Runnable test[]={
             ()->{RobotModules.brush.brushMotorMove(true);},
             ()->{RobotModules.movement.Move(100);},
             ()->{RobotModules.brush.brushMotorMove(false);},
@@ -77,18 +86,44 @@ public class AutonomBlueTeam extends LinearOpMode {
     public void runOpMode() {
 
         dashboard = FtcDashboard.getInstance();
-
         robotModules.init();
         RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);
+        RobotModules.arucoDetect.init(hardwareMap);
         waitForStart();
         queue = 0;
-        while(opModeIsActive() && queue < actions4.length) {
-            Runnable action = actions4[queue];
-            action.run();
-            robotModules.update();
-            if (robotModules.line()) {
-                queue++;
-            }
+        switch (RobotModules.arucoDetect.stopCamera()){
+            case LEFT:
+                while(opModeIsActive() && queue < downPosition.length) {
+                    Runnable action = downPosition[queue];
+                    action.run();
+                    robotModules.update();
+                    if (robotModules.line()) {
+                        queue++;
+                    }
+                }
+                break;
+            case CENTER:
+                while(opModeIsActive() && queue < middlePosition.length) {
+                    Runnable action = middlePosition[queue];
+                    action.run();
+                    robotModules.update();
+                    if (robotModules.line()) {
+                        queue++;
+                    }
+                }
+                break;
+            case RIGHT:
+            case UNKNOWN:
+                while(opModeIsActive() && queue < upPosition.length) {
+                    Runnable action = upPosition[queue];
+                    action.run();
+                    robotModules.update();
+                    if (robotModules.line()) {
+                        queue++;
+                    }
+                }
+                break;
         }
+
     }
 }

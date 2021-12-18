@@ -131,7 +131,7 @@ public class AprilTagDemo extends LinearOpMode
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                     }
 
-                    for(AprilTagDetection detection : detections)
+                    for(AprilTagDetection    detection : detections)
                     {
                         dashboardTelemetry.addData("\nDetected tag ID=%d", detection.id);
                         dashboardTelemetry.addData("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER);

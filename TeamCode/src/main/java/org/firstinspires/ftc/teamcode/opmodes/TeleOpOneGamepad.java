@@ -61,13 +61,13 @@ public class TeleOpOneGamepad extends LinearOpMode {
             // Others
             RobotModules.brush.brushMotorMove(t && buttonSwitch.getState(gamepad1.triangle));
             lift_function();
-            cube_fix(true);
+           // cube_fix(true);
             robotModules.updateForTeleop();
             /*Drawing();*/
         }
     }
 
-    private void cube_fix(boolean activation_bool){
+    /*private void cube_fix(boolean activation_bool){
         if(activation_bool) {
             if (brush.freightIsDetected) {
                 getBrush.ledMotor.setPower(1.0);
@@ -77,7 +77,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
                 cube_bool_2 = true;
             }
         }
-    }
+    }*/
 
     private double get_speed(){ if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; } return pl; }
 
