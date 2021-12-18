@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.teamcode.opencv.ArucoDetect;
 
 import java.util.Arrays;
 
@@ -13,6 +14,7 @@ public class RobotModules {
     public static Elevator elevator;
     public static Movement movement;
     public static Brush brush;
+    public static ArucoDetect arucoDetect;
 
     private final RobotModule[] allModules;
     private final RobotModule[] allModulesTeleop;
@@ -24,6 +26,7 @@ public class RobotModules {
         elevator = new Elevator(linearOpMode);
         movement = new Movement(linearOpMode);
         brush = new Brush(linearOpMode);
+        arucoDetect = new ArucoDetect();
 
         allModules = new RobotModule[]{
                 duck,
@@ -48,7 +51,6 @@ public class RobotModules {
         for (RobotModule robotModule : allModules)
             robotModule.init();
     }
-
     public void updateForTeleop() {
         for (RobotModule robotModule : allModulesTeleop)
             robotModule.update();
