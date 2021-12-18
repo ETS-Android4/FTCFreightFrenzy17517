@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 public class ArucoDetect {
-    enum FreightPosition{
+    public enum FreightPosition{
         LEFT, RIGHT,CENTER, UNKNOWN
     }
 
@@ -24,7 +24,7 @@ public class ArucoDetect {
     double cx = 402.145;
     double cy = 221.506;
     double tagsize = 0.166;
-    double timePosition = 0;
+    public double timePosition = 0;
     int numFramesWithoutDetection = 0;
     final float DECIMATION_HIGH = 3;
     final float DECIMATION_LOW = 2;
@@ -75,5 +75,11 @@ public class ArucoDetect {
     {
         return timePosition > up && timePosition < down;
     }
+    public ArucoDetect.FreightPosition stopCamera(){
+        ArucoDetect.FreightPosition value = getPosition();
+        camera.closeCameraDeviceAsync(() -> {});
+        return value;
+    }
+
 }
 
