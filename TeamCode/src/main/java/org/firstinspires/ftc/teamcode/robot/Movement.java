@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotModule;
 
 
 public class Movement implements RobotModule {
-    BNO055IMU gyro = null;
+    private BNO055IMU gyro = null;
 
     public boolean line() {
         return queuebool;
@@ -56,7 +56,6 @@ public class Movement implements RobotModule {
     private DcMotorEx rightMotorFront = null;
     private DcMotorEx leftMotorBack = null;
     private DcMotorEx rightMotorBack = null;
-    private DcMotorEx ledMotor = null;
 
     private static final double WHEEL_DIAMETER_CM = 10.6;
     private static final int ENCODER_RESOLUTION = 24;
@@ -125,7 +124,7 @@ public class Movement implements RobotModule {
     }
 
     public boolean queuebool = true;
-    public double timerForMovement = 3;
+    public double timerForMovement = 2;
 
     public void forTeleOp() {
         timerForMovement = 0;
@@ -191,7 +190,7 @@ public class Movement implements RobotModule {
             currentTelemetry.addData("dis", distance);
             FtcDashboard.getInstance().getTelemetry().update();
         } */
-        queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || !linearOpMode.opModeIsActive() || !(timer.seconds() <= timerForMovement);
+        queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || !linearOpMode.opModeIsActive() || (timer.seconds() >= timerForMovement);
     }
 
     public void setMotorPowers(double power, double angle) {

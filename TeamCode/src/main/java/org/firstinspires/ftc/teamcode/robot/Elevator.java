@@ -5,13 +5,17 @@ import static java.lang.Math.signum;
 
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.*;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.AutoTele;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positionServoDown;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positionServoUp;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positonServoForElevator;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.R;
 
 public class Elevator implements RobotModule {
 
@@ -92,27 +96,29 @@ public class Elevator implements RobotModule {
     }
 
     public void update() {
-        linearOpMode.telemetry.addData("Rot ebal", liftEncoderOffset);
+       /* if(AutoTele = true) {
+            if (RobotModules.brush.ledMotor.getPower() > 0) ElevatorPosition(ElevatorPosition.UP);
+            if (RobotModules.brush.ledMotor.getPower() <= 0)
+                ElevatorPosition(ElevatorPosition.DOWN);
+        }*/
         servoElevator.setPosition(ejectMinerals ?
                 positionServoDown : (target == downTargetElevator ? positionServoUp : positonServoForElevator));
         if (target == downTargetElevator) {
-            if (limitSwitch.getState()) {
-                liftEncoderOffset = motorLift.getCurrentPosition();
-                motorLift.setPower(0.0);
+            if (!limitSwitch.getState()){
+                motorLift.setPower(-1);
+                queuebool = false;
             }
-            else{
-                motorLift.setPower(-1.0);
+            else {
+                motorLift.setPower(0);
+                resetEncoderElevator();
+                queuebool = true;
             }
         }
         else {
-            double error = target - getLiftEncoderPosition();
-            double kP = 0.1;
-            if (limitSwitch.getState()) {
-                motorLift.setPower(0);
-                resetEncoderElevator();
-            }
+            double error = target - motorLift.getCurrentPosition();
+            double kP = 0.2;
 
-            if (abs(error) > 50) {
+            if (abs(error) > 20) {
                 motorLift.setPower(error * kP);
                 queuebool = false;
             } else {

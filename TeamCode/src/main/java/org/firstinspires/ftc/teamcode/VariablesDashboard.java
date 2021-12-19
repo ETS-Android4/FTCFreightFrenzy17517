@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
-public class VariablesDashboard {
+public abstract class VariablesDashboard {
     @Config
     public static class Duck {
         public static double directionDuck = 1;
@@ -26,6 +26,7 @@ public class VariablesDashboard {
 
     @Config
     public static class ManipulatorConfig {
+        public static boolean AutoTele = false;
         public static double positionServoUp = 0.38;
         public static double positionServoDown = 0.8;
         public static double positonServoForElevator = 0.4;

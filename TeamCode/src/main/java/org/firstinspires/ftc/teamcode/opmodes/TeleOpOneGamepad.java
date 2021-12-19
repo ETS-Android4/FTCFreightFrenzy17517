@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
 import static org.firstinspires.ftc.teamcode.robot.Elevator.ElevatorPosition.UP;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -47,6 +48,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
     public void runOpMode() {
 
         robotModules.init();
+        AutoTele = true;
         RobotModules.duck.Teleop();
 
         waitForStart();
@@ -64,6 +66,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
            // cube_fix(true);
             robotModules.updateForTeleop();
             /*Drawing();*/
+
         }
     }
 
@@ -78,6 +81,7 @@ public class TeleOpOneGamepad extends LinearOpMode {
             }
         }
     }*/
+
 
     private double get_speed(){ if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; } return pl; }
 
