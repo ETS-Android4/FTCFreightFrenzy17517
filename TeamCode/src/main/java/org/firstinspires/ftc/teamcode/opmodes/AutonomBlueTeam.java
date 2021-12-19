@@ -17,14 +17,16 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                 dashboard.getTelemetry().update();},
             () -> {RobotModules.movement.Move(-35,27);},
-            () -> {RobotModules.movement.Move(-45,27);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);
-                    sleep(1000);},
+            () -> {RobotModules.movement.Move(-50,27);},
+            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
+            /*() -> {RobotModules.elevator.ok();},
+            () -> {RobotModules.elevator.neok();},*/
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.movement.Move(-40);},
+            () -> {sleep(1900);},
+            () -> {RobotModules.movement.Move(-30);},
 
-            () -> {RobotModules.movement.Move(-40,90);},
-            () -> {RobotModules.movement.Move(70,90,1.5);}
+            () -> {RobotModules.movement.Move(-30,110);},
+            () -> {RobotModules.movement.Move(90,110,1.5);}
 
 /*
             () -> {RobotModules.movement.Move(0,90);},
@@ -39,7 +41,7 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                     dashboard.getTelemetry().update();},
             () -> {RobotModules.movement.Move(-35,27);},
-            () -> {RobotModules.movement.Move(-45,27, 0.6);
+            () -> {RobotModules.movement.Move(-50,27, 0.6);
                     RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
@@ -62,7 +64,7 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                     dashboard.getTelemetry().update();},
             () -> {RobotModules.movement.Move(-35,27);},
-            () -> {RobotModules.movement.Move(-65,27, 0.6);
+            () -> {RobotModules.movement.Move(-54,27, 0.6);
                 RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
