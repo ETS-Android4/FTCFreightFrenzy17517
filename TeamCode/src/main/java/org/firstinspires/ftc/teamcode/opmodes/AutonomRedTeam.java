@@ -46,7 +46,6 @@ public class AutonomRedTeam extends BaseAutonomous {
     };
     Runnable[] upPosition ={
 
-
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                 dashboard.getTelemetry().update();},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);

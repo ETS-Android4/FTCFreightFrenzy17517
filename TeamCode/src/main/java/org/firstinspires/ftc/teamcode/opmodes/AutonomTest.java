@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotModules;
 public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test ={
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
+            () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {dashboard.getTelemetry().addData("posManip", RobotModules.elevator.motorLift.getCurrentPosition());},
             () -> {dashboard.getTelemetry().addData("bucketServoDelay", bucketServoDelay);},
             () -> {dashboard.getTelemetry().update();},
