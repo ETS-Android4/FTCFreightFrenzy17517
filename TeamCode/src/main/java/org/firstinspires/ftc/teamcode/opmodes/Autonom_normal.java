@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.VariablesDashboard;
 
-@TeleOp
+//@TeleOp
 public class Autonom_normal extends LinearOpMode {
     public DcMotor R_1 = null;
     public DcMotor L_1 = null;

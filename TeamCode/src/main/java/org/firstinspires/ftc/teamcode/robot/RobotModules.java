@@ -57,7 +57,6 @@ public class RobotModules {
     }
 
     public void update() {
-        if(brush.distance.getDistance(DistanceUnit.CM) < 8) brush.ledMotor.setPower(1);
         for (RobotModule robotModule : allModules)
             robotModule.update();
     }
