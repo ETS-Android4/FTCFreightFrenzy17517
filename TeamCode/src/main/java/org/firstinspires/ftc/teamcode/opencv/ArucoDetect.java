@@ -66,9 +66,9 @@ public class ArucoDetect {
                 timePosition = detections.get(0).pose.x*FEET_PER_METER * detections.get(0).pose.z*FEET_PER_METER;
             }
         }
-        if (timePosition < -1) return FreightPosition.LEFT;
-        if (timePosition >= -1 && timePosition < 1) return FreightPosition.CENTER;
-        if (timePosition >= 1) return FreightPosition.RIGHT;
+        if (timePosition < -10) return FreightPosition.LEFT;
+        if (timePosition >= -10 && timePosition < 10) return FreightPosition.CENTER;
+        if (timePosition >= 10) return FreightPosition.RIGHT;
         else return FreightPosition.UNKNOWN;
     }
     public boolean inRange(double down, double up)
