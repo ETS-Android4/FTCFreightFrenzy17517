@@ -21,19 +21,19 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {RobotModules.elevator.MoveServoForElevator(true);
                     sleep(1000);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.movement.Move(-30);},
+            () -> {RobotModules.movement.Move(-40);},
 
-            //() -> {RobotModules.movement.Move(-30,90);},
-            //() -> {RobotModules.movement.Move(70,90,1.5);}
+            () -> {RobotModules.movement.Move(-40,90);},
+            () -> {RobotModules.movement.Move(70,90,1.5);}
 
-
+/*
             () -> {RobotModules.movement.Move(0,90);},
             () -> {RobotModules.movement.Move(-100, 90);},
             () -> {RobotModules.movement.Move(-110,130);},
             () -> {RobotModules.duck.DuckSpin(true);},
             () -> {RobotModules.movement.Move(-90,90);},
             () -> {RobotModules.movement.Move(140,90);}
-
+*/
     };
     Runnable[] middlePosition ={
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
@@ -41,22 +41,21 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {RobotModules.movement.Move(-35,27);},
             () -> {RobotModules.movement.Move(-45,27, 0.6);
                     RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);
-                    sleep(1000);},
+            () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-30);},
+            () -> {RobotModules.movement.Move(-40);},
 
-            //() -> {RobotModules.movement.Move(-30,90);},
-            //() -> {RobotModules.movement.Move(70,90,1.5);}
-
+            () -> {RobotModules.movement.Move(-40,90);},
+            () -> {RobotModules.movement.Move(70,90,1.5);}
+/*
             () -> {RobotModules.movement.Move(0,90);},
             () -> {RobotModules.movement.Move(-100, 90);},
             () -> {RobotModules.movement.Move(-110,130);},
             () -> {RobotModules.duck.DuckSpin(true);},
             () -> {RobotModules.movement.Move(-90,90);},
             () -> {RobotModules.movement.Move(140,90);}
-
+*/
     };
     Runnable[] upPosition ={
 
@@ -68,18 +67,18 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-30);},
+            () -> {RobotModules.movement.Move(-40);},
 
-   //         () -> {RobotModules.movement.Move(-30,90);},
-  //          () -> {RobotModules.movement.Move(70,90, 1.5);}
-
+            () -> {RobotModules.movement.Move(-40,90);},
+            () -> {RobotModules.movement.Move(70,90, 1.5);}
+/*
             () -> {RobotModules.movement.Move(0,90);},
             () -> {RobotModules.movement.Move(-100, 90);},
             () -> {RobotModules.movement.Move(-110,130);},
             () -> {RobotModules.duck.DuckSpin(true);},
             () -> {RobotModules.movement.Move(-90,90);},
             () -> {RobotModules.movement.Move(140,90);}
-
+*/
     };
 
     @Override

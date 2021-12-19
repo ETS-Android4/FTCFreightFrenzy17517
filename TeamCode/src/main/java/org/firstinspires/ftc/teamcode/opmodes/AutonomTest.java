@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.bucketServoDelay;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.VariablesDashboard;
 import org.firstinspires.ftc.teamcode.robot.Duck;
 import org.firstinspires.ftc.teamcode.robot.Elevator;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
@@ -14,8 +15,9 @@ import org.firstinspires.ftc.teamcode.robot.RobotModules;
 public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test ={
-            () -> {dashboard.getTelemetry().addData("pos", RobotModules.arucoDetect.getPosition());},
-            () -> {dashboard.getTelemetry().addData("timePosition", RobotModules.arucoDetect.timePosition);},
+            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
+            () -> {dashboard.getTelemetry().addData("posManip", RobotModules.elevator.motorLift.getCurrentPosition());},
+            () -> {dashboard.getTelemetry().addData("bucketServoDelay", bucketServoDelay);},
             () -> {dashboard.getTelemetry().update();},
 
             () -> {sleep(100000);}
