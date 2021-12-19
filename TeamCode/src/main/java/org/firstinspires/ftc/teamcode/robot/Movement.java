@@ -45,12 +45,10 @@ public class Movement implements RobotModule {
         return -gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
-    public void Deley() {
-
-    }
 
     private double distance = 0;
     private double angle = 0;
+    private double speed = 0;
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx leftMotorFront = null;
     private DcMotorEx rightMotorFront = null;
@@ -132,11 +130,13 @@ public class Movement implements RobotModule {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public void Move(double di, double ag) {
+    public void Move(double di, double ag, double sp) {
         manualControl = false;
-        timer.reset();
+        if(di != distance || ag != angle || sp != speed)
+            timer.reset();
         distance = di;
         angle = ag;
+        speed = sp;
     }
 
     public void update() {
@@ -154,7 +154,6 @@ public class Movement implements RobotModule {
         double deltaErrDistance = 0;
         double deltaErrAngle = 0;
         double timestep = 0;
-        double speed = 1;
         double speedAngle = 1;
         timestep = runtime.seconds();
         errDistance = getDistanceError(distance);
@@ -214,7 +213,8 @@ public class Movement implements RobotModule {
     }
 
     public void Move(double dist) {
-        Move(dist, 0);
+        Move(dist, 0, 1);
     }
-
+    public void Move(double dist, double angle) {Move(dist, angle, 1);}
 }
+

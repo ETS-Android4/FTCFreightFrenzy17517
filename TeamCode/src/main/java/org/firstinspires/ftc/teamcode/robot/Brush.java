@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,6 +32,9 @@ public class Brush implements RobotModule {
         brushMotor.setDirection(DcMotorEx.Direction.REVERSE);
         distance = linearOpMode.hardwareMap.get(DistanceSensor.class, "distance");
         ledMotor = linearOpMode.hardwareMap.get(DcMotorEx.class, "Led");
+        ledMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        ledMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        ledMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -41,7 +45,7 @@ public class Brush implements RobotModule {
     }
 
     public void breatheLed(){
-        ledMotor.setPower(Math.sin(ledBreatheTimer.seconds())*0.5+1.0);
+        ledMotor.setPower(Math.sin(ledBreatheTimer.seconds()*2.0)*0.5+0.5);
     }
 
     public boolean intake = false;

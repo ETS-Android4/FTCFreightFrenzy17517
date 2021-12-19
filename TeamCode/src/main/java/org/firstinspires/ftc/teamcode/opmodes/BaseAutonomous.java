@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.Duck.directionDuck;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.robot.Duck;
 import org.firstinspires.ftc.teamcode.robot.RobotModules;
+import org.firstinspires.ftc.teamcode.VariablesDashboard.Duck.*;
 
 public abstract class BaseAutonomous extends LinearOpMode {
 
@@ -18,6 +22,9 @@ public abstract class BaseAutonomous extends LinearOpMode {
     private final RobotModules robotModules = new RobotModules(this);
 
     private void startLoop() {
+
+        telemetry.addData("position cap", RobotModules.arucoDetect.getPosition());
+        telemetry.update();
         RobotModules.brush.breatheLed();
     }
 
@@ -39,19 +46,33 @@ public abstract class BaseAutonomous extends LinearOpMode {
         waitForStart();
         RobotModules.arucoDetect.getPosition();
         Runnable[] actionsQueue = {};
-        switch (RobotModules.arucoDetect.stopCamera()) {
-            case RIGHT:
-                actionsQueue = getDownPosition();
-                break;
-            case CENTER:
-                actionsQueue = getMiddlePosition();
-                break;
-            case LEFT:
-            case UNKNOWN:
-                actionsQueue = getUpPosition();
-                break;
+        if (directionDuck == -1) {
+            switch (RobotModules.arucoDetect.stopCamera()) {
+                case LEFT:
+                    actionsQueue = getDownPosition();
+                    break;
+                case CENTER:
+                    actionsQueue = getMiddlePosition();
+                    break;
+                case RIGHT:
+                case UNKNOWN:
+                    actionsQueue = getUpPosition();
+                    break;
+            }
+        } else {
+            switch (RobotModules.arucoDetect.stopCamera()) {
+                case RIGHT:
+                    actionsQueue = getDownPosition();
+                    break;
+                case CENTER:
+                    actionsQueue = getMiddlePosition();
+                    break;
+                case LEFT:
+                case UNKNOWN:
+                    actionsQueue = getUpPosition();
+                    break;
+            }
         }
-
         int queueIndex = 0;
         while (opModeIsActive() && queueIndex < actionsQueue.length) {
             Runnable action = actionsQueue[queueIndex];

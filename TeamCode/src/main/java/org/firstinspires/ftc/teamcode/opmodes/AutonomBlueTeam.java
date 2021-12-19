@@ -16,55 +16,70 @@ public class AutonomBlueTeam extends BaseAutonomous {
     Runnable downPosition[] = {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                 dashboard.getTelemetry().update();},
-            () -> {RobotModules.movement.Move(-45,40);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
+            () -> {RobotModules.movement.Move(-35,27);},
+            () -> {RobotModules.movement.Move(-45,27);},
+            () -> {RobotModules.elevator.MoveServoForElevator(true);
+                    sleep(1000);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.movement.Move(-10);},
+            () -> {RobotModules.movement.Move(-30);},
+
+            //() -> {RobotModules.movement.Move(-30,90);},
+            //() -> {RobotModules.movement.Move(70,90,1.5);}
+
+
             () -> {RobotModules.movement.Move(0,90);},
-            () -> {RobotModules.movement.resetEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);},
-            () -> {RobotModules.movement.Move(-83,120);},
+            () -> {RobotModules.movement.Move(-100, 90);},
+            () -> {RobotModules.movement.Move(-110,130);},
             () -> {RobotModules.duck.DuckSpin(true);},
-            () -> {RobotModules.movement.Move(140,130);}
+            () -> {RobotModules.movement.Move(-90,90);},
+            () -> {RobotModules.movement.Move(140,90);}
+
     };
     Runnable[] middlePosition ={
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                     dashboard.getTelemetry().update();},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);
-                RobotModules.movement.Move(-48,27 );},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
+            () -> {RobotModules.movement.Move(-35,27);},
+            () -> {RobotModules.movement.Move(-45,27, 0.6);
+                    RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);},
+            () -> {RobotModules.elevator.MoveServoForElevator(true);
+                    sleep(1000);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-10);},
+            () -> {RobotModules.movement.Move(-30);},
+
+            //() -> {RobotModules.movement.Move(-30,90);},
+            //() -> {RobotModules.movement.Move(70,90,1.5);}
+
             () -> {RobotModules.movement.Move(0,90);},
-            () -> {RobotModules.movement.resetEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);},
-            () -> {RobotModules.movement.Move(-95,100);},
-            () -> {RobotModules.movement.Move(-110,150);},
+            () -> {RobotModules.movement.Move(-100, 90);},
+            () -> {RobotModules.movement.Move(-110,130);},
             () -> {RobotModules.duck.DuckSpin(true);},
             () -> {RobotModules.movement.Move(-90,90);},
-            () -> {RobotModules.movement.Move(100,70);}
+            () -> {RobotModules.movement.Move(140,90);}
+
     };
     Runnable[] upPosition ={
 
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                dashboard.getTelemetry().update();},
-            () -> {RobotModules.movement.Move(-45,40);
+                    dashboard.getTelemetry().update();},
+            () -> {RobotModules.movement.Move(-35,27);},
+            () -> {RobotModules.movement.Move(-65,27, 0.6);
                 RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-10);},
-            () -> {RobotModules.movement.Move(0,90);},
-            () -> {RobotModules.movement.resetEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);},
-            () -> {RobotModules.movement.Move(-8,120);},
-            () -> {RobotModules.duck.DuckSpin(true);},
-            () -> {RobotModules.movement.Move(140,130);}
+            () -> {RobotModules.movement.Move(-30);},
 
-    };
-    Runnable[] test ={
-            () -> {dashboard.getTelemetry().addData("pos", RobotModules.arucoDetect.getPosition());},
-            () -> {dashboard.getTelemetry().addData("timePosition", RobotModules.arucoDetect.timePosition);},
-            () -> {dashboard.getTelemetry().update();},
-            () -> {sleep(100000);}
+   //         () -> {RobotModules.movement.Move(-30,90);},
+  //          () -> {RobotModules.movement.Move(70,90, 1.5);}
+
+            () -> {RobotModules.movement.Move(0,90);},
+            () -> {RobotModules.movement.Move(-100, 90);},
+            () -> {RobotModules.movement.Move(-110,130);},
+            () -> {RobotModules.duck.DuckSpin(true);},
+            () -> {RobotModules.movement.Move(-90,90);},
+            () -> {RobotModules.movement.Move(140,90);}
+
     };
 
     @Override

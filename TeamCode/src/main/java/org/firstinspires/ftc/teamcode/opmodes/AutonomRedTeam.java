@@ -20,12 +20,11 @@ public class AutonomRedTeam extends BaseAutonomous {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                 dashboard.getTelemetry().update();},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);
-                RobotModules.movement.Move(-49,27 );},
+                RobotModules.movement.Move(-50, -27, 0.5);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {sleep(100);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-30,27);},
             () -> {RobotModules.movement.Move(-30,-90);},
             () -> {RobotModules.movement.Move(80,-90);},
 
@@ -35,11 +34,10 @@ public class AutonomRedTeam extends BaseAutonomous {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                 dashboard.getTelemetry().update();},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);
-                RobotModules.movement.Move(-49,27 );},
+                RobotModules.movement.Move(-50, -27,0.5);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-30,27);},
             () -> {RobotModules.movement.Move(-30,-90);},
             () -> {RobotModules.movement.Move(80,-90);},
 
@@ -50,23 +48,14 @@ public class AutonomRedTeam extends BaseAutonomous {
             () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
                 dashboard.getTelemetry().update();},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);
-                RobotModules.movement.Move(-49,27 );},
+                RobotModules.movement.Move(-50,-27,0.5);},
             () -> {RobotModules.elevator.MoveServoForElevator(true);},
             () -> {RobotModules.elevator.MoveServoForElevator(false);},
             () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
 
-            () -> {RobotModules.movement.Move(-30,27);},
             () -> {RobotModules.movement.Move(-30,-90);},
             () -> {RobotModules.movement.Move(80,-90);},
 
-    };
-    Runnable test[]={
-            ()->{RobotModules.brush.brushMotorMove(true);},
-            ()->{RobotModules.movement.Move(100);},
-            ()->{RobotModules.brush.brushMotorMove(false);},
-            ()->{RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);},
-            ()->{RobotModules.elevator.MoveServoForElevator(true);},
-            ()->{RobotModules.elevator.MoveServoForElevator(false);}
     };
 
     @Override
