@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.TeleOpOneGamepad;
@@ -13,8 +14,8 @@ import org.firstinspires.ftc.teamcode.opmodes.TeleOpOneGamepad;
 public class Brush implements RobotModule {
     private DcMotorEx brushMotor = null;
     private LinearOpMode linearOpMode = null;
-    public DistanceSensor distance = null;
-    public DcMotorEx ledMotor = null;
+    private DistanceSensor distance = null;
+    private DcMotorEx ledMotor = null;
     public boolean freightIsDetected = false;
 
 
@@ -31,6 +32,16 @@ public class Brush implements RobotModule {
         distance = linearOpMode.hardwareMap.get(DistanceSensor.class, "distance");
         ledMotor = linearOpMode.hardwareMap.get(DcMotorEx.class, "Led");
 
+    }
+
+    private ElapsedTime ledBreatheTimer = new ElapsedTime();
+
+    public void resetLedBreatheTimer(){
+        ledBreatheTimer.reset();
+    }
+
+    public void breatheLed(){
+        ledMotor.setPower(Math.sin(ledBreatheTimer.seconds())*0.5+1.0);
     }
 
     public boolean intake = false;
