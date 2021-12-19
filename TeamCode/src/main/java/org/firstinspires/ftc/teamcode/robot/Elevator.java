@@ -58,7 +58,7 @@ public class Elevator implements RobotModule {
 
     public boolean ejectMinerals = false;
     public double moveServo = positionServoDown;
-    private ElapsedTime servoTimer = new ElapsedTime();
+    public ElapsedTime servoTimer = new ElapsedTime();
 
     public void MoveServoForElevator(boolean ejectMinerals) { //manipulatorUp //manipulatorDown //positonServoForElevator
         if (this.ejectMinerals != ejectMinerals)
