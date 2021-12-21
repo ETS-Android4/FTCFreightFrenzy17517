@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Duck.directionDuck;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.DuckConfig.directionDuck;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.lynx.LynxVoltageSensor;
 
-import org.firstinspires.ftc.teamcode.robot.Duck;
-import org.firstinspires.ftc.teamcode.robot.RobotModules;
-import org.firstinspires.ftc.teamcode.VariablesDashboard.Duck.*;
+import org.firstinspires.ftc.teamcode.misc.FreightPosition;
+import org.firstinspires.ftc.teamcode.robot.LedStrip;
 
-public abstract class BaseAutonomous extends LinearOpMode {
+public abstract class BaseAutonomous extends BaseOpMode {
 
     protected abstract Runnable[] getUpPosition();
 
@@ -17,37 +15,22 @@ public abstract class BaseAutonomous extends LinearOpMode {
 
     protected abstract Runnable[] getDownPosition();
 
-    FtcDashboard dashboard;
-
-    private final RobotModules robotModules = new RobotModules(this);
-
-    private void startLoop() {
-
-        telemetry.addData("position cap", RobotModules.arucoDetect.getPosition());
+    @Override
+    public void startLoop() {
+        telemetry.addData("Aruco position", robot.arucoDetect.getPosition());
         telemetry.update();
-        RobotModules.brush.breatheLed();
+        if (robot.arucoDetect.getPosition() == FreightPosition.UNKNOWN)
+            robot.ledStrip.setMode(LedStrip.LedStripMode.BLINK);
+        else
+            robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE);
+        robot.ledStrip.update();
     }
 
     @Override
-    public void waitForStart() {
-        RobotModules.brush.resetLedBreatheTimer();
-        while (!isStarted() && !isStopRequested()) {
-            startLoop();
-        }
-        super.waitForStart();
-    }
-
-    @Override
-    public void runOpMode() {
-        dashboard = FtcDashboard.getInstance();
-        robotModules.init();
-        RobotModules.arucoDetect.init(hardwareMap);
-        RobotModules.brush.resetLedBreatheTimer();
-        waitForStart();
-        RobotModules.arucoDetect.getPosition();
+    public void main() {
         Runnable[] actionsQueue = {};
         if (directionDuck == -1) {
-            switch (RobotModules.arucoDetect.stopCamera()) {
+            switch (robot.arucoDetect.stopCamera()) {
                 case LEFT:
                     actionsQueue = getDownPosition();
                     break;
@@ -60,7 +43,7 @@ public abstract class BaseAutonomous extends LinearOpMode {
                     break;
             }
         } else {
-            switch (RobotModules.arucoDetect.stopCamera()) {
+            switch (robot.arucoDetect.stopCamera()) {
                 case RIGHT:
                     actionsQueue = getDownPosition();
                     break;
@@ -73,15 +56,18 @@ public abstract class BaseAutonomous extends LinearOpMode {
                     break;
             }
         }
-        int queueIndex = 0;
-        while (opModeIsActive() && queueIndex < actionsQueue.length) {
-            Runnable action = actionsQueue[queueIndex];
-            action.run();
-            robotModules.update();
-            if (robotModules.line()) {
-                queueIndex++;
-            }
+        for (Runnable action : actionsQueue) {
+            if (opModeIsActive()) action.run();
+            do
+                robot.update();
+            while (!robot.allActionsAreCompleted() && opModeIsActive());
         }
+    }
 
+    @Override
+    public void runOpMode() {
+        robot.arucoDetect.initialize();
+        robot.ledStrip.resetTimer();
+        super.runOpMode();
     }
 }
