@@ -1,32 +1,27 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.VariablesDashboard;
-import org.firstinspires.ftc.teamcode.robot.Duck;
-import org.firstinspires.ftc.teamcode.robot.Elevator;
-import org.firstinspires.ftc.teamcode.robot.RobotModules;
+import org.firstinspires.ftc.teamcode.misc.PositionOnField;
+import org.firstinspires.ftc.teamcode.robot.Bucket;
+import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @Autonomous
 public class AutonomBlueTeam extends BaseAutonomous {
 
     Runnable downPosition[] = {
-            () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                dashboard.getTelemetry().update();},
-            () -> {RobotModules.movement.Move(-35,27);},
-            () -> {RobotModules.movement.Move(-50,27);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
+
+            () -> robot.movement.Move(-35, 27),
+            () -> robot.movement.Move(-50, 27),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             /*() -> {RobotModules.elevator.ok();},
             () -> {RobotModules.elevator.neok();},*/
-            () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {sleep(1900);},
-            () -> {RobotModules.movement.Move(-30);},
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> sleep(1900),
+            () -> robot.movement.Move(-30),
 
-            () -> {RobotModules.movement.Move(-30,110);},
-            () -> {RobotModules.movement.Move(90,110,1.5);}
+            () -> robot.movement.Move(-30, 110),
+            () -> robot.movement.Move(90, 110, 1.5)
 
 /*
             () -> {RobotModules.movement.Move(0,90);},
@@ -37,19 +32,19 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {RobotModules.movement.Move(140,90);}
 */
     };
-    Runnable[] middlePosition ={
-            () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                    dashboard.getTelemetry().update();},
-            () -> {RobotModules.movement.Move(-35,27);},
-            () -> {RobotModules.movement.Move(-50,27, 0.6);
-                    RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
-            () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-40);},
+    Runnable[] middlePosition = {
+            () -> robot.movement.Move(-35, 27),
+            () -> {
+                robot.movement.Move(-50, 27, 0.6);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
+            },
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-40),
 
-            () -> {RobotModules.movement.Move(-40,90);},
-            () -> {RobotModules.movement.Move(70,90,1.5);}
+            () -> robot.movement.Move(-40, 90),
+            () -> robot.movement.Move(70, 90, 1.5)
 /*
             () -> {RobotModules.movement.Move(0,90);},
             () -> {RobotModules.movement.Move(-100, 90);},
@@ -59,20 +54,19 @@ public class AutonomBlueTeam extends BaseAutonomous {
             () -> {RobotModules.movement.Move(140,90);}
 */
     };
-    Runnable[] upPosition ={
+    Runnable[] upPosition = {
+            () -> robot.movement.Move(-35, 27),
+            () -> {
+                robot.movement.Move(-54, 27, 0.6);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
+            },
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-40),
 
-            () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                    dashboard.getTelemetry().update();},
-            () -> {RobotModules.movement.Move(-35,27);},
-            () -> {RobotModules.movement.Move(-54,27, 0.6);
-                RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
-            () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-40);},
-
-            () -> {RobotModules.movement.Move(-40,90);},
-            () -> {RobotModules.movement.Move(70,90, 1.5);}
+            () -> robot.movement.Move(-40, 90),
+            () -> robot.movement.Move(70, 90, 1.5)
 /*
             () -> {RobotModules.movement.Move(0,90);},
             () -> {RobotModules.movement.Move(-100, 90);},
@@ -99,8 +93,8 @@ public class AutonomBlueTeam extends BaseAutonomous {
     }
 
     @Override
-    public void runOpMode(){
-        RobotModules.duck.redOrBlue(Duck.PositionOnField.BLUE);
+    public void runOpMode() {
+        robot.duck.redOrBlue(PositionOnField.BLUE);
         super.runOpMode();
     }
 }

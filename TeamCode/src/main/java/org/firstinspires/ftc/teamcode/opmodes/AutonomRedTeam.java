@@ -1,61 +1,67 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.VariablesDashboard;
-import org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
-import org.firstinspires.ftc.teamcode.robot.Duck;
-import org.firstinspires.ftc.teamcode.robot.Elevator;
-import org.firstinspires.ftc.teamcode.robot.RobotModules;
+import org.firstinspires.ftc.teamcode.misc.PositionOnField;
+import org.firstinspires.ftc.teamcode.robot.Bucket;
+import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @Autonomous
 public class AutonomRedTeam extends BaseAutonomous {
 
     Runnable[] downPosition = {
 
-            () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                dashboard.getTelemetry().update();},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);
-                RobotModules.movement.Move(-55, -27, 0.5);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
-            () -> {sleep(100);},
-            () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-20,0);},
-            () -> {RobotModules.movement.Move(-20,-90);},
-            () -> {RobotModules.movement.Move(40,-90);},
+            () -> {
+                telemetry.addData("qq", robot.arucoDetect.getPosition());
+                telemetry.update();
+            },
+            () -> {
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+                robot.movement.Move(-55, -27, 0.5);
+            },
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
+            () -> sleep(100),
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-20, 0),
+            () -> robot.movement.Move(-20, -90),
+            () -> robot.movement.Move(40, -90),
 
     };
-    Runnable[] middlePosition ={
+    Runnable[] middlePosition = {
 
-            () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                dashboard.getTelemetry().update();},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE);
-                RobotModules.movement.Move(-55, -27,0.5);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
-            () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-20,0);},
-            () -> {RobotModules.movement.Move(-20,-90);},
-            () -> {RobotModules.movement.Move(40,-90);},
+            () -> {
+                telemetry.addData("qq", robot.arucoDetect.getPosition());
+                telemetry.update();
+            },
+            () -> {
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
+                robot.movement.Move(-55, -27, 0.5);
+            },
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-20, 0),
+            () -> robot.movement.Move(-20, -90),
+            () -> robot.movement.Move(40, -90),
 
     };
-    Runnable[] upPosition ={
+    Runnable[] upPosition = {
 
-            () -> {dashboard.getTelemetry().addData("qq", RobotModules.arucoDetect.getPosition());
-                dashboard.getTelemetry().update();},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.UP);
-                RobotModules.movement.Move(-55,-27,0.5);},
-            () -> {RobotModules.elevator.MoveServoForElevator(true);},
-            () -> {RobotModules.elevator.MoveServoForElevator(false);},
-            () -> {RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN);},
-            () -> {RobotModules.movement.Move(-20,0);},
-            () -> {RobotModules.movement.Move(-20,-90);},
-            () -> {RobotModules.movement.Move(40,-90);},
+            () -> {
+                telemetry.addData("qq", robot.arucoDetect.getPosition());
+                telemetry.update();
+            },
+            () -> {
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
+                robot.movement.Move(-55, -27, 0.5);
+            },
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
+            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-20, 0),
+            () -> robot.movement.Move(-20, -90),
+            () -> robot.movement.Move(40, -90),
 
     };
 
@@ -75,8 +81,8 @@ public class AutonomRedTeam extends BaseAutonomous {
     }
 
     @Override
-    public void runOpMode(){
-        RobotModules.duck.redOrBlue(Duck.PositionOnField.RED);
+    public void runOpMode() {
+        robot.duck.redOrBlue(PositionOnField.RED);
         super.runOpMode();
     }
 }

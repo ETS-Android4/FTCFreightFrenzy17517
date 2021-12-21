@@ -4,7 +4,18 @@ import com.acmerobotics.dashboard.config.Config;
 
 public abstract class VariablesDashboard {
     @Config
-    public static class Duck {
+    public static class TelemetryConfig {
+        public static TelemetryType telemetryType = TelemetryType.DRIVER_STATION;
+
+        public enum TelemetryType {
+            DRIVER_STATION,
+            DASHBOARD,
+            DUAL
+        }
+    }
+
+    @Config
+    public static class DuckConfig {
         public static double directionDuck = 1;
     }
 

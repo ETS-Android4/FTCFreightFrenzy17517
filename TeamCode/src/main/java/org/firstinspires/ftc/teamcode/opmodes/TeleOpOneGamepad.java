@@ -1,70 +1,50 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.TeleOpConfig.robotSpeed;
-import static org.firstinspires.ftc.teamcode.robot.Elevator.ElevatorPosition.UP;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.AutoTele;
+import static org.firstinspires.ftc.teamcode.robot.Lift.ElevatorPosition.UP;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
-import org.firstinspires.ftc.teamcode.robot.Brush;
-import org.firstinspires.ftc.teamcode.robot.Duck;
-import org.firstinspires.ftc.teamcode.robot.Elevator;
-import org.firstinspires.ftc.teamcode.robot.RobotModules;
-import org.firstinspires.ftc.teamcode.robot.Sensor_system;
+import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
+import org.firstinspires.ftc.teamcode.robot.Bucket;
+import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @TeleOp
-public class TeleOpOneGamepad extends LinearOpMode {
-    private final RobotModules robotModules = new RobotModules(this);
-    private Duck duck = new Duck(this);
-    private SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.circle,(Boolean duckb) -> robotModules.duck.DuckSpin(duckb));
-    private SmartButtonSwitch servo_elevator_function = new SmartButtonSwitch(() -> gamepad1.square,(Boolean elev) -> robotModules.elevator.MoveServoForElevator(elev));
-    private SmartButtonSwitch intake_function = new SmartButtonSwitch(() -> gamepad1.triangle,(Boolean intake) -> robotModules.brush.brushMotorMove(intake));
-    private ButtonSwitch buttonSwitch = new ButtonSwitch();
-    private ButtonSwitch buttonSwitch1 = new ButtonSwitch();
-   // private Sensor_system sensor_system = new Sensor_system(this);
-    private Brush getBrush = new Brush(this);
+public class TeleOpOneGamepad extends BaseOpMode {
+    private final SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.circle, (Boolean duckb) -> robot.duck.duckSpin(duckb));
+    private final SmartButtonSwitch servo_elevator_function = new SmartButtonSwitch(() -> gamepad1.square, (Boolean elev) -> robot.bucket.setBucketPosition(elev ? Bucket.BucketPosition.EJECT : Bucket.BucketPosition.COLLECT));
+    private final SmartButtonSwitch intake_function = new SmartButtonSwitch(() -> gamepad1.triangle, (Boolean intake) -> robot.brush.enableIntake(intake));
+    private final ButtonSwitch intakeSwitch = new ButtonSwitch();
+    private final ButtonSwitch speedSwitch = new ButtonSwitch();
 
 
     public ButtonActivated BA;
-    private Brush brush;
-
     public boolean cube_bool_1 = false;
     public boolean cube_bool_2 = false;
-
     public boolean t = true;
     public boolean u = true;
-    public double x = 0.0;
-    public double y = 0.0;
-    public double OX = 0.0;
-    public double OY = 0.0;
     public double pl = 0.0;
 
     @Override
-    public void runOpMode() {
-
-        robotModules.init();
+    public void main() {
+        robot.init();
         AutoTele = true;
-        RobotModules.duck.Teleop();
-
-        waitForStart();
+        robot.duck.Teleop();
         while (opModeIsActive()) {
             // Local conditions
-            if(gamepad1.left_bumper){ obnul(u); }
-            RobotModules.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * pl);
+            //if(gamepad1.left_bumper){ obnul(u); }
+            robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * pl);
             // Switch functions
             duck_function.activate();
             servo_elevator_function.activate();
             /*intake_function.activate();*/
             // Others
-            RobotModules.brush.brushMotorMove(t && buttonSwitch.getState(gamepad1.triangle));
+            robot.brush.enableIntake(t && intakeSwitch.getState(gamepad1.triangle));
             lift_function();
-           // cube_fix(true);
-            robotModules.updateForTeleop();
+            // cube_fix(true);
+            robot.update();
             /*Drawing();*/
 
         }
@@ -83,16 +63,42 @@ public class TeleOpOneGamepad extends LinearOpMode {
     }*/
 
 
-    private double get_speed(){ if(buttonSwitch1.getState(gamepad1.right_bumper)){ pl = 1; } else{ pl = 0.5; } return pl; }
-
-    private void obnul(boolean i){
-        if(i){ while(gamepad1.left_bumper && !RobotModules.elevator.limitSwitch.getState()){ robotModules.elevator.motorLift.setPower(-1); u = false; } robotModules.elevator.resetEncoderElevator();}
+    private double get_speed() {
+        if (speedSwitch.getState(gamepad1.right_bumper)) {
+            pl = 1;
+        } else {
+            pl = 0.5;
+        }
+        return pl;
     }
 
-    private void lift_function(){
-        if(gamepad1.dpad_up || cube_bool_1){ cube_bool_1 = false; RobotModules.elevator.ElevatorPosition(UP); t = false;}
-        if(gamepad1.dpad_left){ RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.MIDDLE); t = false;}
-        if(gamepad1.dpad_down || cube_bool_2){ cube_bool_2 = false; RobotModules.elevator.ElevatorPosition(Elevator.ElevatorPosition.DOWN); t = true;}
+    /*
+    private void obnul(boolean i) {
+        if (i) {
+            while (gamepad1.left_bumper && !robot.lift.limitSwitch.getState()) {
+                robot.lift.motorLift.setPower(-1);
+                u = false;
+            }
+            robot.lift.resetEncoderElevator();
+        }
+    }
+     */
+
+    private void lift_function() {
+        if (gamepad1.dpad_up || cube_bool_1) {
+            cube_bool_1 = false;
+            robot.lift.setElevatorTarget(UP);
+            t = false;
+        }
+        if (gamepad1.dpad_left) {
+            robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
+            t = false;
+        }
+        if (gamepad1.dpad_down || cube_bool_2) {
+            cube_bool_2 = false;
+            robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+            t = true;
+        }
     }
 
     /*public void Drawing() {
