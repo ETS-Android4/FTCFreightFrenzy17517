@@ -1,7 +1,13 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 public interface RobotModule {
-    void init();
+    void initialize();
+
     void update();
-    boolean line();
+
+    default boolean actionIsCompleted() {
+        return true;
+    }
 }
