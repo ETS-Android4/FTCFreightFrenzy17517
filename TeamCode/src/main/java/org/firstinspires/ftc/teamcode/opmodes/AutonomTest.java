@@ -9,26 +9,14 @@ import org.firstinspires.ftc.teamcode.robot.Bucket;
 @Autonomous
 public class AutonomTest extends BaseAutonomous {
 
-    Runnable[] test ={
+    Runnable[] test = {
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
-            () -> telemetry.addData("posManip", robot.lift.getElevatorTarget()),
-            () -> telemetry.addData("bucketServoDelay", bucketServoDelay),
-            () -> telemetry.update(),
             () -> robot.timer.delay(30)
     };
 
     @Override
-    protected Runnable[] getUpPosition() {
-        return test;
+    public void main(){
+        execute(test);
     }
 
-    @Override
-    protected Runnable[] getMiddlePosition() {
-        return test;
-    }
-
-    @Override
-    protected Runnable[] getDownPosition() {
-        return test;
-    }
 }

@@ -28,7 +28,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public void runOpMode() {
         switch (VariablesDashboard.TelemetryConfig.telemetryType) {
             case DRIVER_STATION:
-                telemetry = this.telemetry;
+                telemetry = super.telemetry;
                 break;
             case DASHBOARD:
                 telemetry = robot.dashboard.getTelemetry();
