@@ -8,24 +8,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class LedStrip implements RobotModule {
 
-    public enum LedStripMode {
-        OFF, BREATHE, STATIC, BLINK, BLINK_DUALCOLOR, BREATHE_DUALCOLOR, INDICATOR
-    }
-
     private LedStripMode ledStripMode;
-
     private DcMotorEx ledMotor = null;
-
     private ElapsedTime time = new ElapsedTime();
-
-    public void resetTimer(){
-        time.reset();
-    }
-
     private WoENRobot robot = null;
 
     public LedStrip(WoENRobot robot) {
         this.robot = robot;
+    }
+
+    public void resetTimer() {
+        time.reset();
     }
 
     public void setMode(LedStripMode ledStripMode) {
@@ -42,7 +35,7 @@ public class LedStrip implements RobotModule {
 
     @Override
     public void update() {
-        double power;
+        double power = 0;
         switch (ledStripMode) {
             case OFF:
                 power = .0;
@@ -65,5 +58,10 @@ public class LedStrip implements RobotModule {
             case INDICATOR:
                 break;
         }
+        ledMotor.setPower(power);
+    }
+
+    public enum LedStripMode {
+        OFF, BREATHE, STATIC, BLINK, BLINK_DUALCOLOR, BREATHE_DUALCOLOR, INDICATOR
     }
 }
