@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 public abstract class BaseAutonomous extends BaseOpMode {
 
 
@@ -15,10 +17,11 @@ public abstract class BaseAutonomous extends BaseOpMode {
 
     public final void execute(Runnable[] runnables, double timeoutSeconds) {
         for (Runnable action : runnables) {
+            ElapsedTime elapsedTime = new ElapsedTime();
             if (opModeIsActive()) action.run();
             do
                 robot.update();
-            while (!robot.allActionsAreCompleted() && opModeIsActive());
+            while (!robot.allActionsAreCompleted() && opModeIsActive() && elapsedTime.seconds() < timeoutSeconds);
         }
     }
 
