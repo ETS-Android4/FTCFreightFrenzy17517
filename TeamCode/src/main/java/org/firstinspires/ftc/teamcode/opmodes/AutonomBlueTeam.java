@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @Autonomous
-public class AutonomBlueTeam extends BaseAutonomous {
+public class AutonomBlueTeam extends BaseDetectionAutonomous {
 
     Runnable downPosition[] = {
 
@@ -78,17 +78,17 @@ public class AutonomBlueTeam extends BaseAutonomous {
     };
 
     @Override
-    protected Runnable[] getUpPosition() {
+    protected Runnable[] upPosition() {
         return upPosition;
     }
 
     @Override
-    protected Runnable[] getMiddlePosition() {
+    protected Runnable[] middlePosition() {
         return middlePosition;
     }
 
     @Override
-    protected Runnable[] getDownPosition() {
+    protected Runnable[] downPosition() {
         return downPosition;
     }
 

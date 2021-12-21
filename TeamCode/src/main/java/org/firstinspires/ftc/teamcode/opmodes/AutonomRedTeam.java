@@ -7,20 +7,15 @@ import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @Autonomous
-public class AutonomRedTeam extends BaseAutonomous {
+public class AutonomRedTeam extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
 
-            () -> {
-                telemetry.addData("qq", robot.arucoDetect.getPosition());
-                telemetry.update();
-            },
             () -> {
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
                 robot.movement.Move(-55, -27, 0.5);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
-            () -> sleep(100),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-20, 0),
@@ -66,17 +61,17 @@ public class AutonomRedTeam extends BaseAutonomous {
     };
 
     @Override
-    protected Runnable[] getUpPosition() {
+    protected Runnable[] upPosition() {
         return upPosition;
     }
 
     @Override
-    protected Runnable[] getMiddlePosition() {
+    protected Runnable[] middlePosition() {
         return middlePosition;
     }
 
     @Override
-    protected Runnable[] getDownPosition() {
+    protected Runnable[] downPosition() {
         return downPosition;
     }
 
