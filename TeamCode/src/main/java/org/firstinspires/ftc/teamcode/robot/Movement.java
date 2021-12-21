@@ -24,21 +24,22 @@ import org.firstinspires.ftc.teamcode.robot.RobotModule;
 public class Movement implements RobotModule {
     private BNO055IMU gyro = null;
 
-    public boolean line() {
+    public boolean actionIsCompleted() {
         return queuebool;
     }
 
     public void initGyro() {
-        gyro = linearOpMode.hardwareMap.get(BNO055IMU.class, "imu");
+        gyro = robot.getLinearOpMode().hardwareMap.get(BNO055IMU.class, "imu");
         gyro.initialize(new BNO055IMU.Parameters());
     }
 
-    private LinearOpMode linearOpMode = null;
 
     private boolean manualControl = true;
 
-    public Movement(LinearOpMode linearOpMode) {
-        this.linearOpMode = linearOpMode;
+    private WoENRobot robot = null;
+
+    public Movement(WoENRobot robot) {
+        this.robot = robot;
     }
 
     double getGyroHeading() {
@@ -69,10 +70,10 @@ public class Movement implements RobotModule {
     }
 
     private void assignHardware() {
-        rightMotorFront = linearOpMode.hardwareMap.get(DcMotorEx.class, "R1");
-        rightMotorBack = linearOpMode.hardwareMap.get(DcMotorEx.class, "R2");
-        leftMotorFront = linearOpMode.hardwareMap.get(DcMotorEx.class, "L1");
-        leftMotorBack = linearOpMode.hardwareMap.get(DcMotorEx.class, "L2");
+        rightMotorFront = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "R1");
+        rightMotorBack = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "R2");
+        leftMotorFront = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "L1");
+        leftMotorBack = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "L2");
     }
 
     private void setDirections() {
@@ -100,7 +101,7 @@ public class Movement implements RobotModule {
         rightMotorBack.setZeroPowerBehavior(zeroPowerBehavior);
     }
 
-    public void init() {
+    public void initialize() {
         initGyro();
         assignHardware();
         setDirections();
@@ -139,12 +140,11 @@ public class Movement implements RobotModule {
         speed = sp;
     }
 
+    double oldErrDistance = 0;
+    double oldErrAngle = 0;
     public void update() {
+        double timestep = runtime.seconds();
         runtime.reset();
-        double errDistance = getDistanceError(distance);
-        double errAngle = getAngleError(angle);
-        double oldErrDistance = errDistance;
-        double oldErrAngle = errAngle;
         double proportionalLinear = 0;
         double proportionalAngular = 0;
         double integralLinear = 0;
@@ -153,11 +153,9 @@ public class Movement implements RobotModule {
         double differentialAngular = 0;
         double deltaErrDistance = 0;
         double deltaErrAngle = 0;
-        double timestep = 0;
         double speedAngle = 1;
-        timestep = runtime.seconds();
-        errDistance = getDistanceError(distance);
-        errAngle = getAngleError(angle);
+        double errDistance = getDistanceError(distance);
+        double errAngle = getAngleError(angle);
         runtime.reset();
         {   //proportional component
             proportionalLinear = errDistance * kP_Distance;
@@ -182,14 +180,7 @@ public class Movement implements RobotModule {
         if (!manualControl)
             setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed,
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle);
-       /* {
-            Telemetry currentTelemetry;
-            // currentTelemetry = linearOpMode.telemetry;
-            currentTelemetry = FtcDashboard.getInstance().getTelemetry();
-            currentTelemetry.addData("dis", distance);
-            FtcDashboard.getInstance().getTelemetry().update();
-        } */
-        queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || !linearOpMode.opModeIsActive() || (timer.seconds() >= timerForMovement);
+        queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || (timer.seconds() >= timerForMovement);
     }
 
     public void setMotorPowers(double power, double angle) {
