@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.test;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 
-@Autonomous
 public class BrushTest extends BaseOpMode {
 
     @Override
@@ -19,7 +16,6 @@ public class BrushTest extends BaseOpMode {
         robot.timer.delay(10);
         while (!robot.timer.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
-            robot.update();
             telemetry.update();
         }
     }
