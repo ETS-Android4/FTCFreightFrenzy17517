@@ -1,36 +1,32 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.downTargetElevator;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.*;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Duck.*;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.DuckConfig.directionDuck;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.misc.PositionOnField;
 
 public class Duck implements RobotModule {
     private DcMotor duckMotor = null;
-    private LinearOpMode linearOpMode = null;
 
-    public Duck(LinearOpMode linearOpMode) {
-        this.linearOpMode = linearOpMode;
+    private WoENRobot robot = null;
+
+    public Duck(WoENRobot robot) {
+        this.robot = robot;
     }
 
-    public void init() {
-        duckMotor = linearOpMode.hardwareMap.get(DcMotor.class, "DuckMotor");
+    public void initialize() {
+        duckMotor = robot.getLinearOpMode().hardwareMap.get(DcMotor.class, "DuckMotor");
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    }
-
-    public enum PositionOnField {
-        RED, BLUE
     }
 
     public double direction = 1;
 
-    public void redOrBlue(Duck.PositionOnField direction) {
+    public void redOrBlue(PositionOnField direction) {
         switch (direction) {
             case RED:
                 directionDuck = 1;
@@ -49,7 +45,7 @@ public class Duck implements RobotModule {
         time = 1.9;
     }
 
-    public void DuckSpin(boolean ds) {
+    public void duckSpin(boolean ds) {
         if (doSpin != ds) duckTimer.reset();
         doSpin = ds;
     }
@@ -61,7 +57,7 @@ public class Duck implements RobotModule {
     public boolean queuebool = true;
     private ElapsedTime duckTimer = new ElapsedTime();
 
-    public boolean line() {
+    public boolean actionIsCompleted() {
         return queuebool;
     }
 
