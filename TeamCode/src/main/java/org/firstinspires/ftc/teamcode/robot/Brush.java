@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.BrushConfig.*;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,8 +31,8 @@ public class Brush implements RobotModule {
     public ElapsedTime timerProtection = new ElapsedTime();
     public boolean protectionBrushMotor(){
         double timer = timerProtection.seconds();
-        if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || (timer > 3 && timer < 4) ){
-            return (timer >=3);
+        if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || (timer > timeForActivateProtection && timer < timeForReverse) ){
+            return (timer >= timeForActivateProtection);
         }
         else {
             timerProtection.reset();
