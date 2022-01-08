@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
+import org.firstinspires.ftc.teamcode.robot.LedStrip;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @TeleOp
@@ -32,6 +33,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
         robot.init();
         AutoTele = true;
         robot.duck.Teleop();
+        robot.ledStrip.setMode(LedStrip.LedStripMode.INDICATOR);
         while (opModeIsActive()) {
             // Local conditions
             //if(gamepad1.left_bumper){ obnul(u); }
