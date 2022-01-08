@@ -15,6 +15,12 @@ public abstract class VariablesDashboard {
     }
 
     @Config
+    public static class BrushConfig{
+        public static double timeForActivateProtection = 3;
+        public static double timeForReverse = timeForActivateProtection + 1;
+    }
+
+    @Config
     public static class DuckConfig {
         public static double directionDuck = 1;
     }
