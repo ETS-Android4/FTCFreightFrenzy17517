@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -25,6 +26,18 @@ public class Brush implements RobotModule {
         brushMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
     }
+    public ElapsedTime timerProtection = new ElapsedTime();
+    public boolean protectionBrushMotor(){
+        double timer = timerProtection.seconds();
+        timerProtection.reset();
+        if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000){
+            return (timer >=3);
+        }
+        else {
+            timerProtection.reset();
+            return false;
+        }
+    }
 
     public void enableIntake(boolean intake) {
         this.enableIntake = intake;
@@ -37,7 +50,7 @@ public class Brush implements RobotModule {
                 brushPower = -1;
             else
                 brushPower = 1;
-            if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000){
+            if(protectionBrushMotor()){
                 brushPower = -1;
             }
         else
