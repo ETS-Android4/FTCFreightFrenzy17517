@@ -76,9 +76,9 @@ public class Lift implements RobotModule {
             }
         } else {
             double error = encoderTarget - getLiftEncoderPosition();
-            double kP = 0.2;
+            double kP = 0.008;
 
-            if (abs(error) > 20) {
+            if (abs(error) > 50) {
                 motorLift.setPower(error * kP);
                 queuebool = false;
             } else {

@@ -53,6 +53,6 @@ public abstract class VariablesDashboard {
         public static double downTargetElevator = 0;
         public static double middleTargetElevator = 650;
         public static double upTargetElevator = 1300;
-        public static double bucketServoDelay = 2;
+        public static double bucketServoDelay = 1;
     }
 }

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 
 public class Brush implements RobotModule {
 
@@ -31,10 +33,13 @@ public class Brush implements RobotModule {
     public void update() {
         double brushPower;
         if (enableIntake)
-            if (robot.bucket.isFreightDetected() || robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN)
+            if (robot.bucket.isFreightDetected() || robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN )
                 brushPower = -1;
             else
                 brushPower = 1;
+            if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000){
+                brushPower = -1;
+            }
         else
             brushPower = 0;
         brushMotor.setPower(brushPower);
