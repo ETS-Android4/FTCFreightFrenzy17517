@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.bucketServoDelay;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positionServoDown;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positionServoUp;
 import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.positonServoForElevator;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.VariablesDashboard;
 
 public class Bucket implements RobotModule {
 
@@ -24,7 +26,7 @@ public class Bucket implements RobotModule {
     public double moveServo = positionServoDown;
     public ElapsedTime servoTimer = new ElapsedTime();
 
-    BucketPosition bucketPosition;
+    private BucketPosition bucketPosition = BucketPosition.COLLECT;
 
     public BucketPosition getBucketPosition() {
         return bucketPosition;
@@ -54,6 +56,10 @@ public class Bucket implements RobotModule {
         servoElevator = robot.getLinearOpMode().hardwareMap.get(Servo.class, "UpDown");
     }
 
+    public boolean actionIsCompleted() {
+        return servoTimer.seconds() > bucketServoDelay;
+    }
+
     @Override
     public void update() {
         freightDetected = distance.getDistance(DistanceUnit.CM) < 8;
@@ -61,6 +67,7 @@ public class Bucket implements RobotModule {
             case COLLECT:
                 servoElevator.setPosition(robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN ?
                         positionServoUp : positonServoForElevator);
+                break;
             case EJECT:
                 servoElevator.setPosition(positionServoDown);
                 break;

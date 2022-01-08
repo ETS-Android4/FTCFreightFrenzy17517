@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class LedStrip implements RobotModule {
 
-    private LedStripMode ledStripMode;
+    private LedStripMode ledStripMode = LedStripMode.INDICATOR;
     private DcMotorEx ledMotor = null;
     private ElapsedTime time = new ElapsedTime();
     private WoENRobot robot = null;
@@ -24,12 +24,12 @@ public class LedStrip implements RobotModule {
     public void setMode(LedStripMode ledStripMode) {
         if (this.ledStripMode != ledStripMode)
             time.reset();
-        this.ledStripMode = ledStripMode;
+            this.ledStripMode = ledStripMode;
     }
 
     @Override
     public void initialize() {
-        DcMotorEx ledMotor = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "Led");
+        ledMotor = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "Led");
         ledMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 

@@ -63,7 +63,6 @@ public class Duck implements RobotModule {
 
     public void update() {
         if (doSpin && duckTimer.seconds() < time) {
-
             duckMotor.setPower(Range.clip(directionDuck * 0.555, -1, 1));
             queuebool = false;
         } else {
