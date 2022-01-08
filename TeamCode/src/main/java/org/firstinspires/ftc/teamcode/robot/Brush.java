@@ -29,7 +29,6 @@ public class Brush implements RobotModule {
     public ElapsedTime timerProtection = new ElapsedTime();
     public boolean protectionBrushMotor(){
         double timer = timerProtection.seconds();
-        timerProtection.reset();
         if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000){
             return (timer >=3);
         }
