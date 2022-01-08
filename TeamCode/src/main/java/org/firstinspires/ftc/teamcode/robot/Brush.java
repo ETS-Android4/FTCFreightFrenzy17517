@@ -44,19 +44,21 @@ public class Brush implements RobotModule {
 
     public void update() {
         double brushPower;
-        if (enableIntake)
-            if (robot.bucket.isFreightDetected() || robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN )
+        if (enableIntake) {
+            if (robot.bucket.isFreightDetected() || robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN) {
                 brushPower = -1;
-            else
+            } else {
                 brushPower = 1;
-            if(protectionBrushMotor()){
+            }
+            if (protectionBrushMotor()) {
                 brushPower = -1;
             }
-        else
-            brushPower = 0;
-        brushMotor.setPower(brushPower);
-    }
-
+        }
+            else {
+                brushPower = 0;
+                brushMotor.setPower(brushPower);
+            }
+        }
     public boolean actionIsCompleted() {
         return true;
     }
