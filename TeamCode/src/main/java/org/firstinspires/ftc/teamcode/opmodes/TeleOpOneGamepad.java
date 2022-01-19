@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfi
 import static org.firstinspires.ftc.teamcode.robot.Lift.ElevatorPosition.UP;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.robot.LedStrip;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
 import java.lang.reflect.GenericDeclaration;
+import java.util.concurrent.TimeUnit;
 
 @TeleOp
 public class TeleOpOneGamepad extends BaseOpMode {
@@ -24,45 +26,48 @@ public class TeleOpOneGamepad extends BaseOpMode {
     private final ButtonSwitch speedSwitch = new ButtonSwitch();
 
 
+    private ElapsedTime gyro_control = new ElapsedTime();
     public ButtonActivated BA;
     public boolean cube_bool_1 = false;
     public boolean cube_bool_2 = false;
     public boolean t = true;
     public boolean u = true;
     public double pl = 0.0;
+    public int gyro_counter = 0;
     private GyroAuto gyro_auto = new GyroAuto(robot);
 
     @Override
     public void main() {
         robot.init();
+        gyro_auto.init();
+        gyro_control.reset();
         AutoTele = true;
         robot.duck.Teleop();
+        // LED
         robot.ledStrip.setMode(LedStrip.LedStripMode.INDICATOR);
-        gyro_auto.initialize();
+
+
         while (opModeIsActive()) {
-            // Local conditions
-            //if(gamepad1.left_bumper){ obnul(u); }
+            // Movement
             robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * pl);
             // Switch functions
             duck_function.activate();
             servo_elevator_function.activate();
             // Others
             robot.brush.enableIntake(t && intakeSwitch.getState(gamepad1.triangle));
-            lift_function();
             robot.update();
-            gyro_auto.reaction();
-            cube_bool_1 = gyro_auto.gyro_status;
+            gyro_system();
+            lift_function();
         }
     }
 
-    private double get_speed() {
-        if (speedSwitch.getState(gamepad1.right_bumper)) {
-            pl = 1;
-        } else {
-            pl = 0.5;
-        }
-        return pl;
+    private void gyro_system(){
+        gyro_auto.reaction();
+        cube_bool_1 = gyro_auto.gyro_status && gyro_counter%2==0 && robot.bucket.isFreightDetected();
+        cube_bool_2 = gyro_auto.gyro_status && gyro_counter%2==1 && !robot.bucket.isFreightDetected();
     }
+
+    private double get_speed() { if (speedSwitch.getState(gamepad1.right_bumper)) { pl = 1; } else { pl = 0.5; } return pl; }
 
     /*
     private void obnul(boolean i) {
@@ -78,20 +83,17 @@ public class TeleOpOneGamepad extends BaseOpMode {
 
     private void lift_function() {
         if (gamepad1.dpad_up || cube_bool_1) {
-            cube_bool_1 = false;
-            gyro_auto.gyro_status = false;
             robot.lift.setElevatorTarget(UP);
-            t = false;
+            cube_bool_1 = gyro_auto.gyro_status = false;
         }
         if (gamepad1.dpad_left) {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
-            t = false;
         }
         if (gamepad1.dpad_down || cube_bool_2) {
-            cube_bool_2 = false;
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
-            t = true;
+            cube_bool_2 = gyro_auto.gyro_status = false;
         }
+        if((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 1.5){ gyro_control.reset(); gyro_counter++; }
     }
 
     /*public void Drawing() {

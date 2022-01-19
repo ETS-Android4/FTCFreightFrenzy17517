@@ -41,7 +41,7 @@ public class Duck implements RobotModule {
     }
 
     private boolean doSpin = false;
-    private double time = 5;
+    public double time = 5;
 
     public void Teleop() {
         time = 1.9;

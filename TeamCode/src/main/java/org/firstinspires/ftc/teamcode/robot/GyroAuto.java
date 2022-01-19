@@ -20,9 +20,9 @@ public class GyroAuto{
     private BNO055IMU gyro = null;
     private LedStrip led = new LedStrip(robot);
     private boolean private_status = false;
-    public boolean gyro_status  = false;
+    public boolean gyro_status = false;
 
-    public void initialize(){
+    public void init(){
         gyro = robot.getLinearOpMode().hardwareMap.get(BNO055IMU.class, "imu");
         gyro.initialize(new BNO055IMU.Parameters());
         gyro_timer.reset();
@@ -30,13 +30,11 @@ public class GyroAuto{
     }
 
     public void reaction(){
-        if(robot.bucket.isFreightDetected()){
             if(Math.abs(angle()) > 5.0){ private_status = true; gyro_timer.reset();}
             if(private_status && gyro_timer.time(TimeUnit.SECONDS) > 0.5){
                 gyro_status = true;
                 private_status = false;
             }
-        }
     }
 
     private double angle(){ return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - gyro_in; }
