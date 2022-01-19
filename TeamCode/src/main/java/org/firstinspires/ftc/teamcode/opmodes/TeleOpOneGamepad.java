@@ -9,8 +9,11 @@ import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
+import org.firstinspires.ftc.teamcode.robot.Gyro_auto;
 import org.firstinspires.ftc.teamcode.robot.LedStrip;
 import org.firstinspires.ftc.teamcode.robot.Lift;
+
+import java.lang.reflect.GenericDeclaration;
 
 @TeleOp
 public class TeleOpOneGamepad extends BaseOpMode {
@@ -27,6 +30,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
     public boolean t = true;
     public boolean u = true;
     public double pl = 0.0;
+    private Gyro_auto gyro_auto = new Gyro_auto(robot);
 
     @Override
     public void main() {
@@ -41,29 +45,13 @@ public class TeleOpOneGamepad extends BaseOpMode {
             // Switch functions
             duck_function.activate();
             servo_elevator_function.activate();
-            /*intake_function.activate();*/
             // Others
             robot.brush.enableIntake(t && intakeSwitch.getState(gamepad1.triangle));
             lift_function();
-            // cube_fix(true);
             robot.update();
-            /*Drawing();*/
-
+            cube_bool_1 = gyro_auto.gyro_status;
         }
     }
-
-    /*private void cube_fix(boolean activation_bool){
-        if(activation_bool) {
-            if (brush.freightIsDetected) {
-                getBrush.ledMotor.setPower(1.0);
-                cube_bool_1 = true;
-            } else {
-                getBrush.ledMotor.setPower(0.0);
-                cube_bool_2 = true;
-            }
-        }
-    }*/
-
 
     private double get_speed() {
         if (speedSwitch.getState(gamepad1.right_bumper)) {
