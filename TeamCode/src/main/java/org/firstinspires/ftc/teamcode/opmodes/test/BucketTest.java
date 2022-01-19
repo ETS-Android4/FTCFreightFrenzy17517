@@ -19,6 +19,7 @@ public class BucketTest extends BaseOpMode {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Time before ejection", robot.timer.getTimeLeft());
             telemetry.addData("Freight detected", robot.bucket.isFreightDetected());
+            robot.update();
             telemetry.update();
         }
         robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT);
@@ -31,6 +32,7 @@ public class BucketTest extends BaseOpMode {
         while (!robot.bucket.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Freight detected", robot.bucket.isFreightDetected());
+            robot.update();
             telemetry.update();
         }
     }

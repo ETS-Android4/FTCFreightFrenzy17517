@@ -16,7 +16,7 @@ public class Lift implements RobotModule {
     private DcMotorEx motorLift = null;
     private DigitalChannel limitSwitch = null;
     private WoENRobot robot = null;
-    private ElevatorPosition elevatorTarget = null;
+    private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
     private double liftEncoderOffset = 0;
 
     public Lift(WoENRobot robot) {

@@ -18,6 +18,7 @@ public class LiftTest extends BaseOpMode {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Lift position", robot.lift.getElevatorTarget());
             telemetry.addData("Time before test", robot.timer.getTimeLeft());
+            robot.update();
             telemetry.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
@@ -32,6 +33,7 @@ public class LiftTest extends BaseOpMode {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Lift target", robot.lift.getElevatorTarget());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.update();
             telemetry.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
@@ -39,6 +41,7 @@ public class LiftTest extends BaseOpMode {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Lift target", robot.lift.getElevatorTarget());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.update();
             telemetry.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
@@ -46,6 +49,7 @@ public class LiftTest extends BaseOpMode {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Lift target", robot.lift.getElevatorTarget());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.update();
             telemetry.update();
         }
     }

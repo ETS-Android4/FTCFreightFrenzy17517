@@ -18,11 +18,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 import org.firstinspires.ftc.teamcode.robot.RobotModule;
 
 
 public class Movement implements RobotModule {
     private BNO055IMU gyro = null;
+
+    private TimedSensorQuery timedGyroQuery = new TimedSensorQuery(()->gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle, 100);
 
     public boolean actionIsCompleted() {
         return queuebool;
@@ -43,7 +46,7 @@ public class Movement implements RobotModule {
     }
 
     double getGyroHeading() {
-        return -gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        return -timedGyroQuery.getValue();
     }
 
 
