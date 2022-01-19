@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.bucketServoDelay;
+import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.angle;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.robot.Bucket;
@@ -10,12 +11,18 @@ import org.firstinspires.ftc.teamcode.robot.Bucket;
 public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test = {
-
+            ()-> {robot.movement.Move(0,angle);
+                robot.timer.delay(100);
+                robot.movement.teleometryEncoder();},
+            ()-> {robot.movement.Move(0,0);},
+            () -> {robot.movement.teleometryEncoder();}
     };
 
     @Override
     public void main(){
-        execute(test);
+        while (opModeIsActive()) {
+            execute(test);
+        }
     }
 
 }

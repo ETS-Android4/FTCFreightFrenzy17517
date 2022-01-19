@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.opencv.ArucoDetect;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class WoENRobot {
     public Movement movement = new Movement(this);
     public Brush brush = new Brush(this);
     public Timer timer = new Timer();
+    public Accumulator accumulator = new Accumulator(this);
 
     private List<LynxModule> revHubs = null;
 
@@ -28,7 +30,9 @@ public class WoENRobot {
             lift,
             movement,
             brush,
-            timer
+            timer,
+            accumulator
+
     };
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();

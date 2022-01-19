@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
-import org.firstinspires.ftc.teamcode.robot.Gyro_auto;
+import org.firstinspires.ftc.teamcode.robot.GyroAuto;
 import org.firstinspires.ftc.teamcode.robot.LedStrip;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
@@ -30,7 +30,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
     public boolean t = true;
     public boolean u = true;
     public double pl = 0.0;
-    private Gyro_auto gyro_auto = new Gyro_auto(robot);
+    private GyroAuto gyro_auto = new GyroAuto(robot);
 
     @Override
     public void main() {
@@ -38,6 +38,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
         AutoTele = true;
         robot.duck.Teleop();
         robot.ledStrip.setMode(LedStrip.LedStripMode.INDICATOR);
+        gyro_auto.initialize();
         while (opModeIsActive()) {
             // Local conditions
             //if(gamepad1.left_bumper){ obnul(u); }
@@ -49,6 +50,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
             robot.brush.enableIntake(t && intakeSwitch.getState(gamepad1.triangle));
             lift_function();
             robot.update();
+            gyro_auto.reaction();
             cube_bool_1 = gyro_auto.gyro_status;
         }
     }
@@ -77,6 +79,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
     private void lift_function() {
         if (gamepad1.dpad_up || cube_bool_1) {
             cube_bool_1 = false;
+            gyro_auto.gyro_status = false;
             robot.lift.setElevatorTarget(UP);
             t = false;
         }

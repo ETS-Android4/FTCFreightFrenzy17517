@@ -181,14 +181,21 @@ public class Movement implements RobotModule {
             differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
         }
         if (!manualControl)
-            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed,
-                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle);
+            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.accumulator.getkVoltage(),
+                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle * robot.accumulator.getkVoltage());
         queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || (timer.seconds() >= timerForMovement);
     }
 
     public void setMotorPowers(double power, double angle) {
         manualControl = true;
         setMotorPowersPrivate(power, angle);
+    }
+    public void teleometryEncoder(){
+        FtcDashboard.getInstance().getTelemetry().addData("rightMotorFront",rightMotorFront.getCurrentPosition());
+        FtcDashboard.getInstance().getTelemetry().addData("rightMotorBack",rightMotorBack.getCurrentPosition());
+        FtcDashboard.getInstance().getTelemetry().addData("leftMotorFront",leftMotorFront.getCurrentPosition());
+        FtcDashboard.getInstance().getTelemetry().addData("leftMotorBack",leftMotorBack.getCurrentPosition());
+        FtcDashboard.getInstance().getTelemetry().update();
     }
 
     private void setMotorPowersPrivate(double power, double angle) {
