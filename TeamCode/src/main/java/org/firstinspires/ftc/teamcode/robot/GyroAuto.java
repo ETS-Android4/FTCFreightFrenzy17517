@@ -11,10 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class Gyro_auto{
+public class GyroAuto{
     private WoENRobot robot = null;
 
-    public Gyro_auto(WoENRobot robot) { this.robot = robot; }
+    public GyroAuto(WoENRobot robot) { this.robot = robot; }
     private ElapsedTime gyro_timer = new ElapsedTime();
     private double gyro_in;
     private BNO055IMU gyro = null;
@@ -23,19 +23,21 @@ public class Gyro_auto{
     public boolean gyro_status  = false;
 
     public void initialize(){
+        gyro = robot.getLinearOpMode().hardwareMap.get(BNO055IMU.class, "imu");
+        gyro.initialize(new BNO055IMU.Parameters());
         gyro_timer.reset();
-        gyro_in = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        gyro_in = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
     }
 
     public void reaction(){
         if(robot.bucket.isFreightDetected()){
-            if(Math.abs(angle()) > 7.0){ private_status = true; gyro_timer.reset();}
-            if(private_status && gyro_timer.time(TimeUnit.SECONDS) > 1.5){
+            if(Math.abs(angle()) > 5.0){ private_status = true; gyro_timer.reset();}
+            if(private_status && gyro_timer.time(TimeUnit.SECONDS) > 0.5){
                 gyro_status = true;
                 private_status = false;
             }
         }
     }
 
-    private double angle(){ return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle - gyro_in; }
+    private double angle(){ return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - gyro_in; }
 }

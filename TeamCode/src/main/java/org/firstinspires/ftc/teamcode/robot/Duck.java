@@ -19,6 +19,8 @@ public class Duck implements RobotModule {
         this.robot = robot;
     }
 
+    private GyroAuto gyroAuto = new GyroAuto(robot);
+
     public void initialize() {
         duckMotor = robot.getLinearOpMode().hardwareMap.get(DcMotor.class, "DuckMotor");
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);

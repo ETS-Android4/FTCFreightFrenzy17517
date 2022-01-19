@@ -23,7 +23,7 @@ public class Bucket implements RobotModule {
 
     public DistanceSensor distance = null;
 
-    private final TimedSensorQuery timedDistanceSensorQuery = new TimedSensorQuery(() -> distance.getDistance(DistanceUnit.CM), 30);
+    private final TimedSensorQuery timedDistanceSensorQuery = new TimedSensorQuery(() -> distance.getDistance(DistanceUnit.CM), 10);
 
     public double moveServo = positionServoDown;
     public ElapsedTime servoTimer = new ElapsedTime();
