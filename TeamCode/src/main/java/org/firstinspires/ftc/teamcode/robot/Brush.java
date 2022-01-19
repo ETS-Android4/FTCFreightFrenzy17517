@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class Brush implements RobotModule {
 
     public boolean enableIntake = false;
-    private DcMotorEx brushMotor = null;
+    public DcMotorEx brushMotor = null;
     private final WoENRobot robot;
 
     public Brush(WoENRobot robot) {
@@ -58,9 +58,10 @@ public class Brush implements RobotModule {
         }
             else {
                 brushPower = 0;
-                brushMotor.setPower(brushPower);
             }
-        }
+        brushMotor.setPower(brushPower);
+
+    }
     public boolean actionIsCompleted() {
         return true;
     }

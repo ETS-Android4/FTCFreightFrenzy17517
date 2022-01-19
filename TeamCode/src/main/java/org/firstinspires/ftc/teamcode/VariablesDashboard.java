@@ -16,7 +16,7 @@ public abstract class VariablesDashboard {
 
     @Config
     public static class BrushConfig{
-        public static double timeForActivateProtection = 3;
+        public static double timeForActivateProtection = 3.5;
         public static double timeForReverse = timeForActivateProtection + 1;
     }
 
