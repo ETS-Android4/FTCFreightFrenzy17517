@@ -21,7 +21,7 @@ public class Bucket implements RobotModule {
     private Servo servoElevator = null;
 
 
-    private DistanceSensor distance = null;
+    public DistanceSensor distance = null;
 
     public double moveServo = positionServoDown;
     public ElapsedTime servoTimer = new ElapsedTime();

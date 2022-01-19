@@ -10,8 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.Bucket;
 public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test = {
-            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
-            () -> robot.timer.delay(30)
+
     };
 
     @Override
