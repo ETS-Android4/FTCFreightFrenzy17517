@@ -17,7 +17,6 @@ public class Gyro_auto{
     public Gyro_auto(WoENRobot robot) { this.robot = robot; }
     private ElapsedTime gyro_timer = new ElapsedTime();
     private double gyro_in;
-    private double gyro_out;
     private BNO055IMU gyro = null;
     private LedStrip led = new LedStrip(robot);
     private boolean private_status = false;
@@ -38,7 +37,5 @@ public class Gyro_auto{
         }
     }
 
-    private double angle(){
-        return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle - gyro_in;
-    }
+    private double angle(){ return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle - gyro_in; }
 }
