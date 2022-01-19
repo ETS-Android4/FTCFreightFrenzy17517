@@ -33,6 +33,7 @@ public class DuckSpinnerTest extends BaseOpMode {
         while (!robot.duck.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Field position", "BLUE");
+            robot.update();
             telemetry.update();
         }
     }
