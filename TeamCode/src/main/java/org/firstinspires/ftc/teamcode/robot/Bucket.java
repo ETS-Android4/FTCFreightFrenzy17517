@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.VariablesDashboard;
+import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
 public class Bucket implements RobotModule {
 
@@ -22,6 +22,8 @@ public class Bucket implements RobotModule {
 
 
     public DistanceSensor distance = null;
+
+    private final TimedSensorQuery timedDistanceSensorQuery = new TimedSensorQuery(() -> distance.getDistance(DistanceUnit.CM), 30);
 
     public double moveServo = positionServoDown;
     public ElapsedTime servoTimer = new ElapsedTime();
@@ -44,7 +46,7 @@ public class Bucket implements RobotModule {
         return freightDetected;
     }
 
-    private WoENRobot robot = null;
+    private WoENRobot robot;
 
     public Bucket(WoENRobot robot) {
         this.robot = robot;
@@ -60,9 +62,13 @@ public class Bucket implements RobotModule {
         return servoTimer.seconds() > bucketServoDelay;
     }
 
+    private boolean getFreightDetectionStatus() {
+        return timedDistanceSensorQuery.getValue() < 8;
+    }
+
     @Override
     public void update() {
-        freightDetected = distance.getDistance(DistanceUnit.CM) < 8;
+        freightDetected = getFreightDetectionStatus();
         switch (bucketPosition) {
             case COLLECT:
                 servoElevator.setPosition(robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN ?
