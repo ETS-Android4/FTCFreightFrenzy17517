@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotModule;
 public class Movement implements RobotModule {
     private BNO055IMU gyro = null;
 
-    private TimedSensorQuery timedGyroQuery = new TimedSensorQuery(()->gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle, 100);
+    private TimedSensorQuery timedGyroQuery = new TimedSensorQuery(()->gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle, 1000);
 
     public boolean actionIsCompleted() {
         return queuebool;
@@ -182,8 +182,12 @@ public class Movement implements RobotModule {
         }
         if (!manualControl)
             setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.accumulator.getkVoltage(),
-                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle * robot.accumulator.getkVoltage());
+                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle  /* robot.accumulator.getkVoltage()*/);
         queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || (timer.seconds() >= timerForMovement);
+        FtcDashboard.getInstance().getTelemetry().addData("error dist", errDistance);
+        FtcDashboard.getInstance().getTelemetry().addData("timestep", timestep);
+        FtcDashboard.getInstance().getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
+        FtcDashboard.getInstance().getTelemetry().update();
     }
 
     public void setMotorPowers(double power, double angle) {
@@ -210,7 +214,8 @@ public class Movement implements RobotModule {
     }
 
     double getRightEncoder() {
-        return (rightMotorFront.getCurrentPosition() + rightMotorBack.getCurrentPosition()) / 2.0;
+        return rightMotorFront.getCurrentPosition();
+        // (rightMotorFront.getCurrentPosition() + rightMotorBack.getCurrentPosition()) / 2.0; //TODO fix wiring
     }
 
     public void Move(double dist) {

@@ -50,8 +50,8 @@ public class Brush implements RobotModule {
 
     public void update() {
         double brushPower;
-        if (enableIntake) {
-            if (robot.bucket.isFreightDetected() || robot.lift.getElevatorTarget() != Lift.ElevatorPosition.DOWN) {
+        if (enableIntake && robot.lift.limitSwitch.getState()) {
+            if (robot.bucket.isFreightDetected()) {
                 brushPower = -1;
             } else {
                 brushPower = 1;

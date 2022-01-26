@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 
+@Autonomous
 public class BucketTest extends BaseOpMode {
 
     @Override

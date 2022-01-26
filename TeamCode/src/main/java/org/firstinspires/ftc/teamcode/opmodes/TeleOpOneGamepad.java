@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.GyroAuto;
 import org.firstinspires.ftc.teamcode.robot.LedStrip;
+import org.firstinspires.ftc.teamcode.robot.Accumulator.*;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
 import java.lang.reflect.GenericDeclaration;
@@ -49,6 +50,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
 
         while (opModeIsActive()) {
             // Movement
+            robot.movement.teleometryEncoder();
             robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * pl);
             // Switch functions
             duck_function.activate();
@@ -63,11 +65,11 @@ public class TeleOpOneGamepad extends BaseOpMode {
 
     private void gyro_system(){
         gyro_auto.reaction();
-        cube_bool_1 = gyro_auto.gyro_status && gyro_counter%2==0 && robot.bucket.isFreightDetected();
-        cube_bool_2 = gyro_auto.gyro_status && gyro_counter%2==1 && !robot.bucket.isFreightDetected();
+        cube_bool_1 = gyro_auto.gyro_status && robot.bucket.isFreightDetected();
+        cube_bool_2 = gyro_auto.gyro_status && !robot.bucket.isFreightDetected();
     }
 
-    private double get_speed() { if (speedSwitch.getState(gamepad1.right_bumper)) { pl = 1; } else { pl = 0.5; } return pl; }
+    private double get_speed() { if (speedSwitch.getState(gamepad1.right_bumper)) { pl = 1; } else { pl = 0.5; } return pl*robot.accumulator.getkVoltage(); }
 
     /*
     private void obnul(boolean i) {
@@ -93,7 +95,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             cube_bool_2 = gyro_auto.gyro_status = false;
         }
-        if((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 1.5){ gyro_control.reset(); gyro_counter++; }
+        if((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 0.4){ gyro_control.reset();}
     }
 
     /*public void Drawing() {

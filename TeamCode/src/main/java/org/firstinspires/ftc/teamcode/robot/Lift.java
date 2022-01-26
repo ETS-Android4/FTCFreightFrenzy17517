@@ -14,7 +14,7 @@ public class Lift implements RobotModule {
     public boolean queuebool = true;
     private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
-    private DigitalChannel limitSwitch = null;
+    public DigitalChannel limitSwitch = null;
     private WoENRobot robot = null;
     private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
     private double liftEncoderOffset = 0;
@@ -76,7 +76,7 @@ public class Lift implements RobotModule {
             }
         } else {
             double error = encoderTarget - getLiftEncoderPosition();
-            double kP = 0.008;
+            double kP = 0.005;
 
             if (abs(error) > 50) {
                 motorLift.setPower(error * kP);

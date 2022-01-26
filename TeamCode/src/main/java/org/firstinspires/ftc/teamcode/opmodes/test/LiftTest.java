@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
+@Autonomous
 public class LiftTest extends BaseOpMode {
 
     @Override
@@ -26,6 +29,7 @@ public class LiftTest extends BaseOpMode {
             telemetry.addData("Test", "Running...");
             telemetry.addData("Lift target", robot.lift.getElevatorTarget());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.update();
             telemetry.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);

@@ -5,6 +5,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opencv.ArucoDetect;
 
 import java.util.Arrays;
@@ -36,6 +37,10 @@ public class WoENRobot {
     };
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();
+
+    private Telemetry telemetry = null;
+
+
 
     public WoENRobot(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;

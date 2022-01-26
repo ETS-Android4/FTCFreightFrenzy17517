@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 public class AutonomBlueTeam extends BaseDetectionAutonomous {
 
     Runnable downPosition[] = {
-
-            () -> robot.movement.Move(-35, 27),
             () -> robot.movement.Move(-50, 27),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
@@ -31,7 +29,7 @@ public class AutonomBlueTeam extends BaseDetectionAutonomous {
 */
     };
     Runnable[] middlePosition = {
-            () -> robot.movement.Move(-35, 27),
+
             () -> {
                 robot.movement.Move(-50, 27, 0.6);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);},
@@ -52,7 +50,7 @@ public class AutonomBlueTeam extends BaseDetectionAutonomous {
 */
     };
     Runnable[] upPosition = {
-            () -> robot.movement.Move(-35, 27),
+
             () -> {
                 robot.movement.Move(-54, 27, 0.6);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},

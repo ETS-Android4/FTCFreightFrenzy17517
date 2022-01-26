@@ -14,7 +14,7 @@ public class Timer implements RobotModule {
     }
 
     public double getTimeLeft(){
-        return delaySeconds-elapsedTime.seconds();
+        return delaySeconds - elapsedTime.seconds();
     }
 
     @Override

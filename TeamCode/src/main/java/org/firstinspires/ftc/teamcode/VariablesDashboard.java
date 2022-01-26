@@ -29,12 +29,12 @@ public abstract class VariablesDashboard {
     public static class MovementConfig {
         public static double dist = 0;
         public static double angle = 0;
-        public static double kP_Distance = 0.04;
-        public static double kP_Angle = 0.08;
-        public static double kI_Distance = 0.001;
-        public static double kI_Angle = 0.008;
-        public static double kD_Distance = 0.0001;
-        public static double kD_Angle = 0.03;
+        public static double kP_Distance = 0.013;
+        public static double kP_Angle = 0.05;
+        public static double kI_Distance = 1;
+        public static double kI_Angle = 0.005;
+        public static double kD_Distance = 0.002;
+        public static double kD_Angle = 0.003;
         public static double maxIntegralAngle = 0.25;
         public static double maxIntegralDistance = 0.25;
         public static double minErrorDistance = 5.0;
