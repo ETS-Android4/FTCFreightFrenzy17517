@@ -12,10 +12,8 @@ import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.GyroAuto;
 import org.firstinspires.ftc.teamcode.robot.LedStrip;
-import org.firstinspires.ftc.teamcode.robot.Accumulator.*;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
-import java.lang.reflect.GenericDeclaration;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp
@@ -43,9 +41,9 @@ public class TeleOpOneGamepad extends BaseOpMode {
         gyro_auto.init();
         gyro_control.reset();
         AutoTele = true;
-        robot.duck.Teleop();
+        robot.duck.setTeleOpMode(true);
         // LED
-        robot.ledStrip.setMode(LedStrip.LedStripMode.INDICATOR);
+        robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
 
 
         while (opModeIsActive()) {

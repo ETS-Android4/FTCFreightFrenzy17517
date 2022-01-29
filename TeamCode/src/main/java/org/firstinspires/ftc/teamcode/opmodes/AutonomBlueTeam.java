@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 @Autonomous
 public class AutonomBlueTeam extends BaseDetectionAutonomous {
 
-    Runnable downPosition[] = {
+    Runnable[] downPosition = {
             () -> robot.movement.Move(-50, 27),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),

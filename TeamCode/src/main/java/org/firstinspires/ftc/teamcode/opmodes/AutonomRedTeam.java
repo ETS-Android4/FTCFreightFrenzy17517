@@ -24,11 +24,6 @@ public class AutonomRedTeam extends BaseDetectionAutonomous {
 
     };
     Runnable[] middlePosition = {
-
-            () -> {
-                telemetry.addData("qq", robot.arucoDetect.getPosition());
-                telemetry.update();
-            },
             () -> {
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
                 robot.movement.Move(-55, -27, 0.5);
@@ -42,11 +37,6 @@ public class AutonomRedTeam extends BaseDetectionAutonomous {
 
     };
     Runnable[] upPosition = {
-
-            () -> {
-                telemetry.addData("qq", robot.arucoDetect.getPosition());
-                telemetry.update();
-            },
             () -> {
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
                 robot.movement.Move(-55, -27, 0.5);

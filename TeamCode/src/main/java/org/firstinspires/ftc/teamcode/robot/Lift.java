@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import static org.firstinspires.ftc.teamcode.robot.Lift.Elevator.downTargetElevator;
-import static org.firstinspires.ftc.teamcode.robot.Lift.Elevator.middleTargetElevator;
-import static org.firstinspires.ftc.teamcode.robot.Lift.Elevator.upTargetElevator;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.downTargetElevator;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.errorThreshold;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.homingPower;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.kP;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.middleTargetElevator;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.upTargetElevator;
 import static java.lang.Math.abs;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -16,7 +19,7 @@ public class Lift implements RobotModule {
     public DigitalChannel limitSwitch = null;
     private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
-    private WoENRobot robot = null;
+    private WoENRobot robot;
     private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
     private int liftEncoderOffset = 0;
 
@@ -71,7 +74,7 @@ public class Lift implements RobotModule {
     public void update() {
         if (elevatorTarget == ElevatorPosition.DOWN) {
             if (!limitSwitch.getState()) {
-                motorLift.setPower(-1);
+                motorLift.setPower(-homingPower);
                 queuebool = false;
             } else {
                 motorLift.setPower(0);
@@ -80,9 +83,8 @@ public class Lift implements RobotModule {
             }
         } else {
             double error = encoderTarget - getLiftEncoderPosition();
-            double kP = 0.005;
 
-            if (abs(error) > 50) {
+            if (abs(error) > errorThreshold) {
                 motorLift.setPower(error * kP);
                 queuebool = false;
             } else {
@@ -97,7 +99,10 @@ public class Lift implements RobotModule {
     }
 
     @Config
-    public static class Elevator {
+    public static class LiftConfig {
+        public static double homingPower = 1;
+        public static double kP = 0.005;
+        public static int errorThreshold = 50;
         public static double downTargetElevator = 0;
         public static double middleTargetElevator = 650;
         public static double upTargetElevator = 1300;

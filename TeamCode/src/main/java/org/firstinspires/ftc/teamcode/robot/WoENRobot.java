@@ -20,6 +20,7 @@ public class WoENRobot {
     public Movement movement = new Movement(this);
     public Brush brush = new Brush(this);
     public Timer timer = new Timer();
+    public TelemetryNode telemetryNode = new TelemetryNode(this);
     public Accumulator accumulator = new Accumulator(this);
 
     private List<LynxModule> revHubs = null;
@@ -32,15 +33,11 @@ public class WoENRobot {
             movement,
             brush,
             timer,
-            accumulator
-
+            accumulator,
+            telemetryNode
     };
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();
-
-    private Telemetry telemetry = null;
-
-
 
     public WoENRobot(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;

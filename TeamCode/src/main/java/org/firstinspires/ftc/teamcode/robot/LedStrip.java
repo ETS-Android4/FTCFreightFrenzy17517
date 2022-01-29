@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import static org.firstinspires.ftc.teamcode.robot.LedStrip.LedStripConfig.LEDPower;
+import static org.firstinspires.ftc.teamcode.robot.LedStrip.LedStripConfig.wavePeriod;
 import static java.lang.Math.sin;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,11 +10,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class LedStrip implements RobotModule {
 
-    private LedStripMode ledStripMode = LedStripMode.INDICATOR;
+    private LedStripMode ledStripMode = LedStripMode.DRIVER_INDICATOR;
     private DcMotorEx ledMotor = null;
-    private ElapsedTime lightTimer = new ElapsedTime();
-    private int dualLEDSwitchIterator = 0;
-    private WoENRobot robot = null;
+    private final ElapsedTime lightTimer = new ElapsedTime();
+    private boolean dualLEDSwitchIterator = false;
+    private WoENRobot robot;
 
     public LedStrip(WoENRobot robot) {
         this.robot = robot;
@@ -23,8 +25,7 @@ public class LedStrip implements RobotModule {
     }
 
     public void setMode(LedStripMode ledStripMode) {
-        if (!this.ledStripMode.equals(ledStripMode))
-            lightTimer.reset();
+        if (!this.ledStripMode.equals(ledStripMode)) lightTimer.reset();
         this.ledStripMode = ledStripMode;
     }
 
@@ -34,8 +35,12 @@ public class LedStrip implements RobotModule {
         ledMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    private double breatheWave() {
-        return sin(lightTimer.seconds() * 2.0) * 0.5 + 0.5;
+    private double sineWave() {
+        return sin(lightTimer.seconds() * wavePeriod);
+    }
+
+    private double sawtoothWave() {
+        return lightTimer.seconds() % wavePeriod < 1.0 ? 1 : -1;
     }
 
     @Override
@@ -45,34 +50,64 @@ public class LedStrip implements RobotModule {
             case OFF:
                 power = .0;
                 break;
-            case BREATHE:
-                power = breatheWave();
+            case BREATHE_COLOR1:
+                power = sineWave() * 0.5 + 0.5;
                 break;
-            case STATIC:
+            case BREATHE_COLOR2:
+                power = sineWave() * 0.5 - 0.5;
+                break;
+            case STATIC_COLOR1:
                 power = 1.0;
                 break;
-            case BLINK:
-                power = lightTimer.seconds() % 2.0 < 1.0 ? 1 : 0;
+            case STATIC_COLOR2:
+                power = -1.0;
+                break;
+            case BLINK_COLOR1:
+                power = sawtoothWave() * 0.5 + 0.5;
+                break;
+            case BLINK_COLOR2:
+                power = sawtoothWave() * 0.5 - 0.5;
                 break;
             case BLINK_DUALCOLOR:
-                power = lightTimer.seconds() % 2.0 < 1.0 ? 1 : -1;
-                break;
-            case BLINK_MAGIC:
-                power = (dualLEDSwitchIterator % 2) == 0 ? sin(lightTimer.seconds() * 3.0) * 0.5 + 0.5 : -(sin(lightTimer.seconds() * 3.0 + 0.75*Math.PI) * 0.5 + 0.5);
-                dualLEDSwitchIterator++;
+                power = sawtoothWave();
                 break;
             case BREATHE_DUALCOLOR:
-                power = sin(lightTimer.seconds() * 2.0);
+                power = sineWave();
                 break;
-            case INDICATOR:
-                power = robot.bucket.isFreightDetected() ? -(robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN ? 1 : breatheWave()) :
-                        robot.brush.getEnableIntake() ? breatheWave() : 0;
+            case BREATHE_MAGIC:
+                power = dualLEDSwitchIterator ? sin(lightTimer.seconds() * wavePeriod) * 0.5 + 0.5 :
+                        -(sin(lightTimer.seconds() * wavePeriod + 0.75 * Math.PI) * 0.5 + 0.5);
+                break;
+            case STATIC_DUALCOLOR:
+                power = dualLEDSwitchIterator ? 1 : -1;
+                break;
+            case DRIVER_INDICATOR:
+                power = robot.bucket.isFreightDetected() ?
+                        -(robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN ? 1 :
+                                sineWave()) : robot.brush.getEnableIntake() ? sineWave() : 0;
                 break;
         }
-        ledMotor.setPower(power);
+        dualLEDSwitchIterator = !dualLEDSwitchIterator;
+        ledMotor.setPower(power * LEDPower);
     }
 
     public enum LedStripMode {
-        OFF, BREATHE, STATIC, BLINK, BLINK_DUALCOLOR, BREATHE_DUALCOLOR, INDICATOR, BLINK_MAGIC
+        OFF,
+        BREATHE_COLOR1,
+        BREATHE_COLOR2,
+        STATIC_COLOR1,
+        STATIC_COLOR2,
+        BLINK_COLOR1,
+        BLINK_COLOR2,
+        BLINK_DUALCOLOR,
+        BREATHE_DUALCOLOR,
+        DRIVER_INDICATOR,
+        STATIC_DUALCOLOR,
+        BREATHE_MAGIC
+    }
+
+    public static class LedStripConfig {
+        public static double LEDPower = 1;
+        public static double wavePeriod = 2.5;
     }
 }

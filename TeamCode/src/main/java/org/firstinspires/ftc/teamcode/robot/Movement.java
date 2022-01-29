@@ -106,7 +106,7 @@ public class Movement implements RobotModule {
         assignHardware();
         setDirections();
         resetEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.FLOAT);
+        setZeroPowerBehaviors(zeroPowerBehavior);
     }
 
     public double getDistanceError(double target) {
@@ -181,10 +181,9 @@ public class Movement implements RobotModule {
             setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.accumulator.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle  /* robot.accumulator.getkVoltage()*/);
         queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || (timer.seconds() >= timerForMovement);
-        FtcDashboard.getInstance().getTelemetry().addData("error dist", errDistance);
-        FtcDashboard.getInstance().getTelemetry().addData("timestep", timestep);
-        FtcDashboard.getInstance().getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
-        FtcDashboard.getInstance().getTelemetry().update();
+        robot.telemetryNode.getTelemetry().addData("error dist", errDistance);
+        robot.telemetryNode.getTelemetry().addData("timestep", timestep);
+        robot.telemetryNode.getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
     }
 
     public void setMotorPowers(double power, double angle) {
@@ -192,11 +191,10 @@ public class Movement implements RobotModule {
         setMotorPowersPrivate(power, angle);
     }
     public void teleometryEncoder(){
-        FtcDashboard.getInstance().getTelemetry().addData("rightMotorFront",rightMotorFront.getCurrentPosition());
-        FtcDashboard.getInstance().getTelemetry().addData("rightMotorBack",rightMotorBack.getCurrentPosition());
-        FtcDashboard.getInstance().getTelemetry().addData("leftMotorFront",leftMotorFront.getCurrentPosition());
-        FtcDashboard.getInstance().getTelemetry().addData("leftMotorBack",leftMotorBack.getCurrentPosition());
-        FtcDashboard.getInstance().getTelemetry().update();
+        robot.telemetryNode.getTelemetry().addData("rightMotorFront",rightMotorFront.getCurrentPosition());
+        robot.telemetryNode.getTelemetry().addData("rightMotorBack",rightMotorBack.getCurrentPosition());
+        robot.telemetryNode.getTelemetry().addData("leftMotorFront",leftMotorFront.getCurrentPosition());
+        robot.telemetryNode.getTelemetry().addData("leftMotorBack",leftMotorBack.getCurrentPosition());
     }
 
     private void setMotorPowersPrivate(double power, double angle) {
@@ -234,6 +232,7 @@ public class Movement implements RobotModule {
         public static double maxIntegralDistance = 0.25;
         public static double minErrorDistance = 5.0;
         public static double minErrorAngle = 2.5;
+        public static DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT;
     }
 }
 

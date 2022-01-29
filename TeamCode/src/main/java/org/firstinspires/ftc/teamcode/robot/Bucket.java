@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import static org.firstinspires.ftc.teamcode.robot.Bucket.BucketConfig.bucketServoDelay;
+import static org.firstinspires.ftc.teamcode.robot.Bucket.BucketConfig.distanceThresholdCm;
 import static org.firstinspires.ftc.teamcode.robot.Bucket.BucketConfig.positionServoDown;
 import static org.firstinspires.ftc.teamcode.robot.Bucket.BucketConfig.positionServoUp;
 import static org.firstinspires.ftc.teamcode.robot.Bucket.BucketConfig.positonServoForElevator;
@@ -18,12 +19,11 @@ public class Bucket implements RobotModule {
     public DistanceSensor distance = null;
     private final TimedSensorQuery timedDistanceSensorQuery =
             new TimedSensorQuery(() -> distance.getDistance(DistanceUnit.CM), 10);
-    public double moveServo = positionServoDown;
     public ElapsedTime servoTimer = new ElapsedTime();
     private Servo servoElevator = null;
     private BucketPosition bucketPosition = BucketPosition.COLLECT;
     private boolean freightDetected = false;
-    private WoENRobot robot;
+    private final WoENRobot robot;
 
     public Bucket(WoENRobot robot) {
         this.robot = robot;
@@ -60,7 +60,7 @@ public class Bucket implements RobotModule {
     }
 
     private boolean getFreightDetectionStatus() {
-        return timedDistanceSensorQuery.getValue() < 9.5;
+        return timedDistanceSensorQuery.getValue() < distanceThresholdCm;
     }
 
     @Override
@@ -84,6 +84,7 @@ public class Bucket implements RobotModule {
 
     @Config
     public static class BucketConfig {
+        public static double distanceThresholdCm = 9.5;
         public static double positionServoUp = 0.38;
         public static double positionServoDown = 0.8;
         public static double positonServoForElevator = 0.4;

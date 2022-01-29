@@ -16,13 +16,16 @@ public abstract class BaseDetectionAutonomous extends BaseAutonomous {
     @Override
     public void startLoop(){
         super.startLoop();
-
         FreightPosition freightPosition = robot.arucoDetect.getPosition();
         telemetry.addData("Aruco position", freightPosition);
-        if (freightPosition == FreightPosition.UNKNOWN)
-            robot.ledStrip.setMode(LedStrip.LedStripMode.BLINK_DUALCOLOR);
-        else
-            robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_DUALCOLOR);
+        switch (freightPosition) {
+            case LEFT:
+                robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_COLOR1);
+            case CENTER:
+                robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_DUALCOLOR);
+            case RIGHT:
+                robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_COLOR2);
+        }
         robot.ledStrip.update();
     }
 

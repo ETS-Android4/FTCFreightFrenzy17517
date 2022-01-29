@@ -12,7 +12,7 @@ public class TimedSensorQuery {
 
     private double updateTimeSeconds;
 
-    private ElapsedTime queryTimer = new ElapsedTime();
+    private final ElapsedTime queryTimer = new ElapsedTime();
 
     public TimedSensorQuery(DoubleSupplier sensorValueSupplier, double refreshRateHz) {
         this.sensorValueSupplier = sensorValueSupplier;

@@ -18,7 +18,6 @@ public class GyroAuto{
     private ElapsedTime gyro_timer = new ElapsedTime();
     private double gyro_in;
     private BNO055IMU gyro = null;
-    private LedStrip led = new LedStrip(robot);
     private boolean private_status = false;
     public boolean gyro_status = false;
 

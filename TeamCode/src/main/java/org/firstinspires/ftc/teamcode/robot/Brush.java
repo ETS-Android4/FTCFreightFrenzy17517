@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import static org.firstinspires.ftc.teamcode.robot.Brush.BrushConfig.motorCurrentThreshold;
+import static org.firstinspires.ftc.teamcode.robot.Brush.BrushConfig.motorPower;
 import static org.firstinspires.ftc.teamcode.robot.Brush.BrushConfig.timeForActivateProtection;
 import static org.firstinspires.ftc.teamcode.robot.Brush.BrushConfig.timeForReverse;
 
@@ -34,8 +36,9 @@ public class Brush implements RobotModule {
 
     public boolean protectionBrushMotor() {
         double timer = timerProtection.seconds();
-        if (brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000 ||
-                (timer > timeForActivateProtection && timer < timeForActivateProtection + timeForReverse)) {
+        if (brushMotor.getCurrent(CurrentUnit.AMPS) > motorCurrentThreshold ||
+                (timer > timeForActivateProtection &&
+                        timer < timeForActivateProtection + timeForReverse)) {
             return (timer >= timeForActivateProtection);
         } else {
             timerProtection.reset();
@@ -55,8 +58,9 @@ public class Brush implements RobotModule {
         double brushPower;
         if (enableIntake && robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN &&
                 robot.bucket.getBucketPosition() == Bucket.BucketPosition.COLLECT) {
-            if (robot.bucket.isFreightDetected() || protectionBrushMotor()) brushPower = -1;
-            else brushPower = 1;
+            if (robot.bucket.isFreightDetected() || protectionBrushMotor())
+                brushPower = -motorPower;
+            else brushPower = motorPower;
         } else {
             brushPower = 0;
         }
@@ -68,7 +72,9 @@ public class Brush implements RobotModule {
     }
 
     @Config
-    public static class BrushConfig{
+    public static class BrushConfig {
+        public static double motorPower = 1;
+        public static double motorCurrentThreshold = 3.0;
         public static double timeForActivateProtection = 3.5;
         public static double timeForReverse = /* timeForActivateProtection + */ 1;
     }
