@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.BrushConfig.*;
+import static org.firstinspires.ftc.teamcode.robot.Brush.BrushConfig.timeForActivateProtection;
+import static org.firstinspires.ftc.teamcode.robot.Brush.BrushConfig.timeForReverse;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,9 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class Brush implements RobotModule {
 
+    private final WoENRobot robot;
+    public ElapsedTime timerProtection = new ElapsedTime();
     private boolean enableIntake = false;
     private DcMotorEx brushMotor = null;
-    private final WoENRobot robot;
 
     public Brush(WoENRobot robot) {
         this.robot = robot;
@@ -28,13 +31,13 @@ public class Brush implements RobotModule {
         brushMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
     }
-    public ElapsedTime timerProtection = new ElapsedTime();
-    public boolean protectionBrushMotor(){
+
+    public boolean protectionBrushMotor() {
         double timer = timerProtection.seconds();
-        if(brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || (timer > timeForActivateProtection && timer < timeForReverse) ){
+        if (brushMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000 ||
+                (timer > timeForActivateProtection && timer < timeForActivateProtection + timeForReverse)) {
             return (timer >= timeForActivateProtection);
-        }
-        else {
+        } else {
             timerProtection.reset();
             return false;
         }
@@ -50,21 +53,23 @@ public class Brush implements RobotModule {
 
     public void update() {
         double brushPower;
-        if (enableIntake && robot.lift.limitSwitch.getState()) {
-            if (robot.bucket.isFreightDetected()) {
-                brushPower = -1;
-            } else {
-                brushPower = 1;
-            }
-            if (protectionBrushMotor()) {
-                brushPower = -1;
-            }
+        if (enableIntake && robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN &&
+                robot.bucket.getBucketPosition() == Bucket.BucketPosition.COLLECT) {
+            if (robot.bucket.isFreightDetected() || protectionBrushMotor()) brushPower = -1;
+            else brushPower = 1;
         } else {
             brushPower = 0;
         }
         brushMotor.setPower(brushPower);
     }
+
     public boolean actionIsCompleted() {
         return true;
+    }
+
+    @Config
+    public static class BrushConfig{
+        public static double timeForActivateProtection = 3.5;
+        public static double timeForReverse = /* timeForActivateProtection + */ 1;
     }
 }

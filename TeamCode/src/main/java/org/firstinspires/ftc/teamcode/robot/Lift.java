@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.downTargetElevator;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.middleTargetElevator;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.Elevator.upTargetElevator;
+import static org.firstinspires.ftc.teamcode.robot.Lift.Elevator.downTargetElevator;
+import static org.firstinspires.ftc.teamcode.robot.Lift.Elevator.middleTargetElevator;
+import static org.firstinspires.ftc.teamcode.robot.Lift.Elevator.upTargetElevator;
 import static java.lang.Math.abs;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -12,12 +13,12 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 public class Lift implements RobotModule {
 
     public boolean queuebool = true;
+    public DigitalChannel limitSwitch = null;
     private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
-    public DigitalChannel limitSwitch = null;
     private WoENRobot robot = null;
     private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
-    private double liftEncoderOffset = 0;
+    private int liftEncoderOffset = 0;
 
     public Lift(WoENRobot robot) {
         this.robot = robot;
@@ -37,15 +38,18 @@ public class Lift implements RobotModule {
         return queuebool;
     }
 
-    public ElevatorPosition getElevatorTarget() {
-        return elevatorTarget;
+    public ElevatorPosition getElevatorPosition() {
+        if (elevatorTarget == ElevatorPosition.DOWN && queuebool) return ElevatorPosition.DOWN;
+        int encoderPosition = getLiftEncoderPosition();
+        return abs(encoderPosition - middleTargetElevator) <
+                abs(encoderPosition - upTargetElevator) ? ElevatorPosition.MIDDLE :
+                ElevatorPosition.UP;
     }
 
     public void setElevatorTarget(ElevatorPosition elevatorPosition) {
         this.elevatorTarget = elevatorPosition;
 
         switch (elevatorPosition) {
-            case ZERO:
             case DOWN:
                 encoderTarget = downTargetElevator;
                 break;
@@ -60,7 +64,7 @@ public class Lift implements RobotModule {
         queuebool = false;
     }
 
-    public double getLiftEncoderPosition() {
+    public int getLiftEncoderPosition() {
         return motorLift.getCurrentPosition() - liftEncoderOffset;
     }
 
@@ -89,6 +93,13 @@ public class Lift implements RobotModule {
     }
 
     public enum ElevatorPosition {
-        ZERO, DOWN, MIDDLE, UP
+        DOWN, MIDDLE, UP
+    }
+
+    @Config
+    public static class Elevator {
+        public static double downTargetElevator = 0;
+        public static double middleTargetElevator = 650;
+        public static double upTargetElevator = 1300;
     }
 }

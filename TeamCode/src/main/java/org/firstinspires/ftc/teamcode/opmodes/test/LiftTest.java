@@ -19,7 +19,7 @@ public class LiftTest extends BaseOpMode {
         robot.timer.delay(5);
         while (!robot.timer.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
-            telemetry.addData("Lift position", robot.lift.getElevatorTarget());
+            telemetry.addData("Lift position", robot.lift.getElevatorPosition());
             telemetry.addData("Time before test", robot.timer.getTimeLeft());
             robot.update();
             telemetry.update();
@@ -27,7 +27,7 @@ public class LiftTest extends BaseOpMode {
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
-            telemetry.addData("Lift target", robot.lift.getElevatorTarget());
+            telemetry.addData("Lift target", robot.lift.getElevatorPosition());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
             robot.update();
             telemetry.update();
@@ -35,7 +35,7 @@ public class LiftTest extends BaseOpMode {
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
-            telemetry.addData("Lift target", robot.lift.getElevatorTarget());
+            telemetry.addData("Lift target", robot.lift.getElevatorPosition());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
             robot.update();
             telemetry.update();
@@ -43,7 +43,7 @@ public class LiftTest extends BaseOpMode {
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
-            telemetry.addData("Lift target", robot.lift.getElevatorTarget());
+            telemetry.addData("Lift target", robot.lift.getElevatorPosition());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
             robot.update();
             telemetry.update();
@@ -51,7 +51,7 @@ public class LiftTest extends BaseOpMode {
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");
-            telemetry.addData("Lift target", robot.lift.getElevatorTarget());
+            telemetry.addData("Lift target", robot.lift.getElevatorPosition());
             telemetry.addData("Lift encoder", robot.lift.getLiftEncoderPosition());
             robot.update();
             telemetry.update();

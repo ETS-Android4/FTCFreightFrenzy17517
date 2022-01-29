@@ -65,7 +65,7 @@ public class LedStrip implements RobotModule {
                 power = sin(lightTimer.seconds() * 2.0);
                 break;
             case INDICATOR:
-                power = robot.bucket.isFreightDetected() ? -(robot.lift.getElevatorTarget() == Lift.ElevatorPosition.DOWN ? 1 : breatheWave()) :
+                power = robot.bucket.isFreightDetected() ? -(robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN ? 1 : breatheWave()) :
                         robot.brush.getEnableIntake() ? breatheWave() : 0;
                 break;
         }

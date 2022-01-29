@@ -1,25 +1,22 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.*;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.*;
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
-import org.firstinspires.ftc.teamcode.robot.RobotModule;
 
 
 public class Movement implements RobotModule {
@@ -222,5 +219,21 @@ public class Movement implements RobotModule {
         Move(dist, 0, 1);
     }
     public void Move(double dist, double angle) {Move(dist, angle, 1);}
+
+    @Config
+    public static class MovementConfig {
+        public static double dist = 0;
+        public static double angle = 0;
+        public static double kP_Distance = 0.013;
+        public static double kP_Angle = 0.05;
+        public static double kI_Distance = 1;
+        public static double kI_Angle = 0.005;
+        public static double kD_Distance = 0.002;
+        public static double kD_Angle = 0.003;
+        public static double maxIntegralAngle = 0.25;
+        public static double maxIntegralDistance = 0.25;
+        public static double minErrorDistance = 5.0;
+        public static double minErrorAngle = 2.5;
+    }
 }
 

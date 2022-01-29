@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.DuckConfig.directionDuck;
+import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.directionDuck;
 
 import org.firstinspires.ftc.teamcode.misc.FreightPosition;
 import org.firstinspires.ftc.teamcode.robot.LedStrip;

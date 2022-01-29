@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.angle;
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.MovementConfig.dist;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
-
-import java.nio.ReadOnlyBufferException;
 
 @Autonomous
 public class AutonomTest extends BaseAutonomous {
