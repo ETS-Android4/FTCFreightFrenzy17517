@@ -5,33 +5,18 @@ import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
 
 public class Movement implements RobotModule {
-    private BNO055IMU gyro = null;
-
-    private TimedSensorQuery timedGyroQuery = new TimedSensorQuery(()->gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle, 1000);
 
     public boolean actionIsCompleted() {
         return queuebool;
     }
 
-    public void initGyro() {
-        gyro = robot.getLinearOpMode().hardwareMap.get(BNO055IMU.class, "imu");
-        gyro.initialize(new BNO055IMU.Parameters());
-    }
 
 
     private boolean manualControl = true;
@@ -43,14 +28,14 @@ public class Movement implements RobotModule {
     }
 
     double getGyroHeading() {
-        return -timedGyroQuery.getValue();
+        return -robot.gyro.getOrientation().firstAngle;
     }
 
 
     private double distance = 0;
     private double angle = 0;
     private double speed = 0;
-    private final ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime loopTimer = new ElapsedTime();
     private DcMotorEx leftMotorFront = null;
     private DcMotorEx rightMotorFront = null;
     private DcMotorEx leftMotorBack = null;
@@ -102,7 +87,6 @@ public class Movement implements RobotModule {
     }
 
     public void initialize() {
-        initGyro();
         assignHardware();
         setDirections();
         resetEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -114,83 +98,96 @@ public class Movement implements RobotModule {
     }
 
     public double getAngleError(double target) {
-        double error = target - getGyroHeading(); //(angle + cmToEncoderTicks(getRightEncoder()) - cmToEncoderTicks(getLeftEncoder()));
-        if (error > 180.0)
-            do error -= 360.0; while (error > 180.0);
-        else if (error < -180.0)
-            do error += 360.0; while (error < -180.0);
+        double error = target - getGyroHeading();
+        if (error > 180.0) do error -= 360.0; while (error > 180.0);
+        else if (error < -180.0) do error += 360.0; while (error < -180.0);
         return error;
     }
 
     public boolean queuebool = true;
-    public double timerForMovement = 2;
-
-    public void forTeleOp() {
-        timerForMovement = 0;
-    }
 
     ElapsedTime timer = new ElapsedTime();
 
-    public void Move(double di, double ag, double sp) {
+    public void Move(double dist) {
+        Move(dist, 0, 1);
+    }
+
+    public void Move(double dist, double angle) {
+        Move(dist, angle, 1);
+    }
+
+    public void Move(double distance, double angle, double speed) {
         manualControl = false;
-        if(di != distance || ag != angle || sp != speed)
+        if (distance != this.distance || angle != this.angle || speed != this.speed) {
             timer.reset();
-        distance = di;
-        angle = ag;
-        speed = sp;
+            loopTimer.reset();
+            oldErrDistance = getDistanceError(this.distance);
+            oldErrAngle = getAngleError(this.angle);
+        }
+        this.distance = distance;
+        this.angle = angle;
+        this.speed = speed;
     }
 
     double oldErrDistance = 0;
     double oldErrAngle = 0;
     public void update() {
-        double timestep = runtime.seconds();
-        runtime.reset();
-        double proportionalLinear = 0;
-        double proportionalAngular = 0;
-        double integralLinear = 0;
-        double integralAngular = 0;
-        double differentialLinear = 0;
-        double differentialAngular = 0;
-        double deltaErrDistance = 0;
-        double deltaErrAngle = 0;
-        double speedAngle = 1;
-        double errDistance = getDistanceError(distance);
-        double errAngle = getAngleError(angle);
-        runtime.reset();
-        {   //proportional component
-            proportionalLinear = errDistance * kP_Distance;
-            proportionalAngular = errAngle * kP_Angle;
+        if (!manualControl) {
+            double proportionalLinear = 0;
+            double proportionalAngular = 0;
+            double integralLinear = 0;
+            double integralAngular = 0;
+            double differentialLinear = 0;
+            double differentialAngular = 0;
+            double deltaErrDistance = 0;
+            double deltaErrAngle = 0;
+            double speedAngle = 1;
+            double errDistance = getDistanceError(distance);
+            double errAngle = getAngleError(angle);
+            double timestep = loopTimer.seconds();
+            loopTimer.reset();
+            {   //proportional component
+                proportionalLinear = errDistance * kP_Distance;
+                proportionalAngular = errAngle * kP_Angle;
+            }
+            {   //integral component  (|0.25|)
+                integralLinear += errDistance * kI_Distance * timestep;
+                integralAngular += errAngle * kI_Angle * timestep;
+                if (abs(integralAngular) > maxIntegralAngle)
+                    integralAngular = maxIntegralAngle * signum(integralAngular);
+                if (abs(integralLinear) > maxIntegralDistance)
+                    integralLinear = maxIntegralDistance * signum(integralLinear);
+            }
+            {   //differential component
+                deltaErrDistance = errDistance - oldErrDistance;
+                deltaErrAngle = errAngle - oldErrAngle;
+                oldErrDistance = errDistance;
+                oldErrAngle = errAngle;
+                differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
+                differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
+            }
+            setMotorPowersPrivate(
+                    (integralLinear + proportionalLinear + differentialLinear) * speed *
+                            robot.accumulator.getkVoltage(),
+                    (integralAngular + proportionalAngular + differentialAngular) *
+                            speedAngle  /* robot.accumulator.getkVoltage()*/);
+            queuebool =
+                    (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) ||
+                            (timer.seconds() >= moveTimeoutS);
+            /*
+            robot.telemetryNode.getTelemetry().addData("error dist", errDistance);
+            robot.telemetryNode.getTelemetry().addData("timestep", timestep);
+            robot.telemetryNode.getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
+             */
         }
-        {   //integral component  (|0.25|)
-            integralLinear += errDistance * kI_Distance * timestep;
-            integralAngular += errAngle * kI_Angle * timestep;
-            if (abs(integralAngular) > maxIntegralAngle)
-                integralAngular = maxIntegralAngle * signum(integralAngular);
-            if (abs(integralLinear) > maxIntegralDistance)
-                integralLinear = maxIntegralDistance * signum(integralLinear);
-        }
-        {   //differential component
-            deltaErrDistance = errDistance - oldErrDistance;
-            deltaErrAngle = errAngle - oldErrAngle;
-            oldErrDistance = errDistance;
-            oldErrAngle = errAngle;
-            differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
-            differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
-        }
-        if (!manualControl)
-            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.accumulator.getkVoltage(),
-                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle  /* robot.accumulator.getkVoltage()*/);
-        queuebool = (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) || (timer.seconds() >= timerForMovement);
-        robot.telemetryNode.getTelemetry().addData("error dist", errDistance);
-        robot.telemetryNode.getTelemetry().addData("timestep", timestep);
-        robot.telemetryNode.getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
+        queuebool = true;
     }
 
     public void setMotorPowers(double power, double angle) {
         manualControl = true;
         setMotorPowersPrivate(power, angle);
     }
-    public void teleometryEncoder(){
+    public void telemetryEncoder(){
         robot.telemetryNode.getTelemetry().addData("rightMotorFront",rightMotorFront.getCurrentPosition());
         robot.telemetryNode.getTelemetry().addData("rightMotorBack",rightMotorBack.getCurrentPosition());
         robot.telemetryNode.getTelemetry().addData("leftMotorFront",leftMotorFront.getCurrentPosition());
@@ -213,11 +210,6 @@ public class Movement implements RobotModule {
         // (rightMotorFront.getCurrentPosition() + rightMotorBack.getCurrentPosition()) / 2.0; //TODO fix wiring
     }
 
-    public void Move(double dist) {
-        Move(dist, 0, 1);
-    }
-    public void Move(double dist, double angle) {Move(dist, angle, 1);}
-
     @Config
     public static class MovementConfig {
         public static double dist = 0;
@@ -232,6 +224,7 @@ public class Movement implements RobotModule {
         public static double maxIntegralDistance = 0.25;
         public static double minErrorDistance = 5.0;
         public static double minErrorAngle = 2.5;
+        public static double moveTimeoutS = 2;
         public static DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT;
     }
 }

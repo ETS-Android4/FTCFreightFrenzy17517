@@ -60,7 +60,7 @@ public class Duck implements RobotModule {
 
     public void update() {
         if (shoudSpin && duckTimer.seconds() < (teleOpMode ? teleOpSpinTime : autonomousSpinTime)) {
-            duckMotor.setPower(directionDuck * motorSpeed);
+            duckMotor.setPower(directionDuck * motorSpeed * robot.accumulator.getkVoltage());
             queuebool = false;
         } else {
             queuebool = true;

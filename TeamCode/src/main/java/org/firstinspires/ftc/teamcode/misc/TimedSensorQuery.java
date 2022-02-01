@@ -3,31 +3,32 @@ package org.firstinspires.ftc.teamcode.misc;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
-public class TimedSensorQuery {
+public class TimedSensorQuery<T>{
 
-    private DoubleSupplier sensorValueSupplier = null;
+    private Supplier<T> sensorValueSupplier = null;
 
-    private double lastValue = Double.NaN;
+    private T lastValue = null;
 
     private double updateTimeSeconds;
 
     private final ElapsedTime queryTimer = new ElapsedTime();
 
-    public TimedSensorQuery(DoubleSupplier sensorValueSupplier, double refreshRateHz) {
+    public TimedSensorQuery(Supplier<T> sensorValueSupplier, double refreshRateHz) {
         this.sensorValueSupplier = sensorValueSupplier;
         updateTimeSeconds = 1 / refreshRateHz;
     }
 
-    public TimedSensorQuery(DoubleSupplier sensorValueSupplier) {
-        this(sensorValueSupplier, 50);
+    public TimedSensorQuery(Supplier<T> sensorValueSupplier) {
+        this(sensorValueSupplier, 100);
     }
 
-    public double getValue() {
-        if (Double.isNaN(lastValue))
-            lastValue = sensorValueSupplier.getAsDouble();
+    public T getValue() {
+        if (lastValue == null)
+            lastValue = sensorValueSupplier.get();
         else if (queryTimer.seconds() > updateTimeSeconds) {
-            lastValue = sensorValueSupplier.getAsDouble();
+            lastValue = sensorValueSupplier.get();
             queryTimer.reset();
         }
         return lastValue;

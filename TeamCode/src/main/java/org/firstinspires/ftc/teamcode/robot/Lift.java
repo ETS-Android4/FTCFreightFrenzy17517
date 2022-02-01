@@ -74,18 +74,19 @@ public class Lift implements RobotModule {
     public void update() {
         if (elevatorTarget == ElevatorPosition.DOWN) {
             if (!limitSwitch.getState()) {
-                motorLift.setPower(-homingPower);
+                double error = encoderTarget - getLiftEncoderPosition();
+                motorLift.setPower(((error < 0 ? error * kP : 0) - homingPower) *
+                        robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
                 motorLift.setPower(0);
-                liftEncoderOffset = motorLift.getCurrentPosition();
+                if (!queuebool) liftEncoderOffset = motorLift.getCurrentPosition();
                 queuebool = true;
             }
         } else {
             double error = encoderTarget - getLiftEncoderPosition();
-
             if (abs(error) > errorThreshold) {
-                motorLift.setPower(error * kP);
+                motorLift.setPower(error * kP * robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
                 motorLift.setPower(0);
@@ -100,7 +101,7 @@ public class Lift implements RobotModule {
 
     @Config
     public static class LiftConfig {
-        public static double homingPower = 1;
+        public static double homingPower = 0.25;
         public static double kP = 0.005;
         public static int errorThreshold = 50;
         public static double downTargetElevator = 0;

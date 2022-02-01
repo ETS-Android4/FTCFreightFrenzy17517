@@ -14,7 +14,7 @@ public class AutonomBlueTeam extends BaseDetectionAutonomous {
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> sleep(1900),
-            () -> robot.movement.Move(-30),
+            () -> robot.movement.Move(-30, 0),
 
             () -> robot.movement.Move(-30, 110),
             () -> robot.movement.Move(90, 110, 1.5)
@@ -57,7 +57,7 @@ public class AutonomBlueTeam extends BaseDetectionAutonomous {
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-40),
+            () -> robot.movement.Move(-40, 0),
 
             () -> robot.movement.Move(-40, 90),
             () -> robot.movement.Move(70, 90, 1.5)

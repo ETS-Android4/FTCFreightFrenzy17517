@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 public class Bucket implements RobotModule {
 
     public DistanceSensor distance = null;
-    private final TimedSensorQuery timedDistanceSensorQuery =
-            new TimedSensorQuery(() -> distance.getDistance(DistanceUnit.CM), 10);
+    private final TimedSensorQuery<Double> timedDistanceSensorQuery =
+            new TimedSensorQuery<>(() -> distance.getDistance(DistanceUnit.CM), 10);
     public ElapsedTime servoTimer = new ElapsedTime();
     private Servo servoElevator = null;
     private BucketPosition bucketPosition = BucketPosition.COLLECT;

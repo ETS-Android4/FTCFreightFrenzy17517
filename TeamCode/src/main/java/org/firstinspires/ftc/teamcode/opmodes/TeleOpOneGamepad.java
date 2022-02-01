@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.VariablesDashboard.ManipulatorConfig.AutoTele;
+
+import static org.firstinspires.ftc.teamcode.opmodes.TeleOpOneGamepad.TeleOpConfig.robotSpeedMultiplier;
 import static org.firstinspires.ftc.teamcode.robot.Lift.ElevatorPosition.UP;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -29,18 +31,13 @@ public class TeleOpOneGamepad extends BaseOpMode {
     public ButtonActivated BA;
     public boolean cube_bool_1 = false;
     public boolean cube_bool_2 = false;
-    public boolean t = true;
-    public boolean u = true;
     public double pl = 0.0;
     public int gyro_counter = 0;
-    private GyroAuto gyro_auto = new GyroAuto(robot);
 
     @Override
     public void main() {
         robot.init();
-        gyro_auto.init();
         gyro_control.reset();
-        AutoTele = true;
         robot.duck.setTeleOpMode(true);
         // LED
         robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
@@ -48,62 +45,51 @@ public class TeleOpOneGamepad extends BaseOpMode {
 
         while (opModeIsActive()) {
             // Movement
-            robot.movement.teleometryEncoder();
-            robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * pl);
+            //robot.movement.teleometryEncoder();
+            robot.movement.setMotorPowers(
+                    -gamepad1.left_stick_y * get_speed(),
+                    gamepad1.right_stick_x * get_speed());
             // Switch functions
             duck_function.activate();
             servo_elevator_function.activate();
             // Others
-            robot.brush.enableIntake(t && intakeSwitch.getState(gamepad1.triangle));
+            robot.brush.enableIntake(intakeSwitch.getState(gamepad1.triangle));
             robot.update();
             gyro_system();
             lift_function();
         }
     }
 
-    private void gyro_system(){
-        gyro_auto.reaction();
-        cube_bool_1 = gyro_auto.gyro_status && robot.bucket.isFreightDetected();
-        cube_bool_2 = gyro_auto.gyro_status && !robot.bucket.isFreightDetected();
+    private void gyro_system() {
+        cube_bool_1 = robot.gyroAuto.gyro_status && robot.bucket.isFreightDetected();
+        cube_bool_2 = robot.gyroAuto.gyro_status && !robot.bucket.isFreightDetected();
     }
 
-    private double get_speed() { if (speedSwitch.getState(gamepad1.right_bumper)) { pl = 1; } else { pl = 0.5; } return pl*robot.accumulator.getkVoltage(); }
-
-    /*
-    private void obnul(boolean i) {
-        if (i) {
-            while (gamepad1.left_bumper && !robot.lift.limitSwitch.getState()) {
-                robot.lift.motorLift.setPower(-1);
-                u = false;
-            }
-            robot.lift.resetEncoderElevator();
-        }
+    private double get_speed() {
+        if (speedSwitch.getState(gamepad1.right_bumper)) pl = 1;
+        else pl = 0.5 * robot.accumulator.getkVoltage();
+        return pl * robotSpeedMultiplier;
     }
-     */
 
     private void lift_function() {
         if (gamepad1.dpad_up || cube_bool_1) {
             robot.lift.setElevatorTarget(UP);
-            cube_bool_1 = gyro_auto.gyro_status = false;
+            cube_bool_1 = robot.gyroAuto.gyro_status = false;
         }
         if (gamepad1.dpad_left) {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
         }
         if (gamepad1.dpad_down || cube_bool_2) {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
-            cube_bool_2 = gyro_auto.gyro_status = false;
+            cube_bool_2 = robot.gyroAuto.gyro_status = false;
         }
-        if((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 0.4){ gyro_control.reset();}
+        if ((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 0.4) {
+            gyro_control.reset();
+        }
     }
 
-    /*public void Drawing() {
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("x", x);
-        packet.put("y", y);
-        packet.fieldOverlay()
-                .setFill("red")
-                .fillRect(OX / 1000, OY / 1000, 40, 40);
-        dashboard.sendTelemetryPacket(packet);
-    }*/
+    @Config
+    public static class TeleOpConfig {
+        public static double robotSpeedMultiplier = 1.0;
+    }
 }

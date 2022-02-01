@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opencv;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.misc.FreightPosition;
+import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 import org.firstinspires.ftc.teamcode.robot.WoENRobot;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -47,12 +48,16 @@ public class ArucoDetect {
         });
     }
 
-    public FreightPosition getPosition() {
+    private final TimedSensorQuery<FreightPosition> freightPositionTimedSensorQuery =
+            new TimedSensorQuery<>(this::forceGetPosition, 3);
+
+    public FreightPosition forceGetPosition() {
         ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
         if (detections != null) {
             if (detections.size() == 0) {
                 numFramesWithoutDetection++;
-                if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
+                if (numFramesWithoutDetection >=
+                        THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                     aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
                 }
                 return FreightPosition.UNKNOWN;
@@ -61,7 +66,9 @@ public class ArucoDetect {
                 if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
                     aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                 }
-                timePosition = detections.get(0).pose.x * FEET_PER_METER * detections.get(0).pose.z * FEET_PER_METER;
+                timePosition =
+                        detections.get(0).pose.x * FEET_PER_METER * detections.get(0).pose.z *
+                                FEET_PER_METER;
             }
         } else {
             return FreightPosition.UNKNOWN;
@@ -72,14 +79,17 @@ public class ArucoDetect {
         return FreightPosition.UNKNOWN;
     }
 
+    public FreightPosition getPosition() {
+        return freightPositionTimedSensorQuery.getValue();
+    }
+
     public boolean inRange(double down, double up) {
         return timePosition > up && timePosition < down;
     }
 
     public FreightPosition stopCamera() {
-        FreightPosition value = getPosition();
-        camera.closeCameraDeviceAsync(() -> {
-        });
+        FreightPosition value = forceGetPosition();
+        camera.closeCameraDeviceAsync(() -> {});
         return value;
     }
 

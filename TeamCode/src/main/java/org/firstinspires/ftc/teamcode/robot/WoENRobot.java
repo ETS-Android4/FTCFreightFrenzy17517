@@ -13,20 +13,23 @@ import java.util.List;
 
 public class WoENRobot {
     private final LinearOpMode linearOpMode;
-    public Bucket bucket = new Bucket(this);
-    public LedStrip ledStrip = new LedStrip(this);
-    public Duck duck = new Duck(this);
-    public Lift lift = new Lift(this);
-    public Movement movement = new Movement(this);
-    public Brush brush = new Brush(this);
-    public Timer timer = new Timer();
-    public TelemetryNode telemetryNode = new TelemetryNode(this);
-    public Accumulator accumulator = new Accumulator(this);
+    public final Bucket bucket = new Bucket(this);
+    public final LedStrip ledStrip = new LedStrip(this);
+    public final Duck duck = new Duck(this);
+    public final Lift lift = new Lift(this);
+    public final Movement movement = new Movement(this);
+    public final Brush brush = new Brush(this);
+    public final Timer timer = new Timer();
+    public final TelemetryNode telemetryNode = new TelemetryNode(this);
+    public final Accumulator accumulator = new Accumulator(this);
+    public final Gyro gyro = new Gyro(this);
+    public final GyroAuto gyroAuto = new GyroAuto(this);
 
     private List<LynxModule> revHubs = null;
 
     private final RobotModule[] allModules = new RobotModule[]{
             bucket,
+            gyro,
             ledStrip,
             duck,
             lift,
@@ -34,7 +37,8 @@ public class WoENRobot {
             brush,
             timer,
             accumulator,
-            telemetryNode
+            gyroAuto,
+            telemetryNode,
     };
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();
