@@ -15,7 +15,7 @@ public class Gyro implements RobotModule {
     private BNO055IMU gyro;
 
     private TimedSensorQuery<Orientation> timedGyroQuery =
-            new TimedSensorQuery<>(() -> gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 100);
+            new TimedSensorQuery<>(() -> gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 1000000);
 
     private Orientation orientation;
 
@@ -33,6 +33,7 @@ public class Gyro implements RobotModule {
     @Override
     public void update() {
         orientation = timedGyroQuery.getValue();
+        robot.telemetryNode.getTelemetry().addData("angle",orientation.firstAngle);
     }
 
     public Orientation getOrientation() {

@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.autonomousSpi
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.directionDuck;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.motorSpeed;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.teleOpSpinTime;
+import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.*;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.misc.PositionOnField;
+import org.firstinspires.ftc.teamcode.misc.PositionToSearch;
 
 public class Duck implements RobotModule {
     private DcMotor duckMotor = null;
@@ -28,14 +30,31 @@ public class Duck implements RobotModule {
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    public void redOrBlue(PositionOnField direction) {
+    public void redOrBlue(PositionOnField direction, PositionToSearch position) {
         switch (direction) {
             case RED:
                 directionDuck = 1;
+                switch (position) {
+                    case LEFT:
+                        centreOfDuck = -21.5;
+                    break;
+                    case RIGHT:
+                        centreOfDuck = 0;
+                    break;
+                }
                 break;
             case BLUE:
                 directionDuck = -1;
+                switch (position) {
+                    case LEFT:
+                        centreOfDuck = -21.5;
+                        break;
+                    case RIGHT:
+                        centreOfDuck = 0;
+                        break;
+                }
                 break;
+
         }
     }
 

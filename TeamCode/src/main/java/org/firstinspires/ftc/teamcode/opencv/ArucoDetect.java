@@ -12,13 +12,14 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 public class ArucoDetect {
-
+    public static double entreDistance = 13.5;
+    public static double centreOfDuck = 0;
     static final double FEET_PER_METER = 3.28084;
     final float DECIMATION_HIGH = 3;
     final float DECIMATION_LOW = 2;
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
-    public double timePosition = 0;
+    public static double timePosition = 0;
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     double fx = 578.272;
@@ -60,7 +61,7 @@ public class ArucoDetect {
                         THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                     aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
                 }
-                return FreightPosition.UNKNOWN;
+                return FreightPosition.RIGHT;
             } else {
                 numFramesWithoutDetection = 0;
                 if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
@@ -69,14 +70,15 @@ public class ArucoDetect {
                 timePosition =
                         detections.get(0).pose.x * FEET_PER_METER * detections.get(0).pose.z *
                                 FEET_PER_METER;
+                timePosition = timePosition + centreOfDuck;
+
             }
         } else {
-            return FreightPosition.UNKNOWN;
+            return FreightPosition.RIGHT;
         }
-        if (timePosition < -10) return FreightPosition.LEFT;
-        if (timePosition >= -10 && timePosition < 10) return FreightPosition.CENTER;
-        if (timePosition >= 10) return FreightPosition.RIGHT;
-        return FreightPosition.UNKNOWN;
+        if (timePosition < -entreDistance) return FreightPosition.LEFT;
+        if (timePosition >= -entreDistance && timePosition < entreDistance) return FreightPosition.CENTER;
+        return FreightPosition.RIGHT;
     }
 
     public FreightPosition getPosition() {

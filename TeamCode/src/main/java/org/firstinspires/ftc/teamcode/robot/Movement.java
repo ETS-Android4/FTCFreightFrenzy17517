@@ -117,9 +117,9 @@ public class Movement implements RobotModule {
     }
 
     public void Move(double distance, double angle, double speed) {
+        timer.reset();
         manualControl = false;
         if (distance != this.distance || angle != this.angle || speed != this.speed) {
-            timer.reset();
             loopTimer.reset();
             oldErrDistance = getDistanceError(this.distance);
             oldErrAngle = getAngleError(this.angle);
@@ -170,17 +170,15 @@ public class Movement implements RobotModule {
                     (integralLinear + proportionalLinear + differentialLinear) * speed *
                             robot.accumulator.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) *
-                            speedAngle  /* robot.accumulator.getkVoltage()*/);
-            queuebool =
-                    (!(abs(errDistance) > minErrorDistance) && !(abs(errAngle) > minErrorAngle)) ||
-                            (timer.seconds() >= moveTimeoutS);
+                            speedAngle * robot.accumulator.getkVoltage());
+            queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle))||(timer.seconds() >= moveTimeoutS);
             /*
             robot.telemetryNode.getTelemetry().addData("error dist", errDistance);
             robot.telemetryNode.getTelemetry().addData("timestep", timestep);
             robot.telemetryNode.getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
              */
         }
-        queuebool = true;
+        else queuebool = true;
     }
 
     public void setMotorPowers(double power, double angle) {

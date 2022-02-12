@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.centreOfDuck;
+import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.timePosition;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class BaseAutonomous extends BaseOpMode {
@@ -7,12 +10,14 @@ public abstract class BaseAutonomous extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        telemetry.addData("Status", "Ready to start");
-        telemetry.update();
+        robot.telemetryNode.getTelemetry().addData("Status", "Ready to start");
+        robot.telemetryNode.getTelemetry().addData("offset", centreOfDuck);
+        robot.telemetryNode.getTelemetry().addData("timePosition", timePosition);
+        robot.telemetryNode.getTelemetry().update();
     }
 
     public final void execute(Runnable[] runnables) {
-        execute(runnables, 10);
+        execute(runnables, 4);
     }
 
     public final void execute(Runnable[] runnables, double timeoutSeconds) {

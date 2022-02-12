@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.robot.TelemetryNode.TelemetryConfig
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -17,15 +18,11 @@ public class TelemetryNode implements RobotModule {
     private Telemetry multipleTelemetry = null;
     private Telemetry currentTelemetry = null;
 
+    private ElapsedTime transmissionTimer = new ElapsedTime();
+
 
     public TelemetryNode(WoENRobot robot) {
         this.robot = robot;
-        dashboard = FtcDashboard.getInstance();
-        dashboardTelemetry = dashboard.getTelemetry();
-        opModeTelemetry = robot.getLinearOpMode().telemetry;
-        multipleTelemetry = new MultipleTelemetry(dashboardTelemetry, opModeTelemetry);
-        multipleTelemetry.setMsTransmissionInterval(msTransmissionInterval);
-        currentTelemetry = choseTelemetry();
     }
 
     private Telemetry choseTelemetry() {
@@ -40,18 +37,29 @@ public class TelemetryNode implements RobotModule {
         }
     }
 
-    public Telemetry getTelemetry(){
+    public Telemetry getTelemetry() {
         return currentTelemetry;
     }
 
     @Override
     public void initialize() {
+        dashboard = FtcDashboard.getInstance();
+        dashboardTelemetry = dashboard.getTelemetry();
+        opModeTelemetry = robot.getLinearOpMode().telemetry;
+        multipleTelemetry = new MultipleTelemetry(dashboardTelemetry, opModeTelemetry);
+        multipleTelemetry.setMsTransmissionInterval(msTransmissionInterval);
+        currentTelemetry = choseTelemetry();
         currentTelemetry.clearAll();
+        transmissionTimer.reset();
     }
 
     @Override
     public void update() {
-        currentTelemetry.update();
+        if (transmissionTimer.milliseconds() < msTransmissionInterval) currentTelemetry.clear();
+        else {
+            transmissionTimer.reset();
+            currentTelemetry.update();
+        }
     }
 
     public enum TelemetryType {

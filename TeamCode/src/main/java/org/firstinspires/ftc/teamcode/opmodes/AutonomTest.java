@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test = {
-            () -> {robot.movement.Move(-62, -37);                                //-64, -37
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
+            () -> { robot.movement.Move(-61, -37);                                //-64, -37
+                  robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-50, 0),
-            () -> robot.movement.Move(-50,90),
+            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
+            () -> {robot.movement.Move(-50, 0);},
+            () -> {robot.movement.Move(-50, 90);},
             () -> robot.movement.Move(-150,120),
             () -> robot.movement.Move(-150,150),
             () -> {robot.duck.duckSpin(true);
@@ -31,12 +31,13 @@ public class AutonomTest extends BaseAutonomous {
             () -> robot.movement.Move(-230,-90),
             () -> {robot.movement.Move(-230,0);
                   robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP); },
-            () -> robot.movement.Move(-262,0),
+            () -> robot.movement.Move(-265,0),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-230,-90),
-            () -> robot.movement.Move(-380,-90),
+            () -> robot.movement.Move(-235,0),
+            () -> robot.movement.Move(-235,-90),
+            () -> robot.movement.Move(-420,-90),
     };
 
     @Override

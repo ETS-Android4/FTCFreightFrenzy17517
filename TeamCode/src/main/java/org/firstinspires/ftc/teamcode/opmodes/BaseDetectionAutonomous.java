@@ -7,24 +7,32 @@ import org.firstinspires.ftc.teamcode.robot.LedStrip;
 
 public abstract class BaseDetectionAutonomous extends BaseAutonomous {
 
-    protected abstract Runnable[] upPosition();
+    protected Runnable[] upPosition(){
+        return new Runnable[0];
+    }
 
-    protected abstract Runnable[] middlePosition();
+    protected Runnable[] middlePosition(){
+        return new Runnable[0];
+    }
 
-    protected abstract Runnable[] downPosition();
-
+    protected Runnable[] downPosition(){
+        return new Runnable[0];
+    }
     @Override
     public void startLoop(){
         super.startLoop();
         FreightPosition freightPosition = robot.arucoDetect.getPosition();
-        telemetry.addData("Aruco position", freightPosition);
+        robot.telemetryNode.getTelemetry().addData("Aruco position", freightPosition);
         switch (freightPosition) {
             case LEFT:
                 robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_COLOR1);
+                break;
             case CENTER:
-                robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_DUALCOLOR);
+                robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_MAGIC);
+                break;
             case RIGHT:
                 robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_COLOR2);
+                break;
         }
         robot.ledStrip.update();
     }
@@ -65,5 +73,6 @@ public abstract class BaseDetectionAutonomous extends BaseAutonomous {
     public void runOpMode() {
         robot.arucoDetect.initialize();
         super.runOpMode();
+        robot.arucoDetect.stopCamera();
     }
 }

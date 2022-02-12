@@ -75,8 +75,7 @@ public class Lift implements RobotModule {
         if (elevatorTarget == ElevatorPosition.DOWN) {
             if (!limitSwitch.getState()) {
                 double error = encoderTarget - getLiftEncoderPosition();
-                motorLift.setPower(((error < 0 ? error * kP : 0) - homingPower) *
-                        robot.accumulator.getkVoltage());
+                motorLift.setPower(((error < 0 ? error * kP : 0) - homingPower) * robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
                 motorLift.setPower(0);
