@@ -18,7 +18,7 @@ public class Brush implements RobotModule {
     private final WoENRobot robot;
     public ElapsedTime timerProtection = new ElapsedTime();
     private boolean enableIntake = false;
-    private DcMotorEx brushMotor = null;
+    public DcMotorEx brushMotor = null;
 
     public Brush(WoENRobot robot) {
         this.robot = robot;
@@ -75,7 +75,7 @@ public class Brush implements RobotModule {
     public static class BrushConfig {
         public static double motorPower = 1;
         public static double motorCurrentThreshold = 3.0;
-        public static double timeForActivateProtection = 3.5;
-        public static double timeForReverse = /* timeForActivateProtection + */ 1;
+        public static double timeForActivateProtection = 0.5;
+        public static double timeForReverse = /* timeForActivateProtection + */ 0.2;
     }
 }

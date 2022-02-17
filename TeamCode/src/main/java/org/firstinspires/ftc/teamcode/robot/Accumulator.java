@@ -21,7 +21,7 @@ public class Accumulator implements RobotModule {
     VoltageSensor controlHubVoltageSensor = null;
 
 
-    private final TimedSensorQuery<Double> timedVoltageSensor = new TimedSensorQuery<>(() -> controlHubVoltageSensor.getVoltage(),7);
+    public final TimedSensorQuery<Double> timedVoltageSensor = new TimedSensorQuery<>(() -> controlHubVoltageSensor.getVoltage(),7);
 
     public double getkVoltage() {
         return kVoltage;

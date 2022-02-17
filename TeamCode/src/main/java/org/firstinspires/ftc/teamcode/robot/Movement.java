@@ -131,14 +131,14 @@ public class Movement implements RobotModule {
 
     double oldErrDistance = 0;
     double oldErrAngle = 0;
+    double proportionalLinear = 0;
+    double proportionalAngular = 0;
+    double integralLinear = 0;
+    double integralAngular = 0;
+    double differentialLinear = 0;
+    double differentialAngular = 0;
     public void update() {
         if (!manualControl) {
-            double proportionalLinear = 0;
-            double proportionalAngular = 0;
-            double integralLinear = 0;
-            double integralAngular = 0;
-            double differentialLinear = 0;
-            double differentialAngular = 0;
             double deltaErrDistance = 0;
             double deltaErrAngle = 0;
             double speedAngle = 1;
@@ -172,33 +172,28 @@ public class Movement implements RobotModule {
                     (integralAngular + proportionalAngular + differentialAngular) *
                             speedAngle * robot.accumulator.getkVoltage());
             queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle))||(timer.seconds() >= moveTimeoutS);
-            /*
-            robot.telemetryNode.getTelemetry().addData("error dist", errDistance);
-            robot.telemetryNode.getTelemetry().addData("timestep", timestep);
-            robot.telemetryNode.getTelemetry().addData("kvoltage", robot.accumulator.getkVoltage());
-             */
         }
         else queuebool = true;
     }
+    public void telemetryForMovement(){
+        robot.dashboard.getTelemetry().addData("Proportional(liner)", proportionalLinear);
+        robot.dashboard.getTelemetry().addData("Proportional(angle)", proportionalAngular);
+        robot.dashboard.getTelemetry().addData("Differential(liner)", differentialLinear);
+        robot.dashboard.getTelemetry().addData("Differential(angle)", differentialAngular);
+        robot.dashboard.getTelemetry().addData("Integral(liner)", integralLinear);
+        robot.dashboard.getTelemetry().addData("Integral(angle)", integralAngular);
 
+    }
     public void setMotorPowers(double power, double angle) {
         manualControl = true;
         setMotorPowersPrivate(power, angle);
     }
-    public void telemetryEncoder(){
-        robot.telemetryNode.getTelemetry().addData("rightMotorFront",rightMotorFront.getCurrentPosition());
-        robot.telemetryNode.getTelemetry().addData("rightMotorBack",rightMotorBack.getCurrentPosition());
-        robot.telemetryNode.getTelemetry().addData("leftMotorFront",leftMotorFront.getCurrentPosition());
-        robot.telemetryNode.getTelemetry().addData("leftMotorBack",leftMotorBack.getCurrentPosition());
-    }
-
     private void setMotorPowersPrivate(double power, double angle) {
         rightMotorFront.setPower(power - angle);
         rightMotorBack.setPower(power - angle);
         leftMotorFront.setPower(power + angle);
         leftMotorBack.setPower(power + angle);
     }
-
     double getLeftEncoder() {
         return (leftMotorBack.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0;
     }
