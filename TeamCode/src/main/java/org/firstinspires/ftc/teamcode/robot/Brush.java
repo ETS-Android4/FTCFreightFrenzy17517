@@ -25,13 +25,11 @@ public class Brush implements RobotModule {
     }
 
     public void initialize() {
-
         brushMotor = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "BrushMotor");
         brushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         brushMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         brushMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brushMotor.setDirection(DcMotorEx.Direction.REVERSE);
-
     }
 
     public boolean protectionBrushMotor() {
