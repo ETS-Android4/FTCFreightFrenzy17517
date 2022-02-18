@@ -47,10 +47,10 @@ public class Duck implements RobotModule {
                 directionDuck = -1;
                 switch (position) {
                     case LEFT:
-                        centreOfDuck = -21.5;
+                        centreOfDuck = 0;
                         break;
                     case RIGHT:
-                        centreOfDuck = 0;
+                        centreOfDuck = -21.5;
                         break;
                 }
                 break;
@@ -91,7 +91,7 @@ public class Duck implements RobotModule {
     public static class DuckConfig {
         public static double autonomousSpinTime = 5.0;
         public static double teleOpSpinTime = 1.9;
-        public static double motorSpeed = 0.555;
+        public static double motorSpeed = 0.4;
         public static double directionDuck = 1;
     }
 }

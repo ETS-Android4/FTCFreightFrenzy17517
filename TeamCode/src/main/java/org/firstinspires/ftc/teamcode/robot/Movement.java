@@ -173,7 +173,10 @@ public class Movement implements RobotModule {
                             speedAngle * robot.accumulator.getkVoltage());
             queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle))||(timer.seconds() >= moveTimeoutS);
         }
-        else queuebool = true;
+        else{
+            queuebool = true;
+        }
+
     }
     public void telemetryForMovement(){
         robot.dashboard.getTelemetry().addData("Proportional(liner)", proportionalLinear);
@@ -182,6 +185,7 @@ public class Movement implements RobotModule {
         robot.dashboard.getTelemetry().addData("Differential(angle)", differentialAngular);
         robot.dashboard.getTelemetry().addData("Integral(liner)", integralLinear);
         robot.dashboard.getTelemetry().addData("Integral(angle)", integralAngular);
+
 
     }
     public void setMotorPowers(double power, double angle) {
@@ -207,18 +211,17 @@ public class Movement implements RobotModule {
     public static class MovementConfig {
         public static double dist = 0;
         public static double angle = 0;
-        public static double kP_Distance = 0.013;
-        public static double kP_Angle = 0.05;
-        public static double kI_Distance = 1;
-        public static double kI_Angle = 0.005;
+        public static double kP_Distance = 0.017;
+        public static double kP_Angle = 0.052;
+        public static double kI_Distance = 0.004;
+        public static double kI_Angle = 0.008;
         public static double kD_Distance = 0.002;
         public static double kD_Angle = 0.003;
         public static double maxIntegralAngle = 0.25;
         public static double maxIntegralDistance = 0.25;
-        public static double minErrorDistance = 5.0;
-        public static double minErrorAngle = 2.5;
+        public static double minErrorDistance = 2.0;
+        public static double minErrorAngle = 1;
         public static double moveTimeoutS = 2;
         public static DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT;
     }
 }
-

@@ -8,47 +8,41 @@ import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
 @Autonomous
-public class AutonomRedTeam extends BaseDetectionAutonomous {
+public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
 
-            () -> {
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
-                robot.movement.Move(-55, -27, 0.5);
-            },
+            () -> { robot.movement.Move(-60, 30);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-20, 0),
-            () -> robot.movement.Move(-20, -90),
-            () -> robot.movement.Move(40, -90),
+            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
+            () -> {robot.movement.Move(-32, 30);},
+            () -> {robot.movement.Move(-32,90);},
+            () -> {robot.movement.Move(80,90, 1.6);},
 
     };
     Runnable[] middlePosition = {
-            () -> {
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
-                robot.movement.Move(-55, -27, 0.5);
-            },
+
+            () -> { robot.movement.Move(-60, 30);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-20, 0),
-            () -> robot.movement.Move(-20, -90),
-            () -> robot.movement.Move(40, -90),
-
+            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
+            () -> {robot.movement.Move(-32, 30);},
+            () -> {robot.movement.Move(-32,90);},
+            () -> {robot.movement.Move(80,90, 1.6);},
     };
     Runnable[] upPosition = {
-            () -> {
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
-                robot.movement.Move(-55, -27, 0.5);
-            },
+
+            () -> { robot.movement.Move(-60, 30, 1.5);
+                  robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-20, 0),
-            () -> robot.movement.Move(-20, -90),
-            () -> robot.movement.Move(40, -90),
-
+            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
+            () -> {robot.movement.Move(-32, 30);},
+            () -> {robot.movement.Move(-32,90);},
+            () -> {robot.movement.Move(80,90, 1.6);},
     };
 
     @Override
@@ -68,7 +62,7 @@ public class AutonomRedTeam extends BaseDetectionAutonomous {
 
     @Override
     public void runOpMode() {
-        robot.duck.redOrBlue(PositionOnField.RED, PositionToSearch.LEFT);
+        robot.duck.redOrBlue(PositionOnField.BLUE, PositionToSearch.LEFT);
         super.runOpMode();
     }
 }

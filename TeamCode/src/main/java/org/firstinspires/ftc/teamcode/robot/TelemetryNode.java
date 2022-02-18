@@ -86,6 +86,11 @@ public class TelemetryNode implements RobotModule {
                 case MOVEMENT:
                     robot.movement.telemetryForMovement();
                     break;
+                case UNEXPECTED:
+                    currentTelemetry.addData("chto-to ne ochevidnoe", 0);
+                    break;
+                case OPENCV:
+                    currentTelemetry.addData("Camera", robot.arucoDetect.forceGetPosition());
             }
             currentTelemetry.addData("Mode", TelemetryNode.TelemetryModuleConfig.telemetryModuleValue);
             transmissionTimer.reset();
@@ -98,7 +103,7 @@ public class TelemetryNode implements RobotModule {
     }
 
     public enum TelemetryModuleValue {
-        ACCUMULATOR, BRUSH, BUCKET, ENCODERS, GYRO, LIFT, MOVEMENT
+        ACCUMULATOR, BRUSH, BUCKET, ENCODERS, OPENCV, GYRO, LIFT, MOVEMENT, UNEXPECTED
     }
 
     @Config
