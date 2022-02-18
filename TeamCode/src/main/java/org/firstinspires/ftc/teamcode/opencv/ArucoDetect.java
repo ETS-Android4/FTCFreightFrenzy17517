@@ -50,7 +50,7 @@ public class ArucoDetect {
     }
 
     private final TimedSensorQuery<FreightPosition> freightPositionTimedSensorQuery =
-            new TimedSensorQuery<>(this::forceGetPosition, 3);
+            new TimedSensorQuery<>(this::forceGetPosition, 1.5);
 
     public FreightPosition forceGetPosition() {
         ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();

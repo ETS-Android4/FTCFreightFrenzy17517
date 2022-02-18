@@ -33,12 +33,16 @@ public abstract class BaseDetectionAutonomous extends BaseAutonomous {
             case RIGHT:
                 robot.ledStrip.setMode(LedStrip.LedStripMode.BREATHE_COLOR2);
                 break;
+            default:
+                robot.ledStrip.setMode(LedStrip.LedStripMode.OFF);
+                break;
         }
         robot.ledStrip.update();
     }
 
     @Override
     public void main() {
+        robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
         if (directionDuck == -1) {
             switch (robot.arucoDetect.stopCamera()) {
                 case LEFT:
