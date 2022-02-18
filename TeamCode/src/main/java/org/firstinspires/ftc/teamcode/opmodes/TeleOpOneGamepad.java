@@ -83,7 +83,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             cube_bool_2 = robot.gyroAuto.gyro_status = false;
         }
-        if ((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 0.4) {
+        if ((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 0.1) {
             gyro_control.reset();
         }
     }

@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class TelemetryNode implements RobotModule {
 
@@ -55,8 +56,38 @@ public class TelemetryNode implements RobotModule {
 
     @Override
     public void update() {
-        if (transmissionTimer.milliseconds() < msTransmissionInterval) currentTelemetry.clear();
-        else {
+        if (transmissionTimer.milliseconds() > msTransmissionInterval)
+        {
+            switch(TelemetryNode.TelemetryModuleConfig.telemetryModuleValue){
+                case ACCUMULATOR:
+                    currentTelemetry.addData("Accumulator", robot.accumulator.getkVoltage());
+                    currentTelemetry.addData("Accumulator", robot.accumulator.timedVoltageSensor.getValue());
+                    break;
+                case BRUSH:
+                    currentTelemetry.addData("Protection(On or Off)", robot.brush.protectionBrushMotor());
+                    currentTelemetry.addData("EnableIntake", robot.brush.getEnableIntake());
+                    currentTelemetry.addData("AMPS brush motor", robot.brush.brushMotor.getCurrent(CurrentUnit.AMPS));
+                    break;
+                case BUCKET:
+                    currentTelemetry.addData("BucketPosition", robot.bucket.getBucketPosition());
+                    currentTelemetry.addData("ServoTimer", robot.bucket.servoTimer);
+                    break;
+                case ENCODERS:
+                    currentTelemetry.addData("RightEncoder", robot.movement.getRightEncoder());
+                    currentTelemetry.addData("LeftEncoder", robot.movement.getLeftEncoder());
+                    break;
+                case GYRO:
+                    currentTelemetry.addData("Orientation",robot.gyro.getOrientation());
+                    break;
+                case LIFT:
+                    currentTelemetry.addData("ElevatorPosition",robot.lift.getElevatorPosition());
+                    currentTelemetry.addData("LiftEncoderPosition",robot.lift.getLiftEncoderPosition());
+                    break;
+                case MOVEMENT:
+                    robot.movement.telemetryForMovement();
+                    break;
+            }
+            currentTelemetry.addData("Mode", TelemetryNode.TelemetryModuleConfig.telemetryModuleValue);
             transmissionTimer.reset();
             currentTelemetry.update();
         }
@@ -66,10 +97,19 @@ public class TelemetryNode implements RobotModule {
         DRIVER_STATION, DASHBOARD, DUAL
     }
 
+    public enum TelemetryModuleValue {
+        ACCUMULATOR, BRUSH, BUCKET, ENCODERS, GYRO, LIFT, MOVEMENT
+    }
+
     @Config
     public static class TelemetryConfig {
         public static TelemetryNode.TelemetryType telemetryType =
-                TelemetryNode.TelemetryType.DRIVER_STATION;
+                TelemetryType.DASHBOARD;
         public static int msTransmissionInterval = 250;
+    }
+
+    @Config
+    public static class TelemetryModuleConfig{
+        public static TelemetryModuleValue telemetryModuleValue = TelemetryModuleValue.ACCUMULATOR;
     }
 }

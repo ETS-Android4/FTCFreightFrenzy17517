@@ -38,7 +38,7 @@ public class WoENRobot {
             timer,
             accumulator,
             gyroAuto,
-            telemetryNode,
+            telemetryNode
     };
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();
