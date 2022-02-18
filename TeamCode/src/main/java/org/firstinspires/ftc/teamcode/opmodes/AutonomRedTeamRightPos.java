@@ -12,37 +12,40 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     Runnable[] upPosition = {
 
-            () -> { robot.movement.Move(-59, -30);
+            () -> { robot.movement.Move(-58, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
                 robot.timer.delay(1);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> { robot.movement.Move(-53, -30);},
             () -> {robot.movement.Move(-40, 0);},
             () -> {robot.movement.Move(-40,90);},
-            () -> {robot.movement.Move(-220,90);},
+            () -> {robot.movement.Move(-180,90);},
 
     };
     Runnable[] middlePosition = {
 
-            () -> { robot.movement.Move(-59, -30);
+            () -> { robot.movement.Move(-58, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
+            () -> { robot.movement.Move(-53, -30);},
             () -> {robot.movement.Move(-40, 0);},
             () -> {robot.movement.Move(-40,90);},
-            () -> {robot.movement.Move(-220,90);},
+            () -> {robot.movement.Move(-180,90);},
     };
     Runnable[] downPosition = {
 
-            () -> { robot.movement.Move(-60, -30);
+            () -> { robot.movement.Move(-58, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
+            () -> { robot.movement.Move(-53, -30);},
             () -> {robot.movement.Move(-40, -30);},
             () -> {robot.movement.Move(-40,90);},
-            () -> {robot.movement.Move(-220,90);},
+            () -> {robot.movement.Move(-180,90);},
     };
 
     @Override
