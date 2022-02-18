@@ -35,7 +35,7 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
     };
     Runnable[] downPosition = {
 
-            () -> { robot.movement.Move(-59, -30);
+            () -> { robot.movement.Move(-60, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
