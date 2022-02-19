@@ -109,7 +109,7 @@ public class TelemetryNode implements RobotModule {
     @Config
     public static class TelemetryConfig {
         public static TelemetryNode.TelemetryType telemetryType =
-                TelemetryType.DASHBOARD;
+                TelemetryType.DUAL;
         public static int msTransmissionInterval = 250;
     }
 

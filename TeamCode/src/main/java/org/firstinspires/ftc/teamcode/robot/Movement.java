@@ -93,6 +93,10 @@ public class Movement implements RobotModule {
         setZeroPowerBehaviors(zeroPowerBehavior);
     }
 
+    public double getDistanceErrorOneSide(double target) {
+        return target - encoderTicksToCm(getLeftEncoder());
+    }
+
     public double getDistanceError(double target) {
         return target - encoderTicksToCm((getLeftEncoder() + getRightEncoder()) / 2.0);
     }
@@ -103,6 +107,8 @@ public class Movement implements RobotModule {
         else if (error < -180.0) do error += 360.0; while (error < -180.0);
         return error;
     }
+
+    
 
     public boolean queuebool = true;
 
@@ -212,9 +218,9 @@ public class Movement implements RobotModule {
         public static double dist = 0;
         public static double angle = 0;
         public static double kP_Distance = 0.017;
-        public static double kP_Angle = 0.052;
+        public static double kP_Angle = 0.056;
         public static double kI_Distance = 0.004;
-        public static double kI_Angle = 0.008;
+        public static double kI_Angle = 0.01;
         public static double kD_Distance = 0.002;
         public static double kD_Angle = 0.003;
         public static double maxIntegralAngle = 0.25;

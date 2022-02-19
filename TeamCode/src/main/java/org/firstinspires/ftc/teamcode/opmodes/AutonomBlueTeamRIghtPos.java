@@ -27,7 +27,11 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
                 robot.movement.Move(-108,180);},
             () -> robot.movement.Move(-75,180),
             () -> robot.movement.Move(-75,90),
-            () -> robot.movement.Move(170,90, 1.4),
+            () -> robot.timer.delay(4.5),
+            () -> robot.movement.Move(210,90, 1.4),
+            () -> robot.movement.Move(210, 0),
+            () -> robot.movement.Move(220, 0),
+
 
     };
     Runnable[] middlePosition = {
@@ -46,8 +50,10 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
                 robot.movement.Move(-108,180);},
             () -> robot.movement.Move(-75,180),
             () -> robot.movement.Move(-75,90),
-            () -> robot.movement.Move(170,90, 1.4),
-
+            () -> robot.timer.delay(4.5),
+            () -> robot.movement.Move(210,90, 1.4),
+            () -> robot.movement.Move(210, 0),
+            () -> robot.movement.Move(220, 0),
 
     };
     Runnable[] upPosition = {
@@ -66,7 +72,11 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
                 robot.movement.Move(-108,180);},
             () -> robot.movement.Move(-75,180),
             () -> robot.movement.Move(-75,90),
-            () -> robot.movement.Move(170,90, 1.4),
+            () -> robot.timer.delay(4.5),
+            () -> robot.movement.Move(210,90, 1.4),
+            () -> robot.movement.Move(210, 0),
+            () -> robot.movement.Move(220, 0),
+
 
     };
 

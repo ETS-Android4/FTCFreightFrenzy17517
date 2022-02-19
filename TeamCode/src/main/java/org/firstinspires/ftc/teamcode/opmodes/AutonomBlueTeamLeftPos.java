@@ -19,7 +19,7 @@ public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
             () -> {robot.movement.Move(-32, 30);},
             () -> {robot.movement.Move(-32,90);},
-            () -> {robot.movement.Move(80,90, 1.6);},
+            () -> {robot.movement.Move(110,90, 1.6);},
 
     };
     Runnable[] middlePosition = {
@@ -31,7 +31,7 @@ public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
             () -> {robot.movement.Move(-32, 30);},
             () -> {robot.movement.Move(-32,90);},
-            () -> {robot.movement.Move(80,90, 1.6);},
+            () -> {robot.movement.Move(110,90, 1.6);},
     };
     Runnable[] upPosition = {
 
@@ -42,7 +42,7 @@ public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
             () -> {robot.movement.Move(-32, 30);},
             () -> {robot.movement.Move(-32,90);},
-            () -> {robot.movement.Move(80,90, 1.6);},
+            () -> {robot.movement.Move(110,90, 1.6);},
     };
 
     @Override

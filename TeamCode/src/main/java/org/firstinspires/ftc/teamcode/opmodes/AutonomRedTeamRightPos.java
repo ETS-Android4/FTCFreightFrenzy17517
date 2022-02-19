@@ -17,10 +17,10 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
                 robot.timer.delay(1);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> { robot.movement.Move(-53, -30);},
-            () -> {robot.movement.Move(-40, 0);},
-            () -> {robot.movement.Move(-40,90);},
-            () -> {robot.movement.Move(-180,90);},
+            () -> { robot.movement.Move(-53, -30, 5);},
+            () -> {robot.movement.Move(-45, 0, 4);},
+            () -> {robot.movement.Move(-45,90, 4);},
+            () -> {robot.movement.Move(-180,90,3);},
 
     };
     Runnable[] middlePosition = {
@@ -30,10 +30,10 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> { robot.movement.Move(-53, -30);},
-            () -> {robot.movement.Move(-40, 0);},
-            () -> {robot.movement.Move(-40,90);},
-            () -> {robot.movement.Move(-180,90);},
+            () -> { robot.movement.Move(-53, -30, 5);},
+            () -> {robot.movement.Move(-45, 0, 4);},
+            () -> {robot.movement.Move(-45,90, 4);},
+            () -> {robot.movement.Move(-180,90,3);},
     };
     Runnable[] downPosition = {
 
@@ -42,10 +42,10 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> { robot.movement.Move(-53, -30);},
-            () -> {robot.movement.Move(-40, -30);},
-            () -> {robot.movement.Move(-40,90);},
-            () -> {robot.movement.Move(-180,90);},
+            () -> { robot.movement.Move(-53, -30, 5);},
+            () -> {robot.movement.Move(-45, 0, 4);},
+            () -> {robot.movement.Move(-45,90, 4);},
+            () -> {robot.movement.Move(-180,90,3);},
     };
 
     @Override
@@ -65,7 +65,7 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     @Override
     public void runOpMode() {
-        robot.duck.redOrBlue(PositionOnField.RED, PositionToSearch.LEFT);
+        robot.duck.redOrBlue(PositionOnField.RED, PositionToSearch.RIGHT);
         super.runOpMode();
     }
 }
