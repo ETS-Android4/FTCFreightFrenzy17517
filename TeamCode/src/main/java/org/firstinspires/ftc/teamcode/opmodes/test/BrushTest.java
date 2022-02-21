@@ -15,7 +15,7 @@ public class BrushTest extends BaseOpMode {
 
     @Override
     public void main() {
-        robot.brush.enableIntake(true);
+        robot.brush.setEnableIntake(true);
         robot.timer.delay(10);
         while (!robot.timer.actionIsCompleted() && opModeIsActive()) {
             telemetry.addData("Test", "Running...");

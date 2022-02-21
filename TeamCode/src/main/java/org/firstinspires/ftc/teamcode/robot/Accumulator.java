@@ -4,31 +4,38 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.lynx.LynxVoltageSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.internal.tfod.RollingAverage;
 import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
 public class Accumulator implements RobotModule {
 
-
     WoENRobot robot;
 
     private double kVoltage = 1;
+    private VoltageSensor controlHubVoltageSensor = null;
+    private double batteryVoltage = 13.0;
+    private RollingAverage averageBatteryVoltage = new RollingAverage(8, batteryVoltage);
+    private final TimedSensorQuery<Double> timedVoltageSensor = new TimedSensorQuery<>(() -> {
+        averageBatteryVoltage.add(controlHubVoltageSensor.getVoltage());
+        return averageBatteryVoltage.get();
+    }, 8);
+
 
     public Accumulator(WoENRobot robot) {
         this.robot = robot;
     }
 
-    VoltageSensor controlHubVoltageSensor = null;
-
-
-    public final TimedSensorQuery<Double> timedVoltageSensor = new TimedSensorQuery<>(() -> controlHubVoltageSensor.getVoltage(),7);
+    public double getBatteryVoltage() {
+        return batteryVoltage;
+    }
 
     public double getkVoltage() {
         return kVoltage;
     }
 
     public void update() {
-        kVoltage = 13 / timedVoltageSensor.getValue();
+        batteryVoltage = timedVoltageSensor.getValue();
+        kVoltage = 13 / batteryVoltage;
     }
 
     public void initialize() {

@@ -8,18 +8,16 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class TelemetryNode implements RobotModule {
 
+    private final ElapsedTime transmissionTimer = new ElapsedTime();
     private WoENRobot robot = null;
     private FtcDashboard dashboard = null;
     private Telemetry dashboardTelemetry = null;
     private Telemetry opModeTelemetry = null;
     private Telemetry multipleTelemetry = null;
     private Telemetry currentTelemetry = null;
-
-    private ElapsedTime transmissionTimer = new ElapsedTime();
 
 
     public TelemetryNode(WoENRobot robot) {
@@ -56,43 +54,45 @@ public class TelemetryNode implements RobotModule {
 
     @Override
     public void update() {
-        if (transmissionTimer.milliseconds() > msTransmissionInterval)
-        {
-            switch(TelemetryNode.TelemetryModuleConfig.telemetryModuleValue){
+        if (transmissionTimer.milliseconds() > msTransmissionInterval) {
+            currentTelemetry.addLine().addData("Mode", TelemetryNode.TelemetryModuleConfig.telemetryModuleValue);
+            switch (TelemetryNode.TelemetryModuleConfig.telemetryModuleValue) {
                 case ACCUMULATOR:
-                    currentTelemetry.addData("Accumulator", robot.accumulator.getkVoltage());
-                    currentTelemetry.addData("Accumulator", robot.accumulator.timedVoltageSensor.getValue());
+                    currentTelemetry.addLine().addData("Voltage", ".3f", robot.accumulator.getBatteryVoltage())
+                            .addData("Coefficient", ".3f", robot.accumulator.getkVoltage());
                     break;
                 case BRUSH:
-                    currentTelemetry.addData("Protection(On or Off)", robot.brush.protectionBrushMotor());
-                    currentTelemetry.addData("EnableIntake", robot.brush.getEnableIntake());
-                    currentTelemetry.addData("AMPS brush motor", robot.brush.brushMotor.getCurrent(CurrentUnit.AMPS));
+                    currentTelemetry.addLine().addData("Enabled", robot.brush.getEnableIntake())
+                            .addData("Motor current", ".2f", robot.brush.getBrushMotorCurrent())
+                            .addData("Protection enabled", robot.brush.protectionBrushMotor());
                     break;
                 case BUCKET:
-                    currentTelemetry.addData("BucketPosition", robot.bucket.getBucketPosition());
-                    currentTelemetry.addData("ServoTimer", robot.bucket.servoTimer);
+                    currentTelemetry.addLine().addData("Bucket position", robot.bucket.getBucketPosition())
+                            .addData("Freight detected", robot.bucket.isFreightDetected())
+                            .addData("Servo timer", ".1f", robot.bucket.servoTimer);
                     break;
                 case ENCODERS:
-                    currentTelemetry.addData("RightEncoder", robot.movement.getRightEncoder());
-                    currentTelemetry.addData("LeftEncoder", robot.movement.getLeftEncoder());
+                    currentTelemetry.addLine().addData("Left encoder", ".0f", robot.movement.getLeftEncoder())
+                            .addData("Right encoder", ".0f", robot.movement.getRightEncoder());
                     break;
                 case GYRO:
-                    currentTelemetry.addData("Orientation",robot.gyro.getOrientation());
+                    currentTelemetry.addLine().addData("Heading", ".2f", -robot.gyro.getOrientation().firstAngle)
+                            .addData("Roll", ".2f", robot.gyro.getOrientation().secondAngle)
+                            .addData("Pitch", ".2f", robot.gyro.getOrientation().thirdAngle);
                     break;
                 case LIFT:
-                    currentTelemetry.addData("ElevatorPosition",robot.lift.getElevatorPosition());
-                    currentTelemetry.addData("LiftEncoderPosition",robot.lift.getLiftEncoderPosition());
+                    currentTelemetry.addLine().addData("ElevatorPosition", robot.lift.getElevatorPosition())
+                            .addData("LiftEncoderPosition", robot.lift.getLiftEncoderPosition());
                     break;
                 case MOVEMENT:
-                    robot.movement.telemetryForMovement();
+                    robot.movement.telemetryForMovement(currentTelemetry);
                     break;
                 case UNEXPECTED:
-                    currentTelemetry.addData("chto-to ne ochevidnoe", 0);
+                    currentTelemetry.addLine().addData("chto-to ne ochevidnoe", 0);
                     break;
                 case OPENCV:
-                    currentTelemetry.addData("Camera", robot.arucoDetect.forceGetPosition());
+                    currentTelemetry.addLine().addData("Camera", robot.arucoDetect.forceGetPosition());
             }
-            currentTelemetry.addData("Mode", TelemetryNode.TelemetryModuleConfig.telemetryModuleValue);
             transmissionTimer.reset();
             currentTelemetry.update();
         }
@@ -108,13 +108,12 @@ public class TelemetryNode implements RobotModule {
 
     @Config
     public static class TelemetryConfig {
-        public static TelemetryNode.TelemetryType telemetryType =
-                TelemetryType.DASHBOARD;
+        public static TelemetryNode.TelemetryType telemetryType = TelemetryType.DASHBOARD;
         public static int msTransmissionInterval = 250;
     }
 
     @Config
-    public static class TelemetryModuleConfig{
+    public static class TelemetryModuleConfig {
         public static TelemetryModuleValue telemetryModuleValue = TelemetryModuleValue.ACCUMULATOR;
     }
 }

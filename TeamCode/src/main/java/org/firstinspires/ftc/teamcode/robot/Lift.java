@@ -13,13 +13,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.misc.CommandSender;
+
 public class Lift implements RobotModule {
 
     public boolean queuebool = true;
     public DigitalChannel limitSwitch = null;
     private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
-    private WoENRobot robot;
+    private final CommandSender liftCommandSender =
+            new CommandSender((double value) -> motorLift.setPower(value));
+    private final WoENRobot robot;
     private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
     private int liftEncoderOffset = 0;
 
@@ -75,20 +79,20 @@ public class Lift implements RobotModule {
         if (elevatorTarget == ElevatorPosition.DOWN) {
             if (!limitSwitch.getState()) {
                 double error = encoderTarget - getLiftEncoderPosition();
-                motorLift.setPower(((error < 0 ? error * kP : 0) - homingPower) * robot.accumulator.getkVoltage());
+                liftCommandSender.send(((error < 0 ? error * kP : 0) - homingPower) * robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
-                motorLift.setPower(0);
+                liftCommandSender.send(0);
                 if (!queuebool) liftEncoderOffset = motorLift.getCurrentPosition();
                 queuebool = true;
             }
         } else {
             double error = encoderTarget - getLiftEncoderPosition();
             if (abs(error) > errorThreshold) {
-                motorLift.setPower(error * kP * robot.accumulator.getkVoltage());
+                liftCommandSender.send(error * kP * robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
-                motorLift.setPower(0);
+                liftCommandSender.send(0);
                 queuebool = true;
             }
         }

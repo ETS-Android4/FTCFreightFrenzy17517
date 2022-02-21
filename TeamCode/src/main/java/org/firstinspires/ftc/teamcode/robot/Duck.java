@@ -1,32 +1,36 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 
+import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.centreOfDuck;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.autonomousSpinTime;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.directionDuck;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.motorSpeed;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.teleOpSpinTime;
-import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.*;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.misc.CommandSender;
 import org.firstinspires.ftc.teamcode.misc.PositionOnField;
 import org.firstinspires.ftc.teamcode.misc.PositionToSearch;
 
 public class Duck implements RobotModule {
-    private DcMotor duckMotor = null;
-
     private final WoENRobot robot;
-
+    private final ElapsedTime duckTimer = new ElapsedTime();
+    public boolean queuebool = true;
+    private DcMotorEx duckMotor = null;
+    private final CommandSender motorCommandSender =
+            new CommandSender((double value) -> duckMotor.setPower(value));
+    private boolean shoudSpin = false;
+    private boolean teleOpMode = false;
     public Duck(WoENRobot robot) {
         this.robot = robot;
     }
 
-
     public void initialize() {
-        duckMotor = robot.getLinearOpMode().hardwareMap.get(DcMotor.class, "DuckMotor");
+        duckMotor = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "DuckMotor");
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
@@ -37,10 +41,10 @@ public class Duck implements RobotModule {
                 switch (position) {
                     case LEFT:
                         centreOfDuck = -21.5;
-                    break;
+                        break;
                     case RIGHT:
                         centreOfDuck = 0;
-                    break;
+                        break;
                 }
                 break;
             case BLUE:
@@ -58,9 +62,6 @@ public class Duck implements RobotModule {
         }
     }
 
-    private boolean shoudSpin = false;
-    private boolean teleOpMode = false;
-
     public void setTeleOpMode(boolean teleOpMode) {
         this.teleOpMode = teleOpMode;
     }
@@ -70,20 +71,17 @@ public class Duck implements RobotModule {
         shoudSpin = doSpin;
     }
 
-    public boolean queuebool = true;
-    private final ElapsedTime duckTimer = new ElapsedTime();
-
     public boolean actionIsCompleted() {
         return queuebool;
     }
 
     public void update() {
         if (shoudSpin && duckTimer.seconds() < (teleOpMode ? teleOpSpinTime : autonomousSpinTime)) {
-            duckMotor.setPower(directionDuck * motorSpeed * robot.accumulator.getkVoltage());
+            motorCommandSender.send(directionDuck * motorSpeed * robot.accumulator.getkVoltage());
             queuebool = false;
         } else {
             queuebool = true;
-            duckMotor.setPower(0);
+            motorCommandSender.send(0);
         }
     }
 

@@ -1,6 +1,17 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.*;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kD_Angle;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kD_Distance;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kI_Angle;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kI_Distance;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kP_Angle;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kP_Distance;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.maxIntegralAngle;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.maxIntegralDistance;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.minErrorAngle;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.minErrorDistance;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.moveTimeoutS;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.zeroPowerBehavior;
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
@@ -10,41 +21,63 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.misc.CommandSender;
+
 
 public class Movement implements RobotModule {
 
-    public boolean actionIsCompleted() {
-        return queuebool;
-    }
-
-
-
+    private static final double TRACK_WIDTH_CM = 38.84500;
+    private static final double WHEEL_DIAMETER_CM = 10.6; //10.90532
+    private static final int ENCODER_RESOLUTION = 24;
+    private static final double GEARBOX_RATIO = 20.0;
+    private static final double ENCODER_TICKS_TO_CM_RATIO =
+            (WHEEL_DIAMETER_CM * PI) / (ENCODER_RESOLUTION * GEARBOX_RATIO);
+    private static final double CM_TO_ROTATION_DEGREES_RATIO = 180 / ((TRACK_WIDTH_CM / 2) * PI);
+    private final ElapsedTime loopTimer = new ElapsedTime();
+    public boolean queuebool = true;
+    ElapsedTime timer = new ElapsedTime();
+    double oldErrDistance = 0;
+    double oldErrAngle = 0;
+    double proportionalLinear = 0;
+    double proportionalAngular = 0;
+    double integralLinear = 0;
+    double integralAngular = 0;
+    double differentialLinear = 0;
+    double differentialAngular = 0;
     private boolean manualControl = true;
-
     private WoENRobot robot = null;
+    private double distance = 0;
+    private double angle = 0;
+    private double speed = 0;
+    private DcMotorEx leftMotorFront = null;
+    private DcMotorEx rightMotorFront = null;
+    private DcMotorEx leftMotorBack = null;
+    private DcMotorEx rightMotorBack = null;
+    private final CommandSender leftMotorCommandSender = new CommandSender((double value) -> {
+        leftMotorBack.setPower(value);
+        leftMotorFront.setPower(value);
+    });
+    private final CommandSender rightMotorCommandSender = new CommandSender((double value) -> {
+        rightMotorBack.setPower(value);
+        rightMotorFront.setPower(value);
+    });
 
     public Movement(WoENRobot robot) {
         this.robot = robot;
+    }
+
+    public boolean actionIsCompleted() {
+        return queuebool;
     }
 
     double getGyroHeading() {
         return -robot.gyro.getOrientation().firstAngle;
     }
 
-
-    private double distance = 0;
-    private double angle = 0;
-    private double speed = 0;
-    private final ElapsedTime loopTimer = new ElapsedTime();
-    private DcMotorEx leftMotorFront = null;
-    private DcMotorEx rightMotorFront = null;
-    private DcMotorEx leftMotorBack = null;
-    private DcMotorEx rightMotorBack = null;
-
-    private static final double WHEEL_DIAMETER_CM = 10.6;
-    private static final int ENCODER_RESOLUTION = 24;
-    private static final double GEARBOX_RATIO = 20.0;
-    private static final double ENCODER_TICKS_TO_CM_RATIO = (WHEEL_DIAMETER_CM * PI) / (ENCODER_RESOLUTION * GEARBOX_RATIO);
+    public double encoderTicksToRotationDegrees(double ticks) {
+        return encoderTicksToCm(ticks) * CM_TO_ROTATION_DEGREES_RATIO;
+    }
 
     public double cmToEncoderTicks(double centimeters) {
         return centimeters / ENCODER_TICKS_TO_CM_RATIO;
@@ -104,10 +137,6 @@ public class Movement implements RobotModule {
         return error;
     }
 
-    public boolean queuebool = true;
-
-    ElapsedTime timer = new ElapsedTime();
-
     public void Move(double dist) {
         Move(dist, 0, 1);
     }
@@ -129,14 +158,6 @@ public class Movement implements RobotModule {
         this.speed = speed;
     }
 
-    double oldErrDistance = 0;
-    double oldErrAngle = 0;
-    double proportionalLinear = 0;
-    double proportionalAngular = 0;
-    double integralLinear = 0;
-    double integralAngular = 0;
-    double differentialLinear = 0;
-    double differentialAngular = 0;
     public void update() {
         if (!manualControl) {
             double deltaErrDistance = 0;
@@ -169,35 +190,36 @@ public class Movement implements RobotModule {
             setMotorPowersPrivate(
                     (integralLinear + proportionalLinear + differentialLinear) * speed *
                             robot.accumulator.getkVoltage(),
-                    (integralAngular + proportionalAngular + differentialAngular) *
-                            speedAngle * robot.accumulator.getkVoltage());
-            queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle))||(timer.seconds() >= moveTimeoutS);
-        }
-        else{
+                    (integralAngular + proportionalAngular + differentialAngular) * speedAngle *
+                            robot.accumulator.getkVoltage());
+            queuebool =
+                    ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle)) ||
+                            (timer.seconds() >= moveTimeoutS);
+        } else {
             queuebool = true;
         }
 
     }
-    public void telemetryForMovement(){
-        robot.dashboard.getTelemetry().addData("Proportional(liner)", proportionalLinear);
-        robot.dashboard.getTelemetry().addData("Proportional(angle)", proportionalAngular);
-        robot.dashboard.getTelemetry().addData("Differential(liner)", differentialLinear);
-        robot.dashboard.getTelemetry().addData("Differential(angle)", differentialAngular);
-        robot.dashboard.getTelemetry().addData("Integral(liner)", integralLinear);
-        robot.dashboard.getTelemetry().addData("Integral(angle)", integralAngular);
 
-
+    public void telemetryForMovement(Telemetry telemetry) {
+        telemetry.addLine().addData("Proportional(liner)", proportionalLinear)
+                .addData("Proportional(angle)", proportionalAngular)
+                .addData("Differential(liner)", differentialLinear)
+                .addData("Differential(angle)", differentialAngular)
+                .addData("Integral(liner)", integralLinear)
+                .addData("Integral(angle)", integralAngular);
     }
+
     public void setMotorPowers(double power, double angle) {
         manualControl = true;
         setMotorPowersPrivate(power, angle);
     }
+
     private void setMotorPowersPrivate(double power, double angle) {
-        rightMotorFront.setPower(power - angle);
-        rightMotorBack.setPower(power - angle);
-        leftMotorFront.setPower(power + angle);
-        leftMotorBack.setPower(power + angle);
+        rightMotorCommandSender.send(power - angle);
+        leftMotorCommandSender.send(power + angle);
     }
+
     double getLeftEncoder() {
         return (leftMotorBack.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0;
     }
@@ -209,8 +231,6 @@ public class Movement implements RobotModule {
 
     @Config
     public static class MovementConfig {
-        public static double dist = 0;
-        public static double angle = 0;
         public static double kP_Distance = 0.017;
         public static double kP_Angle = 0.052;
         public static double kI_Distance = 0.004;

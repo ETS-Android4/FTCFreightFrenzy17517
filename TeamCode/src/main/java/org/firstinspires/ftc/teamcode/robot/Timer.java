@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Timer implements RobotModule {
 
-    private ElapsedTime elapsedTime = new ElapsedTime();
+    private final ElapsedTime elapsedTime = new ElapsedTime();
 
     private double delaySeconds = 0;
 

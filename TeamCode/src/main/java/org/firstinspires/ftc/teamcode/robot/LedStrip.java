@@ -9,12 +9,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.misc.CommandSender;
 import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
 public class LedStrip implements RobotModule {
 
     private LedStripMode ledStripMode = LedStripMode.DRIVER_INDICATOR;
     private DcMotorEx ledMotor = null;
+    private final CommandSender ledCommandSender =
+            new CommandSender((double value) -> ledMotor.setPower(value));
     private final ElapsedTime lightTimer = new ElapsedTime();
     private boolean dualLEDSwitchIterator = false;
     private WoENRobot robot;
@@ -110,7 +113,7 @@ public class LedStrip implements RobotModule {
 
         dualLEDSwitchIterator = !dualLEDSwitchIterator;
         ledCurrentValue = ledCurrentQuery.getValue();
-        ledMotor.setPower(power * LEDPower);
+        ledCommandSender.send(power * LEDPower);
     }
 
     public enum LedStripMode {

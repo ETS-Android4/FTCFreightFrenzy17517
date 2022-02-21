@@ -12,18 +12,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.misc.CommandSender;
 import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
 public class Bucket implements RobotModule {
 
+    private final WoENRobot robot;
     public DistanceSensor distance = null;
     private final TimedSensorQuery<Double> timedDistanceSensorQuery =
             new TimedSensorQuery<>(() -> distance.getDistance(DistanceUnit.CM), 10);
     public ElapsedTime servoTimer = new ElapsedTime();
     private Servo servoElevator = null;
+    private CommandSender servoCommandSender = new CommandSender((double value)->servoElevator.setPosition(value));
     private BucketPosition bucketPosition = BucketPosition.COLLECT;
     private boolean freightDetected = false;
-    private final WoENRobot robot;
 
     public Bucket(WoENRobot robot) {
         this.robot = robot;
@@ -68,12 +70,12 @@ public class Bucket implements RobotModule {
         freightDetected = getFreightDetectionStatus();
         switch (bucketPosition) {
             case COLLECT:
-                servoElevator.setPosition(
+                servoCommandSender.send(
                         robot.lift.getElevatorPosition() != Lift.ElevatorPosition.DOWN ?
                                 positionServoUp : positonServoForElevator);
                 break;
             case EJECT:
-                servoElevator.setPosition(positionServoDown);
+                servoCommandSender.send(positionServoDown);
                 break;
         }
     }
