@@ -1,44 +1,44 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class GyroAuto implements RobotModule {
+    private boolean gyroTriggered = false;
     private WoENRobot robot = null;
+    private ElapsedTime gyro_timer = new ElapsedTime();
+    private double tiltOffset;
+    private boolean gyroTiltDetected = false;
 
     public GyroAuto(WoENRobot robot) {
         this.robot = robot;
     }
 
-    private ElapsedTime gyro_timer = new ElapsedTime();
-    private double gyro_in;
-    private boolean private_status = false;
-    public boolean gyro_status = false;
+    public boolean isGyroTriggered() {
+        return gyroTriggered;
+    }
+
+    public void resetGyroTrigger() {
+        gyroTriggered = false;
+    }
 
     public void initialize() {
-        gyro_in = robot.gyro.getOrientation().thirdAngle;
+        tiltOffset = robot.gyro.getOrientation().thirdAngle;
     }
 
     public void update() {
-        if (Math.abs(angle()) > 5.0) {
-            private_status = true;
+        if (Math.abs(getTilt()) > 5.0) {
+            gyroTiltDetected = true;
             gyro_timer.reset();
         }
-        if (private_status && gyro_timer.time(TimeUnit.SECONDS) > 0.5) {
-            gyro_status = true;
-            private_status = false;
+        if (gyroTiltDetected && gyro_timer.time(TimeUnit.SECONDS) > 0.5) {
+            gyroTriggered = true;
+            gyroTiltDetected = false;
         }
     }
 
-    private double angle() {
-        return robot.gyro.getOrientation().thirdAngle - gyro_in;
+    private double getTilt() {
+        return robot.gyro.getOrientation().thirdAngle - tiltOffset;
     }
 }
