@@ -1,95 +1,90 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 
-import static org.firstinspires.ftc.teamcode.opmodes.TeleOpOneGamepad.TeleOpConfig.robotSpeedMultiplier;
+import static org.firstinspires.ftc.teamcode.opmodes.TeleOpOneGamepad.TeleOpConfig.drivetrainSpeedMultiplierDashboard;
 import static org.firstinspires.ftc.teamcode.robot.Lift.ElevatorPosition.UP;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.misc.ButtonActivatedModes.ButtonActivated;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.ButtonSwitch;
+import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SinglePressButton;
 import org.firstinspires.ftc.teamcode.misc.ButtonOperations.SmartButtonSwitch;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
-import org.firstinspires.ftc.teamcode.robot.GyroAuto;
 import org.firstinspires.ftc.teamcode.robot.LedStrip;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
-import java.util.concurrent.TimeUnit;
-
 @TeleOp
 public class TeleOpOneGamepad extends BaseOpMode {
-    private final SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.circle, (Boolean duckb) -> robot.duck.duckSpin(duckb));
-    private final SmartButtonSwitch servo_elevator_function = new SmartButtonSwitch(() -> gamepad1.square, (Boolean elev) -> robot.bucket.setBucketPosition(elev ? Bucket.BucketPosition.EJECT : Bucket.BucketPosition.COLLECT));
-    private final SmartButtonSwitch intake_function = new SmartButtonSwitch(() -> gamepad1.triangle, (Boolean intake) -> robot.brush.enableIntake(intake));
-    private final ButtonSwitch intakeSwitch = new ButtonSwitch();
     private final ButtonSwitch speedSwitch = new ButtonSwitch();
-
-
-    private ElapsedTime gyro_control = new ElapsedTime();
-    public ButtonActivated BA;
-    public boolean cube_bool_1 = false;
-    public boolean cube_bool_2 = false;
-    public double pl = 0.0;
-    public int gyro_counter = 0;
+    private final SinglePressButton freightDetectionTrigger = new SinglePressButton();
+    public boolean robotWentToShippingHub = false;
+    public boolean robotWentToFreightZone = false;
+    public double drivetrainSpeedMultiplier = 1.0;
 
     @Override
     public void main() {
-        robot.init();
-        gyro_control.reset();
+        SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.circle, robot.duck::duckSpin);
+        SmartButtonSwitch servo_elevator_function =
+                new SmartButtonSwitch(() -> gamepad1.square, (Boolean elev) -> robot.bucket
+                        .setBucketPosition(elev ? Bucket.BucketPosition.EJECT : Bucket.BucketPosition.COLLECT));
+        SmartButtonSwitch intake_function =
+                new SmartButtonSwitch(() -> gamepad1.triangle, robot.brush::setEnableIntake);
         robot.duck.setTeleOpMode(true);
-        // LED
-        robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
-
 
         while (opModeIsActive()) {
+            //Driver Feedback
+            freightDetectionGamepadRumble();
+            // LED
+            if (gamepad1.left_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
+            else if (gamepad1.right_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR1);
+            else robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
             // Movement
-            //robot.movement.teleometryEncoder();
-            robot.movement.setMotorPowers(
-                    -gamepad1.left_stick_y * get_speed(),
-                    gamepad1.right_stick_x * get_speed());
+            robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * get_speed());
             // Switch functions
             duck_function.activate();
             servo_elevator_function.activate();
             // Others
-            robot.brush.enableIntake(intakeSwitch.getState(gamepad1.triangle));
-            robot.update();
+            intake_function.activate();
             gyro_system();
             lift_function();
+            //Update robot runctions
+            robot.update();
         }
+    }
+
+    private void freightDetectionGamepadRumble() {
+        if (freightDetectionTrigger.getState(robot.bucket.isFreightDetected())) gamepad1.rumble(.5, .5, 200);
     }
 
     private void gyro_system() {
-        cube_bool_1 = robot.gyroAuto.gyro_status && robot.bucket.isFreightDetected();
-        cube_bool_2 = robot.gyroAuto.gyro_status && !robot.bucket.isFreightDetected();
+        robotWentToShippingHub = robot.gyroAuto.isGyroTriggered() && robot.bucket.isFreightDetected();
+        robotWentToFreightZone = robot.gyroAuto.isGyroTriggered() && !robot.bucket.isFreightDetected();
     }
 
     private double get_speed() {
-        if (speedSwitch.getState(gamepad1.right_bumper)) pl = 1;
-        else pl = 0.5 * robot.accumulator.getkVoltage();
-        return pl * robotSpeedMultiplier;
+        if (speedSwitch.getState(gamepad1.right_bumper)) drivetrainSpeedMultiplier = 1;
+        else drivetrainSpeedMultiplier = 0.5 * robot.accumulator.getkVoltage();
+        return drivetrainSpeedMultiplier * drivetrainSpeedMultiplierDashboard;
     }
 
     private void lift_function() {
-        if (gamepad1.dpad_up || cube_bool_1) {
-            robot.lift.setElevatorTarget(UP);
-            cube_bool_1 = robot.gyroAuto.gyro_status = false;
+        if (gamepad1.dpad_down || robotWentToFreightZone) {
+            robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+            robot.gyroAuto.resetGyroTrigger();
         }
         if (gamepad1.dpad_left) {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
+            robot.gyroAuto.resetGyroTrigger(); //?
         }
-        if (gamepad1.dpad_down || cube_bool_2) {
-            robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
-            cube_bool_2 = robot.gyroAuto.gyro_status = false;
-        }
-        if ((cube_bool_1 || cube_bool_2) && gyro_control.time(TimeUnit.SECONDS) > 0.1) {
-            gyro_control.reset();
+        if (gamepad1.dpad_up || robotWentToShippingHub) {
+            robot.lift.setElevatorTarget(UP);
+            robot.gyroAuto.resetGyroTrigger();
         }
     }
 
     @Config
     public static class TeleOpConfig {
-        public static double robotSpeedMultiplier = 1.0;
+        public static double drivetrainSpeedMultiplierDashboard = 1.0;
     }
 }
