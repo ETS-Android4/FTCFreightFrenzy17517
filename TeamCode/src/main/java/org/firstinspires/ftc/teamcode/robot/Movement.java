@@ -217,8 +217,8 @@ public class Movement implements RobotModule {
     public static class MovementConfig {
         public static double dist = 0;
         public static double angle = 0;
-        public static double kP_Distance = 0.017;
-        public static double kP_Angle = 0.056;
+        public static double kP_Distance = 0.02;
+        public static double kP_Angle = 0.063;
         public static double kI_Distance = 0.004;
         public static double kI_Angle = 0.01;
         public static double kD_Distance = 0.002;

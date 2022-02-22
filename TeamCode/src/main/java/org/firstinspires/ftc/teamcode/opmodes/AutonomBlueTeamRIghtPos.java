@@ -12,14 +12,13 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
 
-
-            () -> { robot.movement.Move(-58, -37);                                //-64, -37
+            () -> { robot.movement.Move(-58, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> {robot.movement.Move(-20, -37);},
-            () -> {robot.movement.Move(-20, 90);},
+            () -> {robot.movement.Move(-25, -37);},
+            () -> {robot.movement.Move(-25, 90);},
             () -> {robot.movement.Move(-105, 90);},
             () -> robot.movement.Move(-105,180),
             () -> robot.movement.Move(-108,180),
@@ -27,7 +26,6 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
                 robot.movement.Move(-108,180);},
             () -> robot.movement.Move(-75,180),
             () -> robot.movement.Move(-75,90),
-            () -> robot.timer.delay(4.5),
             () -> robot.movement.Move(210,90, 1.4),
             () -> robot.movement.Move(210, 0),
             () -> robot.movement.Move(220, 0),
@@ -36,13 +34,13 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
     };
     Runnable[] middlePosition = {
 
-            () -> { robot.movement.Move(-58, -37);                                //-64, -37
+            () -> { robot.movement.Move(-58, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> {robot.movement.Move(-20, -37);},
-            () -> {robot.movement.Move(-20, 90);},
+            () -> {robot.movement.Move(-25, -37);},
+            () -> {robot.movement.Move(-25, 90);},
             () -> {robot.movement.Move(-105, 90);},
             () -> robot.movement.Move(-105,180),
             () -> robot.movement.Move(-108,180),
@@ -50,7 +48,6 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
                 robot.movement.Move(-108,180);},
             () -> robot.movement.Move(-75,180),
             () -> robot.movement.Move(-75,90),
-            () -> robot.timer.delay(4.5),
             () -> robot.movement.Move(210,90, 1.4),
             () -> robot.movement.Move(210, 0),
             () -> robot.movement.Move(220, 0),
@@ -58,13 +55,13 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
     };
     Runnable[] upPosition = {
 
-            () -> { robot.movement.Move(-58, -37);                                //-64, -37
+            () -> { robot.movement.Move(-58, -33);                                //-64, -37
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> {robot.movement.Move(-20, -37);},
-            () -> {robot.movement.Move(-20, 90);},
+            () -> {robot.movement.Move(-25, -37);},
+            () -> {robot.movement.Move(-25, 90);},
             () -> {robot.movement.Move(-105, 90);},
             () -> robot.movement.Move(-105,180),
             () -> robot.movement.Move(-108,180),
@@ -72,7 +69,6 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
                 robot.movement.Move(-108,180);},
             () -> robot.movement.Move(-75,180),
             () -> robot.movement.Move(-75,90),
-            () -> robot.timer.delay(4.5),
             () -> robot.movement.Move(210,90, 1.4),
             () -> robot.movement.Move(210, 0),
             () -> robot.movement.Move(220, 0),
