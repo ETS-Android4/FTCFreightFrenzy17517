@@ -28,7 +28,7 @@ public class ArucoDetect {
     double cy = 221.506;
     double tagsize = 0.166;
     int numFramesWithoutDetection = 0;
-    private WoENRobot robot;
+    private final WoENRobot robot;
     public ArucoDetect(WoENRobot robot) {
         this.robot = robot;
     }
@@ -83,10 +83,6 @@ public class ArucoDetect {
 
     public FreightPosition getPosition() {
         return freightPositionTimedSensorQuery.getValue();
-    }
-
-    public boolean inRange(double down, double up) {
-        return timePosition > up && timePosition < down;
     }
 
     public FreightPosition stopCamera() {

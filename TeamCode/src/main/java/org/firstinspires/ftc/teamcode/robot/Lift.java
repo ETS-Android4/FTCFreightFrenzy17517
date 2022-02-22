@@ -105,10 +105,10 @@ public class Lift implements RobotModule {
     @Config
     public static class LiftConfig {
         public static double homingPower = 0.25;
-        public static double kP = 0.005;
-        public static int errorThreshold = 50;
+        public static double kP = 0.01;
+        public static int errorThreshold = 10;
         public static double downTargetElevator = 0;
         public static double middleTargetElevator = 650;
-        public static double upTargetElevator = 1300;
+        public static double upTargetElevator = 1340;
     }
 }

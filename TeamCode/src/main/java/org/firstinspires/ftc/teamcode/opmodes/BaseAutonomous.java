@@ -17,7 +17,7 @@ public abstract class BaseAutonomous extends BaseOpMode {
     }
 
     public final void execute(Runnable[] runnables) {
-        execute(runnables, 10);
+        execute(runnables, 3);
     }
 
     public final void execute(Runnable[] runnables, double timeoutSeconds) {
@@ -26,7 +26,7 @@ public abstract class BaseAutonomous extends BaseOpMode {
             if (opModeIsActive()) action.run();
             do
                 robot.update();
-            while (!robot.allActionsAreCompleted() && opModeIsActive() && elapsedTime.seconds() < timeoutSeconds);
+            while (!robot.allActionsAreCompleted() && opModeIsActive() && elapsedTime.seconds() < Math.max(timeoutSeconds,robot.timer.getDelaySeconds()));
         }
     }
 

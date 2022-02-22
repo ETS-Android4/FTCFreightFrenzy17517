@@ -8,12 +8,16 @@ public class Timer implements RobotModule {
 
     private double delaySeconds = 0;
 
+    public double getDelaySeconds() {
+        return delaySeconds;
+    }
+
     public void delay(double delaySeconds) {
         this.delaySeconds = delaySeconds;
         elapsedTime.reset();
     }
 
-    public double getTimeLeft(){
+    public double getTimeLeft() {
         return delaySeconds - elapsedTime.seconds();
     }
 
@@ -24,6 +28,7 @@ public class Timer implements RobotModule {
 
     @Override
     public void update() {
+        if (actionIsCompleted()) delaySeconds = 0;
     }
 
     @Override
