@@ -40,10 +40,10 @@ public class Duck implements RobotModule {
                 directionDuck = 1;
                 switch (position) {
                     case LEFT:
-                        centreOfDuck = -21.5;
+                        centreOfDuck = 0;
                         break;
                     case RIGHT:
-                        centreOfDuck = 0;
+                        centreOfDuck = -21.5;
                         break;
                 }
                 break;

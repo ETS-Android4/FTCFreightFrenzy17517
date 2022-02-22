@@ -231,10 +231,10 @@ public class Movement implements RobotModule {
 
     @Config
     public static class MovementConfig {
-        public static double kP_Distance = 0.017;
-        public static double kP_Angle = 0.052;
+        public static double kP_Distance = 0.02;
+        public static double kP_Angle = 0.063;
         public static double kI_Distance = 0.004;
-        public static double kI_Angle = 0.008;
+        public static double kI_Angle = 0.01;
         public static double kD_Distance = 0.002;
         public static double kD_Angle = 0.003;
         public static double maxIntegralAngle = 0.25;
