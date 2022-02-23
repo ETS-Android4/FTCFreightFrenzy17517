@@ -24,11 +24,11 @@ public class TeleOpOneGamepad extends BaseOpMode {
 
     @Override
     public void main() {
-        SmartButtonSwitch duck_function = new SmartButtonSwitch(() -> gamepad1.circle, robot.duck::duckSpin);
-        SmartButtonSwitch servo_elevator_function =
+        SmartButtonSwitch duckFunction = new SmartButtonSwitch(() -> gamepad1.circle, robot.duck::duckSpin);
+        SmartButtonSwitch servoElevatorFunction =
                 new SmartButtonSwitch(() -> gamepad1.square, (Boolean elev) -> robot.bucket
                         .setBucketPosition(elev ? Bucket.BucketPosition.EJECT : Bucket.BucketPosition.COLLECT));
-        SmartButtonSwitch intake_function =
+        SmartButtonSwitch intakeFunction =
                 new SmartButtonSwitch(() -> gamepad1.triangle, robot.brush::setEnableIntake);
         robot.duck.setTeleOpMode(true);
 
@@ -36,28 +36,32 @@ public class TeleOpOneGamepad extends BaseOpMode {
             //Driver Feedback
             freightDetectionGamepadRumble();
             // LED
-            if (gamepad1.left_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
-            else if (gamepad1.right_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR1);
-            else robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
+            ledStripFunction();
             // Movement
             robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * get_speed());
             // Switch functions
-            duck_function.activate();
-            servo_elevator_function.activate();
+            duckFunction.activate();
+            servoElevatorFunction.activate();
             // Others
-            intake_function.activate();
-            gyro_system();
-            lift_function();
+            intakeFunction.activate();
+            gyroSystem();
+            liftFunction();
             //Update robot runctions
             robot.update();
         }
+    }
+
+    private void ledStripFunction(){
+        if (gamepad1.left_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
+        else if (gamepad1.right_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR1);
+        else robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
     }
 
     private void freightDetectionGamepadRumble() {
         if (freightDetectionTrigger.getState(robot.bucket.isFreightDetected())) gamepad1.rumble(.5, .5, 200);
     }
 
-    private void gyro_system() {
+    private void gyroSystem() {
         robotWentToShippingHub = robot.gyroAuto.isGyroTriggered() && robot.bucket.isFreightDetected();
         robotWentToFreightZone = robot.gyroAuto.isGyroTriggered() && !robot.bucket.isFreightDetected();
     }
@@ -68,7 +72,7 @@ public class TeleOpOneGamepad extends BaseOpMode {
         return drivetrainSpeedMultiplier * drivetrainSpeedMultiplierDashboard;
     }
 
-    private void lift_function() {
+    private void liftFunction() {
         if (gamepad1.dpad_down || robotWentToFreightZone) {
             robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             robot.gyroAuto.resetGyroTrigger();

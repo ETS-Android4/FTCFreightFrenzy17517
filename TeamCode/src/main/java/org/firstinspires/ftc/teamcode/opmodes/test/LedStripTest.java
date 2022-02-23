@@ -14,14 +14,14 @@ public class LedStripTest extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        telemetry.addData("Test", "Robot will shine after Start button had been pressed.");
-        telemetry.update();
+        robot.telemetryNode.getTelemetry().addData("Test", "Robot will shine after Start button had been pressed.");
+        robot.telemetryNode.getTelemetry().update();
     }
 
     @Override
     public void main() {
-        telemetry.addData("Test", "Running...");
-        telemetry.update();
+        robot.telemetryNode.getTelemetry().addData("Test", "Running...");
+        robot.telemetryNode.getTelemetry().update();
         while (opModeIsActive()) {
             robot.ledStrip.setMode(ledStripMode);
             robot.ledStrip.update();

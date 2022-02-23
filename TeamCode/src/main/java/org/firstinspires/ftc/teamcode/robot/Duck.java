@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.misc.CommandSender;
-import org.firstinspires.ftc.teamcode.misc.PositionOnField;
-import org.firstinspires.ftc.teamcode.misc.PositionToSearch;
+import org.firstinspires.ftc.teamcode.misc.AllianceColor;
+import org.firstinspires.ftc.teamcode.misc.StartingPosition;
 
 public class Duck implements RobotModule {
     private final WoENRobot robot;
@@ -34,11 +34,11 @@ public class Duck implements RobotModule {
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    public void redOrBlue(PositionOnField direction, PositionToSearch position) {
-        switch (direction) {
+    public void setFieldPosition(AllianceColor allianceColor, StartingPosition startingPosition) {
+        switch (allianceColor) {
             case RED:
                 directionDuck = 1;
-                switch (position) {
+                switch (startingPosition) {
                     case LEFT:
                         centreOfDuck = 0;
                         break;
@@ -49,7 +49,7 @@ public class Duck implements RobotModule {
                 break;
             case BLUE:
                 directionDuck = -1;
-                switch (position) {
+                switch (startingPosition) {
                     case LEFT:
                         centreOfDuck = 0;
                         break;

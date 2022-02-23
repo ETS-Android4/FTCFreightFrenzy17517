@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.misc;
 
-public enum PositionOnField {
+public enum AllianceColor {
     RED, BLUE
 }

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class GyroAuto implements RobotModule {
     private boolean gyroTriggered = false;
     private WoENRobot robot = null;
-    private ElapsedTime gyro_timer = new ElapsedTime();
+    private ElapsedTime gyroTimer = new ElapsedTime();
     private double tiltOffset;
     private boolean gyroTiltDetected = false;
 
@@ -30,9 +30,9 @@ public class GyroAuto implements RobotModule {
     public void update() {
         if (Math.abs(getTilt()) > 5.0) {
             gyroTiltDetected = true;
-            gyro_timer.reset();
+            gyroTimer.reset();
         }
-        if (gyroTiltDetected && gyro_timer.time(TimeUnit.SECONDS) > 0.5) {
+        if (gyroTiltDetected && gyroTimer.time(TimeUnit.SECONDS) > 0.5) {
             gyroTriggered = true;
             gyroTiltDetected = false;
         }

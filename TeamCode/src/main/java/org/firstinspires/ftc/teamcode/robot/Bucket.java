@@ -23,7 +23,7 @@ public class Bucket implements RobotModule {
             new TimedSensorQuery<>(() -> distance.getDistance(DistanceUnit.CM), 10);
     public ElapsedTime servoTimer = new ElapsedTime();
     private Servo servoElevator = null;
-    private CommandSender servoCommandSender = new CommandSender((double value)->servoElevator.setPosition(value));
+    private final CommandSender servoCommandSender = new CommandSender((double value)->servoElevator.setPosition(value));
     private BucketPosition bucketPosition = BucketPosition.COLLECT;
     private boolean freightDetected = false;
 

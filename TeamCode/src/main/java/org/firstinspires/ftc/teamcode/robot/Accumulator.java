@@ -14,7 +14,7 @@ public class Accumulator implements RobotModule {
     private double kVoltage = 1;
     private VoltageSensor controlHubVoltageSensor = null;
     private double batteryVoltage = 13.0;
-    private RollingAverage averageBatteryVoltage = new RollingAverage(8, batteryVoltage);
+    private final RollingAverage averageBatteryVoltage = new RollingAverage(8, batteryVoltage);
     private final TimedSensorQuery<Double> timedVoltageSensor = new TimedSensorQuery<>(() -> {
         averageBatteryVoltage.add(controlHubVoltageSensor.getVoltage());
         return averageBatteryVoltage.get();

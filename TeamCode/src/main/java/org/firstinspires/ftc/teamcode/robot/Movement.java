@@ -202,11 +202,11 @@ public class Movement implements RobotModule {
     }
 
     public void telemetryForMovement(Telemetry telemetry) {
-        telemetry.addLine().addData("Proportional(liner)", proportionalLinear)
+        telemetry.addLine().addData("Proportional(linear)", proportionalLinear)
                 .addData("Proportional(angle)", proportionalAngular)
-                .addData("Differential(liner)", differentialLinear)
+                .addData("Differential(linear)", differentialLinear)
                 .addData("Differential(angle)", differentialAngular)
-                .addData("Integral(liner)", integralLinear)
+                .addData("Integral(linear)", integralLinear)
                 .addData("Integral(angle)", integralAngular);
     }
 

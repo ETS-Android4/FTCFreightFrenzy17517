@@ -9,8 +9,8 @@ public class BrushTest extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        telemetry.addData("Test", "Brush will spin forward for 10 seconds after Start button has been pressed");
-        telemetry.update();
+        robot.telemetryNode.getTelemetry().addData("Test", "Brush will spin forward for 10 seconds after Start button has been pressed");
+        robot.telemetryNode.getTelemetry().update();
     }
 
     @Override
@@ -18,9 +18,8 @@ public class BrushTest extends BaseOpMode {
         robot.brush.setEnableIntake(true);
         robot.timer.delay(10);
         while (!robot.timer.actionIsCompleted() && opModeIsActive()) {
-            telemetry.addData("Test", "Running...");
+            robot.telemetryNode.getTelemetry().addData("Test", "Running...");
             robot.update();
-            telemetry.update();
         }
     }
 }

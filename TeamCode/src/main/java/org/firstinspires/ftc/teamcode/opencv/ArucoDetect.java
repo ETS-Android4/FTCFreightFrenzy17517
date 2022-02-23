@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.misc.FreightPosition;
 import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
@@ -40,7 +43,8 @@ public class ArucoDetect {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
+                FtcDashboard.getInstance().startCameraStream(camera,5);
+                //camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -87,9 +91,15 @@ public class ArucoDetect {
 
     public FreightPosition stopCamera() {
         FreightPosition value = forceGetPosition();
-        camera.closeCameraDeviceAsync(() -> {});
+        camera.closeCameraDeviceAsync(() -> {
+            FtcDashboard.getInstance().stopCameraStream();
+        });
         return value;
     }
 
+    @Config
+    public static class OpenCVConfig {
+        public static boolean doCameraStream = false;
+    }
 }
 

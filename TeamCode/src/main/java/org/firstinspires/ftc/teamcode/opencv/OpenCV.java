@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
+import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.OpenCVConfig.doCameraStream;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -37,7 +41,8 @@ public class OpenCV
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(width,height, OpenCvCameraRotation.UPRIGHT);
+                if (doCameraStream) FtcDashboard.getInstance().startCameraStream(camera, 50);
+                //camera.startStreaming(width,height, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -46,9 +51,11 @@ public class OpenCV
             }
         });
     }
-    public FreightPosition stopCamera(){
+    public FreightPosition stopCamera() {
         FreightPosition value = getPosition();
-        camera.closeCameraDeviceAsync(() -> {});
+        camera.closeCameraDeviceAsync(() -> {
+            FtcDashboard.getInstance().stopCameraStream();
+        });
         return value;
     }
     public class Pipeline extends OpenCvPipeline
@@ -71,17 +78,19 @@ public class OpenCV
         {
             return x > up && x < down;
         }
-        public FreightPosition returnPosition()
-        {
+
+        public FreightPosition returnPosition() {
             if (inRange(0, width / 3)) return FreightPosition.LEFT;
             if (inRange(width / 3, width / 3 * 2)) return FreightPosition.CENTER;
             if (inRange(width / 3 * 2, width)) return FreightPosition.RIGHT;
             return FreightPosition.UNKNOWN;
         }
     }
+
     public Pipeline pipeline;
-    public FreightPosition getPosition()
-    {
+
+    public FreightPosition getPosition() {
         return pipeline.returnPosition();
     }
+
 }

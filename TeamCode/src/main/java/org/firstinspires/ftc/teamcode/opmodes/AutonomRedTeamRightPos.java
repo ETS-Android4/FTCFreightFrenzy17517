@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.misc.PositionOnField;
-import org.firstinspires.ftc.teamcode.misc.PositionToSearch;
+import org.firstinspires.ftc.teamcode.misc.AllianceColor;
+import org.firstinspires.ftc.teamcode.misc.StartingPosition;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
@@ -66,7 +66,7 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     @Override
     public void runOpMode() {
-        robot.duck.redOrBlue(PositionOnField.RED, PositionToSearch.RIGHT);
+        robot.duck.setFieldPosition(AllianceColor.RED, StartingPosition.RIGHT);
         super.runOpMode();
     }
 }

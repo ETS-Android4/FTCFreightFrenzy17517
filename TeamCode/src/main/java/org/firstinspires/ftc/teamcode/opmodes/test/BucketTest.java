@@ -10,8 +10,8 @@ public class BucketTest extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        telemetry.addData("Test", "Bucket will stay still and eject 5 seconds after Start button has been pressed.");
-        telemetry.update();
+        robot.telemetryNode.getTelemetry().addData("Test", "Bucket will stay still and eject 5 seconds after Start button has been pressed.");
+        robot.telemetryNode.getTelemetry().update();
     }
 
     @Override
@@ -19,24 +19,21 @@ public class BucketTest extends BaseOpMode {
         robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT);
         robot.timer.delay(5);
         while (!robot.timer.actionIsCompleted() && opModeIsActive()) {
-            telemetry.addData("Test", "Running...");
-            telemetry.addData("Time before ejection", robot.timer.getTimeLeft());
-            telemetry.addData("Freight detected", robot.bucket.isFreightDetected());
+            robot.telemetryNode.getTelemetry().addData("Test", "Running...");
+            robot.telemetryNode.getTelemetry().addData("Time before ejection", robot.timer.getTimeLeft());
+            robot.telemetryNode.getTelemetry().addData("Freight detected", robot.bucket.isFreightDetected());
             robot.update();
-            telemetry.update();
         }
         robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT);
         while (!robot.bucket.actionIsCompleted() && opModeIsActive()) {
-            telemetry.addData("Test", "Running...");
-            telemetry.addData("Freight detected", robot.bucket.isFreightDetected());
-            telemetry.update();
+            robot.telemetryNode.getTelemetry().addData("Test", "Running...");
+            robot.telemetryNode.getTelemetry().addData("Freight detected", robot.bucket.isFreightDetected());
         }
         robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT);
         while (!robot.bucket.actionIsCompleted() && opModeIsActive()) {
-            telemetry.addData("Test", "Running...");
-            telemetry.addData("Freight detected", robot.bucket.isFreightDetected());
+            robot.telemetryNode.getTelemetry().addData("Test", "Running...");
+            robot.telemetryNode.getTelemetry().addData("Freight detected", robot.bucket.isFreightDetected());
             robot.update();
-            telemetry.update();
         }
     }
 }

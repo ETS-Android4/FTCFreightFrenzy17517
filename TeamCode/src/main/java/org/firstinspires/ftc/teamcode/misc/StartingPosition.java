@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.misc;
 
-public enum PositionToSearch {
+public enum StartingPosition {
     LEFT, RIGHT
 }
