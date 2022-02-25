@@ -28,8 +28,7 @@ public class CommandSender {
     }
 
     public void send(double value) {
-        if (sendTimer.seconds() > sendTimeoutSeconds ||
-                apiToInternal(value) != lastSentInternalValue) {
+        if (sendTimer.seconds() > sendTimeoutSeconds || apiToInternal(value) != lastSentInternalValue) {
             doubleConsumer.accept(value);
             lastSentInternalValue = apiToInternal(value);
         }

@@ -4,15 +4,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opencv.ArucoDetect;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class WoENRobot {
-    private final LinearOpMode linearOpMode;
     public final Bucket bucket = new Bucket(this);
     public final LedStrip ledStrip = new LedStrip(this);
     public final Duck duck = new Duck(this);
@@ -24,11 +21,8 @@ public class WoENRobot {
     public final Accumulator accumulator = new Accumulator(this);
     public final Gyro gyro = new Gyro(this);
     public final GyroAuto gyroAuto = new GyroAuto(this);
-
-    private List<LynxModule> revHubs = null;
-
-    private final RobotModule[] allModules = new RobotModule[]{
-            bucket,
+    private final LinearOpMode linearOpMode;
+    private final RobotModule[] allModules = new RobotModule[]{bucket,
             gyro,
             ledStrip,
             duck,
@@ -38,10 +32,10 @@ public class WoENRobot {
             timer,
             accumulator,
             gyroAuto,
-            telemetryNode
-    };
+            telemetryNode};
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();
+    private List<LynxModule> revHubs = null;
 
     public WoENRobot(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -59,7 +53,7 @@ public class WoENRobot {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
     }
 
-    public void updateRevBulkCache(){
+    public void updateRevBulkCache() {
         for (LynxModule module : revHubs)
             module.clearBulkCache();
     }

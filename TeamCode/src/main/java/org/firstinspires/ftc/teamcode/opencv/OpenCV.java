@@ -22,20 +22,22 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 // OpenCV.init(HardwareMap)
 // OpenCV.getPosition()
-public class OpenCV
-{
+public class OpenCV {
 
-    private OpenCvWebcam camera;
-    private final int width = 320;
-    private final int height = 240;
-    private int x = 0;
     static final Scalar COLOR_MIN = new Scalar(12, 80, 40);
     static final Scalar COLOR_MAX = new Scalar(18, 255, 255);
+    private final int width = 320;
+    private final int height = 240;
     private final org.opencv.core.Size size = new org.opencv.core.Size(5, 5);
-    public void init(HardwareMap hwMap)
-    {
-        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hwMap.get(WebcamName.class,"Webcam 1"), cameraMonitorViewId);
+    public Pipeline pipeline;
+    private OpenCvWebcam camera;
+    private int x = 0;
+
+    public void init(HardwareMap hwMap) {
+        int cameraMonitorViewId = hwMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance()
+                .createWebcam(hwMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         Pipeline pipeline = new Pipeline();
         camera.setPipeline(pipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -51,6 +53,7 @@ public class OpenCV
             }
         });
     }
+
     public FreightPosition stopCamera() {
         FreightPosition value = getPosition();
         camera.closeCameraDeviceAsync(() -> {
@@ -58,13 +61,16 @@ public class OpenCV
         });
         return value;
     }
-    public class Pipeline extends OpenCvPipeline
-    {
+
+    public FreightPosition getPosition() {
+        return pipeline.returnPosition();
+    }
+
+    public class Pipeline extends OpenCvPipeline {
         @Override
-        public Mat processFrame(Mat input)
-        {
+        public Mat processFrame(Mat input) {
             Rect rect;
-            Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,new Size(35, 10));
+            Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(35, 10));
             Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
             Imgproc.GaussianBlur(input, input, size, 5);
             Core.inRange(input, COLOR_MIN, COLOR_MAX, input);
@@ -74,8 +80,8 @@ public class OpenCV
             x = rect.x;
             return input;
         }
-        public boolean inRange(int down, int up)
-        {
+
+        public boolean inRange(int down, int up) {
             return x > up && x < down;
         }
 
@@ -85,12 +91,6 @@ public class OpenCV
             if (inRange(width / 3 * 2, width)) return FreightPosition.RIGHT;
             return FreightPosition.UNKNOWN;
         }
-    }
-
-    public Pipeline pipeline;
-
-    public FreightPosition getPosition() {
-        return pipeline.returnPosition();
     }
 
 }

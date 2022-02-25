@@ -12,7 +12,8 @@ public class DuckSpinnerTest extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        robot.telemetryNode.getTelemetry().addData("Test", "Duck spinner will spin for N seconds after Start button has been pressed.");
+        robot.telemetryNode.getTelemetry()
+                .addData("Test", "Duck spinner will spin for N seconds after Start button has been pressed.");
         robot.telemetryNode.getTelemetry().update();
     }
 

@@ -55,43 +55,49 @@ public class TelemetryNode implements RobotModule {
     @Override
     public void update() {
         if (transmissionTimer.milliseconds() > msTransmissionInterval) {
-            currentTelemetry.addLine().addData("Mode", TelemetryNode.TelemetryModuleConfig.telemetryModuleValue);
+            currentTelemetry.addData("Mode", TelemetryNode.TelemetryModuleConfig.telemetryModuleValue);
             switch (TelemetryNode.TelemetryModuleConfig.telemetryModuleValue) {
                 case ACCUMULATOR:
-                    currentTelemetry.addLine().addData("Voltage", ".3f", robot.accumulator.getBatteryVoltage())
-                            .addData("Coefficient", ".3f", robot.accumulator.getkVoltage());
+                    currentTelemetry.addData("Voltage", robot.accumulator.getBatteryVoltage());
+                    currentTelemetry.addData("Coefficient", robot.accumulator.getkVoltage());
                     break;
                 case BRUSH:
-                    currentTelemetry.addLine().addData("Enabled", robot.brush.getEnableIntake())
-                            .addData("Motor current", ".2f", robot.brush.getBrushMotorCurrent())
-                            .addData("Protection enabled", robot.brush.protectionBrushMotor());
+                    currentTelemetry.addData("Enabled", robot.brush.getEnableIntake());
+                    currentTelemetry.addData("Motor current", robot.brush.getBrushMotorCurrent());
+                    currentTelemetry.addData("Protection enabled", robot.brush.protectionBrushMotor());
                     break;
                 case BUCKET:
-                    currentTelemetry.addLine().addData("Bucket position", robot.bucket.getBucketPosition())
-                            .addData("Freight detected", robot.bucket.isFreightDetected())
-                            .addData("Servo timer", ".1f", robot.bucket.servoTimer);
+                    currentTelemetry.addData("Bucket position", robot.bucket.getBucketPosition());
+                    currentTelemetry.addData("Freight detected", robot.bucket.isFreightDetected());
+                    currentTelemetry.addData("Servo timer", robot.bucket.servoTimer);
                     break;
                 case ENCODERS:
-                    currentTelemetry.addLine().addData("Left encoder", ".0f", robot.movement.getLeftEncoder())
-                            .addData("Right encoder", ".0f", robot.movement.getRightEncoder());
+                    currentTelemetry.addData("Left encoder", robot.movement.getLeftEncoder());
+                    currentTelemetry.addData("Right encoder", robot.movement.getRightEncoder());
                     break;
                 case GYRO:
-                    currentTelemetry.addLine().addData("Heading", ".2f", -robot.gyro.getOrientation().firstAngle)
-                            .addData("Roll", ".2f", robot.gyro.getOrientation().secondAngle)
-                            .addData("Pitch", ".2f", robot.gyro.getOrientation().thirdAngle);
+                    currentTelemetry.addData("Heading", -robot.gyro.getOrientation().firstAngle);
+                    currentTelemetry.addData("Roll", robot.gyro.getOrientation().secondAngle);
+                    currentTelemetry.addData("Pitch", robot.gyro.getOrientation().thirdAngle);
                     break;
                 case LIFT:
-                    currentTelemetry.addLine().addData("ElevatorPosition", robot.lift.getElevatorPosition())
-                            .addData("LiftEncoderPosition", robot.lift.getLiftEncoderPosition());
+                    currentTelemetry.addData("ElevatorPosition", robot.lift.getElevatorPosition());
+                    currentTelemetry.addData("LiftEncoderPosition", robot.lift.getLiftEncoderPosition());
                     break;
                 case MOVEMENT:
                     robot.movement.telemetryForMovement(currentTelemetry);
                     break;
+                case LEDSTRIP:
+                    currentTelemetry.addData("LED Current", robot.ledStrip.getLEDCurrent());
+                    break;
+                case DUCK:
+                    currentTelemetry.addData("Done spinning",robot.duck.actionIsCompleted());
+                    break;
                 case UNEXPECTED:
-                    currentTelemetry.addLine().addData("chto-to ne ochevidnoe", 0);
+                    currentTelemetry.addData("chto-to ne ochevidnoe", 0);
                     break;
                 case OPENCV:
-                    currentTelemetry.addLine().addData("Camera", robot.arucoDetect.forceGetPosition());
+                    currentTelemetry.addData("Camera", robot.arucoDetect.forceGetPosition());
             }
             transmissionTimer.reset();
             currentTelemetry.update();
@@ -103,7 +109,7 @@ public class TelemetryNode implements RobotModule {
     }
 
     public enum TelemetryModuleValue {
-        ACCUMULATOR, BRUSH, BUCKET, ENCODERS, OPENCV, GYRO, LIFT, MOVEMENT, UNEXPECTED
+        ACCUMULATOR, BRUSH, BUCKET, ENCODERS, OPENCV, GYRO, LIFT, MOVEMENT, LEDSTRIP, DUCK, UNEXPECTED
     }
 
     @Config

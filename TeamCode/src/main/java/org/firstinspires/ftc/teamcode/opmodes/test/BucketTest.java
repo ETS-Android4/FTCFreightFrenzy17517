@@ -10,7 +10,8 @@ public class BucketTest extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        robot.telemetryNode.getTelemetry().addData("Test", "Bucket will stay still and eject 5 seconds after Start button has been pressed.");
+        robot.telemetryNode.getTelemetry()
+                .addData("Test", "Bucket will stay still and eject 5 seconds after Start button has been pressed.");
         robot.telemetryNode.getTelemetry().update();
     }
 

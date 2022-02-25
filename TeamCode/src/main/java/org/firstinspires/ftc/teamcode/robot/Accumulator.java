@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 public class Accumulator implements RobotModule {
 
     WoENRobot robot;
-
     private double kVoltage = 1;
     private VoltageSensor controlHubVoltageSensor = null;
     private double batteryVoltage = 13.0;
@@ -19,7 +18,6 @@ public class Accumulator implements RobotModule {
         averageBatteryVoltage.add(controlHubVoltageSensor.getVoltage());
         return averageBatteryVoltage.get();
     }, 8);
-
 
     public Accumulator(WoENRobot robot) {
         this.robot = robot;

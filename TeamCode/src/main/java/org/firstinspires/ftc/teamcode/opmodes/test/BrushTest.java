@@ -9,7 +9,8 @@ public class BrushTest extends BaseOpMode {
 
     @Override
     public void startLoop() {
-        robot.telemetryNode.getTelemetry().addData("Test", "Brush will spin forward for 10 seconds after Start button has been pressed");
+        robot.telemetryNode.getTelemetry()
+                .addData("Test", "Brush will spin forward for 10 seconds after Start button has been pressed");
         robot.telemetryNode.getTelemetry().update();
     }
 

@@ -17,13 +17,12 @@ import org.firstinspires.ftc.teamcode.misc.CommandSender;
 
 public class Lift implements RobotModule {
 
+    private final WoENRobot robot;
     public boolean queuebool = true;
     public DigitalChannel limitSwitch = null;
     private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
-    private final CommandSender liftCommandSender =
-            new CommandSender((double value) -> motorLift.setPower(value));
-    private final WoENRobot robot;
+    private final CommandSender liftCommandSender = new CommandSender((double value) -> motorLift.setPower(value));
     private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
     private int liftEncoderOffset = 0;
 
@@ -48,9 +47,8 @@ public class Lift implements RobotModule {
     public ElevatorPosition getElevatorPosition() {
         if (elevatorTarget == ElevatorPosition.DOWN && queuebool) return ElevatorPosition.DOWN;
         int encoderPosition = getLiftEncoderPosition();
-        return abs(encoderPosition - middleTargetElevator) <
-                abs(encoderPosition - upTargetElevator) ? ElevatorPosition.MIDDLE :
-                ElevatorPosition.UP;
+        return abs(encoderPosition - middleTargetElevator) < abs(encoderPosition - upTargetElevator) ?
+                ElevatorPosition.MIDDLE : ElevatorPosition.UP;
     }
 
     public void setElevatorTarget(ElevatorPosition elevatorPosition) {

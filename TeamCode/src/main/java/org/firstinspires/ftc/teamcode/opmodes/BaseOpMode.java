@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.centreOfDuck;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.teamcode.robot.WoENRobot;
 
 public abstract class BaseOpMode extends LinearOpMode {
@@ -27,7 +28,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         robot.init();
         waitForStart();
         main();
-        robot.telemetryNode.getTelemetry().addData("Status","Finished successfully");
+        robot.telemetryNode.getTelemetry().addData("Status", "Finished successfully");
         robot.telemetryNode.getTelemetry().update();
     }
 }

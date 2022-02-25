@@ -5,15 +5,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-public class TimedSensorQuery<T>{
-
-    private Supplier<T> sensorValueSupplier = null;
-
-    private T lastValue = null;
-
-    private double updateTimeSeconds;
+public class TimedSensorQuery<T> {
 
     private final ElapsedTime queryTimer = new ElapsedTime();
+    private Supplier<T> sensorValueSupplier = null;
+    private T lastValue = null;
+    private final double updateTimeSeconds;
 
     public TimedSensorQuery(Supplier<T> sensorValueSupplier, double refreshRateHz) {
         this.sensorValueSupplier = sensorValueSupplier;
@@ -25,8 +22,7 @@ public class TimedSensorQuery<T>{
     }
 
     public T getValue() {
-        if (lastValue == null)
-            lastValue = sensorValueSupplier.get();
+        if (lastValue == null) lastValue = sensorValueSupplier.get();
         else if (queryTimer.seconds() > updateTimeSeconds) {
             lastValue = sensorValueSupplier.get();
             queryTimer.reset();

@@ -33,7 +33,7 @@ public class Movement implements RobotModule {
     private static final double GEARBOX_RATIO = 20.0;
     private static final double ENCODER_TICKS_TO_CM_RATIO =
             (WHEEL_DIAMETER_CM * PI) / (ENCODER_RESOLUTION * GEARBOX_RATIO);
-    private static final double CM_TO_ROTATION_DEGREES_RATIO = 180 / ((TRACK_WIDTH_CM / 2) * PI);
+    private static final double CM_TO_ROTATION_DEGREES_RATIO = 180.0 / ((TRACK_WIDTH_CM / 2.0) * PI);
     private final ElapsedTime loopTimer = new ElapsedTime();
     public boolean queuebool = true;
     ElapsedTime timer = new ElapsedTime();
@@ -53,11 +53,11 @@ public class Movement implements RobotModule {
     private DcMotorEx leftMotorFront = null;
     private DcMotorEx rightMotorFront = null;
     private DcMotorEx leftMotorBack = null;
-    private DcMotorEx rightMotorBack = null;
     private final CommandSender leftMotorCommandSender = new CommandSender((double value) -> {
         leftMotorBack.setPower(value);
         leftMotorFront.setPower(value);
     });
+    private DcMotorEx rightMotorBack = null;
     private final CommandSender rightMotorCommandSender = new CommandSender((double value) -> {
         rightMotorBack.setPower(value);
         rightMotorFront.setPower(value);
@@ -187,14 +187,12 @@ public class Movement implements RobotModule {
                 differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
                 differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
             }
-            setMotorPowersPrivate(
-                    (integralLinear + proportionalLinear + differentialLinear) * speed *
+            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed *
                             robot.accumulator.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle *
                             robot.accumulator.getkVoltage());
-            queuebool =
-                    ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle)) ||
-                            (timer.seconds() >= moveTimeoutS);
+            queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle)) ||
+                    (timer.seconds() >= moveTimeoutS);
         } else {
             queuebool = true;
         }
@@ -202,12 +200,12 @@ public class Movement implements RobotModule {
     }
 
     public void telemetryForMovement(Telemetry telemetry) {
-        telemetry.addLine().addData("Proportional(linear)", proportionalLinear)
-                .addData("Proportional(angle)", proportionalAngular)
-                .addData("Differential(linear)", differentialLinear)
-                .addData("Differential(angle)", differentialAngular)
-                .addData("Integral(linear)", integralLinear)
-                .addData("Integral(angle)", integralAngular);
+        telemetry.addData("Proportional(linear)", proportionalLinear);
+        telemetry.addData("Proportional(angle)", proportionalAngular);
+        telemetry.addData("Differential(linear)", differentialLinear);
+        telemetry.addData("Differential(angle)", differentialAngular);
+        telemetry.addData("Integral(linear)", integralLinear);
+        telemetry.addData("Integral(angle)", integralAngular);
     }
 
     public void setMotorPowers(double power, double angle) {

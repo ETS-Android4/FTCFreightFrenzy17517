@@ -12,38 +12,66 @@ public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
 
-            () -> { robot.movement.Move(-60, 30);
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);},
+            () -> {
+                robot.movement.Move(-60, 30);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+            },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> {robot.movement.Move(-32, 30);},
-            () -> {robot.movement.Move(-32,90);},
-            () -> {robot.movement.Move(110,90, 1.6);},
+            () -> {
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+            },
+            () -> {
+                robot.movement.Move(-32, 30);
+            },
+            () -> {
+                robot.movement.Move(-32, 90);
+            },
+            () -> {
+                robot.movement.Move(110, 90, 1.6);
+            },
 
     };
     Runnable[] middlePosition = {
 
-            () -> { robot.movement.Move(-60, 30);
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);},
+            () -> {
+                robot.movement.Move(-60, 30);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
+            },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> {robot.movement.Move(-32, 30);},
-            () -> {robot.movement.Move(-32,90);},
-            () -> {robot.movement.Move(110,90, 1.6);},
-    };
+            () -> {
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+            },
+            () -> {
+                robot.movement.Move(-32, 30);
+            },
+            () -> {
+                robot.movement.Move(-32, 90);
+            },
+            () -> {
+                robot.movement.Move(110, 90, 1.6);
+            },};
     Runnable[] upPosition = {
 
-            () -> { robot.movement.Move(-60, 30, 1.5);
-                  robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);},
+            () -> {
+                robot.movement.Move(-60, 30, 1.5);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
+            },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> {robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN); },
-            () -> {robot.movement.Move(-32, 30);},
-            () -> {robot.movement.Move(-32,90);},
-            () -> {robot.movement.Move(110,90, 1.6);},
-    };
+            () -> {
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+            },
+            () -> {
+                robot.movement.Move(-32, 30);
+            },
+            () -> {
+                robot.movement.Move(-32, 90);
+            },
+            () -> {
+                robot.movement.Move(110, 90, 1.6);
+            },};
 
     @Override
     protected Runnable[] upPosition() {

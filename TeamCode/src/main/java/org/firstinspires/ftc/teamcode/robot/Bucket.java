@@ -23,7 +23,8 @@ public class Bucket implements RobotModule {
             new TimedSensorQuery<>(() -> distance.getDistance(DistanceUnit.CM), 10);
     public ElapsedTime servoTimer = new ElapsedTime();
     private Servo servoElevator = null;
-    private final CommandSender servoCommandSender = new CommandSender((double value)->servoElevator.setPosition(value));
+    private final CommandSender servoCommandSender =
+            new CommandSender((double value) -> servoElevator.setPosition(value));
     private BucketPosition bucketPosition = BucketPosition.COLLECT;
     private boolean freightDetected = false;
 
@@ -33,8 +34,7 @@ public class Bucket implements RobotModule {
 
     public BucketPosition getBucketPosition() {
         return servoTimer.seconds() > bucketServoDelay / 2 ? bucketPosition :
-                (bucketPosition == BucketPosition.COLLECT ? BucketPosition.EJECT :
-                        BucketPosition.COLLECT);
+                (bucketPosition == BucketPosition.COLLECT ? BucketPosition.EJECT : BucketPosition.COLLECT);
     }
 
     public void setBucketPosition(BucketPosition bucketPosition) {
@@ -53,8 +53,7 @@ public class Bucket implements RobotModule {
     }
 
     public boolean actionIsCompleted() {
-        return getBucketTimerStatus() &&
-                (bucketPosition == BucketPosition.COLLECT || !getFreightDetectionStatus());
+        return getBucketTimerStatus() && (bucketPosition == BucketPosition.COLLECT || !getFreightDetectionStatus());
     }
 
     private boolean getBucketTimerStatus() {
@@ -70,9 +69,9 @@ public class Bucket implements RobotModule {
         freightDetected = getFreightDetectionStatus();
         switch (bucketPosition) {
             case COLLECT:
-                servoCommandSender.send(
-                        robot.lift.getElevatorPosition() != Lift.ElevatorPosition.DOWN ?
-                                positionServoUp : positonServoForElevator);
+                servoCommandSender
+                        .send(robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN ? positionServoUp :
+                                positonServoForElevator);
                 break;
             case EJECT:
                 servoCommandSender.send(positionServoDown);

@@ -24,8 +24,7 @@ public class Brush implements RobotModule {
 
     private final TimedSensorQuery<Double> motorCurrentQuery =
             new TimedSensorQuery<>(() -> brushMotor.getCurrent(CurrentUnit.AMPS), 15);
-    private final CommandSender motorPowerSender =
-            new CommandSender((double value) -> brushMotor.setPower(value));
+    private final CommandSender motorPowerSender = new CommandSender((double value) -> brushMotor.setPower(value));
 
     private double brushMotorCurrent = 0;
 
@@ -52,8 +51,8 @@ public class Brush implements RobotModule {
 
     public boolean protectionBrushMotor() {
         double timer = timerProtection.seconds();
-        if (brushMotorCurrent > motorCurrentThreshold || (timer > timeForActivateProtection &&
-                timer < timeForActivateProtection + timeForReverse)) {
+        if (brushMotorCurrent > motorCurrentThreshold ||
+                (timer > timeForActivateProtection && timer < timeForActivateProtection + timeForReverse)) {
             return (timer >= timeForActivateProtection);
         } else {
             timerProtection.reset();
@@ -74,8 +73,7 @@ public class Brush implements RobotModule {
         if (enableIntake && robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN &&
                 robot.bucket.getBucketPosition() == Bucket.BucketPosition.COLLECT) {
             updateBrushMotorCurrent();
-            if (robot.bucket.isFreightDetected() || protectionBrushMotor())
-                brushPower = -motorPower;
+            if (robot.bucket.isFreightDetected() || protectionBrushMotor()) brushPower = -motorPower;
             else brushPower = motorPower;
         } else {
             brushPower = 0;

@@ -7,19 +7,20 @@ import org.firstinspires.ftc.teamcode.robot.LedStrip;
 
 public abstract class BaseDetectionAutonomous extends BaseAutonomous {
 
-    protected Runnable[] upPosition(){
+    protected Runnable[] upPosition() {
         return new Runnable[0];
     }
 
-    protected Runnable[] middlePosition(){
+    protected Runnable[] middlePosition() {
         return new Runnable[0];
     }
 
-    protected Runnable[] downPosition(){
+    protected Runnable[] downPosition() {
         return new Runnable[0];
     }
+
     @Override
-    public void startLoop(){
+    public void startLoop() {
         super.startLoop();
         FreightPosition freightPosition = robot.arucoDetect.getPosition();
         robot.telemetryNode.getTelemetry().addData("Aruco position", freightPosition);

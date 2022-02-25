@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class GyroAuto implements RobotModule {
     private boolean gyroTriggered = false;
     private WoENRobot robot = null;
-    private ElapsedTime gyroTimer = new ElapsedTime();
+    private final ElapsedTime gyroTimer = new ElapsedTime();
     private double tiltOffset;
     private boolean gyroTiltDetected = false;
 

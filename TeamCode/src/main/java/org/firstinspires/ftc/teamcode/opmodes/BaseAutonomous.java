@@ -24,9 +24,8 @@ public abstract class BaseAutonomous extends BaseOpMode {
         for (Runnable action : runnables) {
             ElapsedTime elapsedTime = new ElapsedTime();
             if (opModeIsActive()) action.run();
-            do
-                robot.update();
-            while (!robot.allActionsAreCompleted() && opModeIsActive() && elapsedTime.seconds() < Math.max(timeoutSeconds,robot.timer.getDelaySeconds()));
+            do robot.update(); while (!robot.allActionsAreCompleted() && opModeIsActive() &&
+                    elapsedTime.seconds() < Math.max(timeoutSeconds, robot.timer.getDelaySeconds()));
         }
     }
 

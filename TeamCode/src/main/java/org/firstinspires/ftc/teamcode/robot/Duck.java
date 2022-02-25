@@ -19,12 +19,12 @@ import org.firstinspires.ftc.teamcode.misc.StartingPosition;
 public class Duck implements RobotModule {
     private final WoENRobot robot;
     private final ElapsedTime duckTimer = new ElapsedTime();
-    public boolean queuebool = true;
+    private boolean queuebool = true;
     private DcMotorEx duckMotor = null;
-    private final CommandSender motorCommandSender =
-            new CommandSender((double value) -> duckMotor.setPower(value));
+    private final CommandSender motorCommandSender = new CommandSender((double value) -> duckMotor.setPower(value));
     private boolean shoudSpin = false;
     private boolean teleOpMode = false;
+
     public Duck(WoENRobot robot) {
         this.robot = robot;
     }
@@ -80,6 +80,7 @@ public class Duck implements RobotModule {
             motorCommandSender.send(directionDuck * motorSpeed * robot.accumulator.getkVoltage());
             queuebool = false;
         } else {
+            shoudSpin = false;
             queuebool = true;
             motorCommandSender.send(0);
         }

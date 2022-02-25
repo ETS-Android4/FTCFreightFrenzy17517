@@ -18,18 +18,17 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 public class TeleOpOneGamepad extends BaseOpMode {
     private final ButtonSwitch speedSwitch = new ButtonSwitch();
     private final SinglePressButton freightDetectionTrigger = new SinglePressButton();
+    SinglePressButton duckButton = new SinglePressButton();
     public boolean robotWentToShippingHub = false;
     public boolean robotWentToFreightZone = false;
     public double drivetrainSpeedMultiplier = 1.0;
 
     @Override
     public void main() {
-        SmartButtonSwitch duckFunction = new SmartButtonSwitch(() -> gamepad1.circle, robot.duck::duckSpin);
         SmartButtonSwitch servoElevatorFunction =
                 new SmartButtonSwitch(() -> gamepad1.square, (Boolean elev) -> robot.bucket
                         .setBucketPosition(elev ? Bucket.BucketPosition.EJECT : Bucket.BucketPosition.COLLECT));
-        SmartButtonSwitch intakeFunction =
-                new SmartButtonSwitch(() -> gamepad1.triangle, robot.brush::setEnableIntake);
+        SmartButtonSwitch intakeFunction = new SmartButtonSwitch(() -> gamepad1.triangle, robot.brush::setEnableIntake);
         robot.duck.setTeleOpMode(true);
 
         while (opModeIsActive()) {
@@ -40,25 +39,31 @@ public class TeleOpOneGamepad extends BaseOpMode {
             // Movement
             robot.movement.setMotorPowers(-gamepad1.left_stick_y * get_speed(), gamepad1.right_stick_x * get_speed());
             // Switch functions
-            duckFunction.activate();
             servoElevatorFunction.activate();
+            duckFunction();
             // Others
             intakeFunction.activate();
             gyroSystem();
             liftFunction();
-            //Update robot runctions
+            //Update robot functions
             robot.update();
         }
     }
 
-    private void ledStripFunction(){
-        if (gamepad1.left_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
+    private void duckFunction() {
+        if (duckButton.getState(gamepad1.circle)) robot.duck.duckSpin(robot.duck.actionIsCompleted());
+    }
+
+    private void ledStripFunction() {
+        if (gamepad1.left_trigger > 0.5 && gamepad1.right_trigger > 0.5)
+            robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_DUALCOLOR);
+        else if (gamepad1.left_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
         else if (gamepad1.right_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR1);
         else robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
     }
 
     private void freightDetectionGamepadRumble() {
-        if (freightDetectionTrigger.getState(robot.bucket.isFreightDetected())) gamepad1.rumble(.5, .5, 200);
+        if (freightDetectionTrigger.getState(robot.bucket.isFreightDetected())) gamepad1.rumble(1, 1, 200);
     }
 
     private void gyroSystem() {

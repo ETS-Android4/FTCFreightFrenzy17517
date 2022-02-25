@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class TimedAction {
 
-    private Runnable action = null;
     private final double updateTimeSeconds;
     private final ElapsedTime actionTimer = new ElapsedTime();
+    private Runnable action = null;
 
     public TimedAction(Runnable action, double refreshRateHz) {
         this.action = action;

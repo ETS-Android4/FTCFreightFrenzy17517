@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import static org.firstinspires.ftc.teamcode.robot.LedStrip.LedStripConfig.LEDPower;
-import static org.firstinspires.ftc.teamcode.robot.LedStrip.LedStripConfig.wavePeriod;
+import static org.firstinspires.ftc.teamcode.robot.LedStrip.LedStripConfig.blinkFrequency;
+import static java.lang.Math.E;
+import static java.lang.Math.abs;
+import static java.lang.Math.log;
+import static java.lang.Math.signum;
 import static java.lang.Math.sin;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,13 +19,14 @@ import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
 public class LedStrip implements RobotModule {
 
+    private final ElapsedTime lightTimer = new ElapsedTime();
     private LedStripMode ledStripMode = LedStripMode.DRIVER_INDICATOR;
     private DcMotorEx ledMotor = null;
-    private final CommandSender ledCommandSender =
-            new CommandSender((double value) -> ledMotor.setPower(value));
-    private final ElapsedTime lightTimer = new ElapsedTime();
+    private final CommandSender ledCommandSender = new CommandSender((double value) -> ledMotor.setPower(value));
+    TimedSensorQuery<Double> ledCurrentQuery = new TimedSensorQuery<>(() -> ledMotor.getCurrent(CurrentUnit.AMPS), 0.5);
     private boolean dualLEDSwitchIterator = false;
-    private WoENRobot robot;
+    private final WoENRobot robot;
+    private double ledCurrentValue = 0.0;
 
     public LedStrip(WoENRobot robot) {
         this.robot = robot;
@@ -42,7 +48,7 @@ public class LedStrip implements RobotModule {
     }
 
     private double sineWave() {
-        return sin(lightTimer.seconds() * wavePeriod);
+        return sin(lightTimer.seconds() * blinkFrequency);
     }
 
     private double positiveSineWave() {
@@ -50,18 +56,14 @@ public class LedStrip implements RobotModule {
     }
 
     private double sawtoothWave() {
-        return lightTimer.seconds() % wavePeriod < 1.0 ? 1 : -1;
+        return (lightTimer.seconds() * blinkFrequency % 2) > 1.0 ? 1 : -1;
     }
 
     private double positiveSawtoothWave() {
         return sawtoothWave() * 0.5 + 0.5;
     }
 
-    TimedSensorQuery<Double> ledCurrentQuery = new TimedSensorQuery<>(()->ledMotor.getCurrent(CurrentUnit.AMPS), 0.5);
-
-    private double ledCurrentValue = 0.0;
-
-    public double getLEDCurrent(){
+    public double getLEDCurrent() {
         return ledCurrentValue;
     }
 
@@ -97,23 +99,26 @@ public class LedStrip implements RobotModule {
                 power = sineWave();
                 break;
             case BREATHE_MAGIC:
-                power = dualLEDSwitchIterator ? sin(lightTimer.seconds() * wavePeriod) * 0.5 + 0.5 :
-                        -(sin(lightTimer.seconds() * wavePeriod + 0.75 * Math.PI) * 0.5 + 0.5);
+                power = dualLEDSwitchIterator ? sin(lightTimer.seconds() * blinkFrequency) * 0.5 + 0.5 :
+                        -(sin(lightTimer.seconds() * blinkFrequency + 0.75 * Math.PI) * 0.5 + 0.5);
                 break;
             case STATIC_DUALCOLOR:
                 power = dualLEDSwitchIterator ? 1 : -1;
                 break;
             case DRIVER_INDICATOR:
                 power = robot.bucket.isFreightDetected() ?
-                        ((robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN ? 1 :
-                                positiveSineWave())) :
+                        ((robot.lift.getElevatorPosition() == Lift.ElevatorPosition.DOWN ? 1 : positiveSineWave())) :
                         (robot.brush.getEnableIntake() ? -positiveSawtoothWave() : 0);
                 break;
         }
 
         dualLEDSwitchIterator = !dualLEDSwitchIterator;
         ledCurrentValue = ledCurrentQuery.getValue();
-        ledCommandSender.send(power * LEDPower);
+        ledCommandSender.send(lineariseBrightness(power * LEDPower));
+    }
+
+    private double lineariseBrightness(double percentage) {
+        return log(abs(percentage) * E + 1) * signum(percentage) * robot.accumulator.getkVoltage();
     }
 
     public enum LedStripMode {
@@ -131,8 +136,9 @@ public class LedStrip implements RobotModule {
         BREATHE_MAGIC
     }
 
+    @Config
     public static class LedStripConfig {
         public static double LEDPower = 1;
-        public static double wavePeriod = 2.5;
+        public static double blinkFrequency = 2.0;
     }
 }
