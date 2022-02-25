@@ -15,6 +15,7 @@ public class WoENRobot {
     public final Duck duck = new Duck(this);
     public final Lift lift = new Lift(this);
     public final Movement movement = new Movement(this);
+    public final DifferentialOdometry odometry = new DifferentialOdometry(this);
     public final Brush brush = new Brush(this);
     public final Timer timer = new Timer();
     public final TelemetryNode telemetryNode = new TelemetryNode(this);
@@ -28,6 +29,7 @@ public class WoENRobot {
             duck,
             lift,
             movement,
+            odometry,
             brush,
             timer,
             accumulator,

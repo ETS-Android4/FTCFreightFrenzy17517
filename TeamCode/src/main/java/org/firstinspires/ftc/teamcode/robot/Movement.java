@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.misc.CommandSender;
 public class Movement implements RobotModule {
 
     private static final double TRACK_WIDTH_CM = 38.84500;
-    private static final double WHEEL_DIAMETER_CM = 10.6; //10.90532
+    private static final double WHEEL_DIAMETER_CM = 10.90532;
     private static final int ENCODER_RESOLUTION = 24;
     private static final double GEARBOX_RATIO = 20.0;
     private static final double ENCODER_TICKS_TO_CM_RATIO =
@@ -51,12 +51,12 @@ public class Movement implements RobotModule {
     private double angle = 0;
     private double speed = 0;
     private DcMotorEx leftMotorFront = null;
-    private DcMotorEx rightMotorFront = null;
     private DcMotorEx leftMotorBack = null;
     private final CommandSender leftMotorCommandSender = new CommandSender((double value) -> {
         leftMotorBack.setPower(value);
         leftMotorFront.setPower(value);
     });
+    private DcMotorEx rightMotorFront = null;
     private DcMotorEx rightMotorBack = null;
     private final CommandSender rightMotorCommandSender = new CommandSender((double value) -> {
         rightMotorBack.setPower(value);

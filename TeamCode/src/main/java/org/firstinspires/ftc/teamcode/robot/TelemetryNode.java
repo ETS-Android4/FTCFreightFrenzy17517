@@ -95,6 +95,7 @@ public class TelemetryNode implements RobotModule {
                     break;
                 case UNEXPECTED:
                     currentTelemetry.addData("chto-to ne ochevidnoe", 0);
+                    currentTelemetry.addData("Odometry", robot.odometry.getCurrentPosition());
                     break;
                 case OPENCV:
                     currentTelemetry.addData("Camera", robot.arucoDetect.forceGetPosition());

@@ -11,95 +11,77 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
-
             () -> {
-                robot.movement.Move(-58, -34.5);                                //-64, -37
+                robot.movement.Move(-59.67, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-25, -37),
-            () -> robot.movement.Move(-25, 90),
-            () -> robot.movement.Move(-105, 90),
-            () -> robot.movement.Move(-105, 180),
-            () -> robot.movement.Move(-108, 180),
+            () -> robot.movement.Move(-25.72, -37),
+            () -> robot.movement.Move(-25.72, 90),
+            () -> robot.movement.Move(-108.02, 90),
+            () -> robot.movement.Move(-108.02, 180),
+            () -> robot.movement.Move(-111.11, 180),
             () -> {
                 robot.duck.duckSpin(true);
-                robot.movement.Move(-108, 180);
+                robot.movement.Move(-111.11, 180);
             },
-            () -> robot.movement.Move(-75, 180),
-            () -> robot.movement.Move(-75, 90),
-            () -> robot.movement.Move(210, 90, 1.4),
-            () -> robot.movement.Move(210, 0),
-            () -> robot.movement.Move(220, 0),
+            () -> robot.movement.Move(-77.16, 180),
+            () -> robot.movement.Move(-77.16, 90),
+            () -> robot.movement.Move(216.05, 90, 1.4),
+            () -> robot.movement.Move(216.05, 0),
+            () -> robot.movement.Move(226.34, 0),
 
 
     };
     Runnable[] middlePosition = {
-
             () -> {
-                robot.movement.Move(-58, -34.5);                                //-64, -37
+                robot.movement.Move(-59.67, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> {
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
-            },
-            () -> {
-                robot.movement.Move(-25, -37);
-            },
-            () -> {
-                robot.movement.Move(-25, 90);
-            },
-            () -> {
-                robot.movement.Move(-105, 90);
-            },
-            () -> robot.movement.Move(-105, 180),
-            () -> robot.movement.Move(-108, 180),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-25.72, -37),
+            () -> robot.movement.Move(-25.72, 90),
+            () -> robot.movement.Move(-108.02, 90),
+            () -> robot.movement.Move(-108.02, 180),
+            () -> robot.movement.Move(-111.11, 180),
             () -> {
                 robot.duck.duckSpin(true);
-                robot.movement.Move(-108, 180);
+                robot.movement.Move(-111.11, 180);
             },
-            () -> robot.movement.Move(-75, 180),
-            () -> robot.movement.Move(-75, 90),
-            () -> robot.movement.Move(210, 90, 1.4),
-            () -> robot.movement.Move(210, 0),
-            () -> robot.movement.Move(220, 0),
+            () -> robot.movement.Move(-77.16, 180),
+            () -> robot.movement.Move(-77.16, 90),
+            () -> robot.movement.Move(216.05, 90, 1.4),
+            () -> robot.movement.Move(216.05, 0),
+            () -> robot.movement.Move(226.34, 0),
 
     };
     Runnable[] upPosition = {
 
             () -> {
-                robot.movement.Move(-58, -33);                                //-64, -37
+                robot.movement.Move(-59.67, -33);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> {
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
-            },
-            () -> {
-                robot.movement.Move(-25, -37);
-            },
-            () -> {
-                robot.movement.Move(-25, 90);
-            },
-            () -> {
-                robot.movement.Move(-105, 90);
-            },
-            () -> robot.movement.Move(-105, 180),
-            () -> robot.movement.Move(-108, 180),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
+            () -> robot.movement.Move(-25.72, -37),
+            () -> robot.movement.Move(-25.72, 90),
+            () -> robot.movement.Move(-108.02, 90),
+            () -> robot.movement.Move(-108.02, 180),
+            () -> robot.movement.Move(-111.11, 180),
             () -> {
                 robot.duck.duckSpin(true);
-                robot.movement.Move(-108, 180);
+                robot.movement.Move(-111.11, 180);
             },
-            () -> robot.movement.Move(-75, 180),
-            () -> robot.movement.Move(-75, 90),
-            () -> robot.movement.Move(210, 90, 1.4),
-            () -> robot.movement.Move(210, 0),
-            () -> robot.movement.Move(220, 0),
+            () -> robot.movement.Move(-77.16, 180),
+            () -> robot.movement.Move(-77.16, 90),
+            () -> robot.movement.Move(216.05, 90, 1.4),
+            () -> robot.movement.Move(216.05, 0),
+            () -> robot.movement.Move(226.34, 0),
 
 
     };

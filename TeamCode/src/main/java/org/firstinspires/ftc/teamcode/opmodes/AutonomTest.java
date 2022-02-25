@@ -10,13 +10,13 @@ public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test = {                         //-64, -37
             () -> {
-                robot.movement.Move(-58, -34.5);                                //-64, -37
+                robot.movement.Move(-59.67, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-10, 0),
+            () -> robot.movement.Move(-10.3, 0),
 
     };
 

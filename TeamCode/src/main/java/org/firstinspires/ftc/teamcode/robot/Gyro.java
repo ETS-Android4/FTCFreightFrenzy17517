@@ -17,7 +17,7 @@ public class Gyro implements RobotModule {
     private final TimedSensorQuery<Orientation> timedGyroQuery = new TimedSensorQuery<>(() -> gyro
             .getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 100);
 
-    private Orientation orientation;
+    private Orientation orientation = new Orientation();
 
     public Gyro(WoENRobot robot) {
         this.robot = robot;

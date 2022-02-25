@@ -21,7 +21,6 @@ public class Timer implements RobotModule {
         return delaySeconds - elapsedTime.seconds();
     }
 
-    @Override
     public void initialize() {
         elapsedTime.reset();
     }
