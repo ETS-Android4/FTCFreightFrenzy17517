@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static java.lang.Math.toRadians;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.sun.tools.javac.util.ArrayUtils;
 
 import org.firstinspires.ftc.teamcode.misc.AllianceColor;
+import org.firstinspires.ftc.teamcode.misc.Pose2D;
 import org.firstinspires.ftc.teamcode.misc.StartingPosition;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
@@ -101,6 +104,7 @@ public class AutonomRedTeamLeftPos extends BaseDetectionAutonomous {
     @Override
     public void runOpMode() {
         robot.duck.setFieldPosition(AllianceColor.RED, StartingPosition.LEFT);
+        robot.odometry.setCurrentPosition(new Pose2D(-79.036, -154.127, toRadians(-90)));
         super.runOpMode();
     }
 }

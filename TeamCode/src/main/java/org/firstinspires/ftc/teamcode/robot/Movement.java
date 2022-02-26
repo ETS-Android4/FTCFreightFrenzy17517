@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.misc.CommandSender;
 
 
@@ -101,6 +102,10 @@ public class Movement implements RobotModule {
         leftMotorBack.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
+    public double getCurrent(){
+        return leftMotorFront.getCurrent(CurrentUnit.AMPS) + leftMotorBack.getCurrent(CurrentUnit.AMPS) + rightMotorFront.getCurrent(CurrentUnit.AMPS) + rightMotorBack.getCurrent(CurrentUnit.AMPS);
+    }
+
     public void resetEncoders(DcMotor.RunMode runMode) {
         leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -137,12 +142,12 @@ public class Movement implements RobotModule {
         return error;
     }
 
-    public void Move(double dist) {
-        Move(dist, 0, 1);
+    public void Move(double distance) {
+        Move(distance, 0, 1);
     }
 
-    public void Move(double dist, double angle) {
-        Move(dist, angle, 1);
+    public void Move(double distance, double angle) {
+        Move(distance, angle, 1);
     }
 
     public void Move(double distance, double angle, double speed) {

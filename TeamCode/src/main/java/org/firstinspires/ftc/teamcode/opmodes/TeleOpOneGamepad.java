@@ -72,8 +72,9 @@ public class TeleOpOneGamepad extends BaseOpMode {
     }
 
     private double get_speed() {
-        if (speedSwitch.getState(gamepad1.right_bumper)) drivetrainSpeedMultiplier = 1;
-        else drivetrainSpeedMultiplier = 0.5 * robot.accumulator.getkVoltage();
+        if (speedSwitch.getState(gamepad1.right_bumper))
+            drivetrainSpeedMultiplier = 0.5 * robot.accumulator.getkVoltage();
+        else drivetrainSpeedMultiplier = 1.0;
         return drivetrainSpeedMultiplier * drivetrainSpeedMultiplierDashboard;
     }
 

@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import static java.lang.Math.toDegrees;
 
 import androidx.annotation.NonNull;
 
@@ -71,7 +72,7 @@ public class Pose2D {
 
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "{x: %.3f, y: %.3f, θ: %.3f}", x, y, heading);
+        return String.format(Locale.getDefault(), "{x: %.3f, y: %.3f, θ: %.3f}", x, y, toDegrees(heading));
     }
 
     @NonNull
