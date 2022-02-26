@@ -19,6 +19,7 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-54.53, -30, 5),
             () -> robot.movement.Move(-46.30, 0, 4),
             () -> robot.movement.Move(-46.30, 90, 4),
@@ -53,7 +54,7 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     @Override
     protected Runnable[] upPosition() {
-        return upPosition;
+        return downPosition;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     @Override
     protected Runnable[] downPosition() {
-        return downPosition;
+        return upPosition;
     }
 
     @Override
