@@ -47,8 +47,8 @@ public class ArucoDetect {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
+                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
                 FtcDashboard.getInstance().startCameraStream(camera, 5);
-                //camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
