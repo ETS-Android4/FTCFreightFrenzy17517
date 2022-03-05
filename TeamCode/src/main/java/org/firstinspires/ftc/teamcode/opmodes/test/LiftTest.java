@@ -28,28 +28,28 @@ public class LiftTest extends BaseOpMode {
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             robot.telemetryNode.getTelemetry().addData("Test", "Running...");
             robot.telemetryNode.getTelemetry().addData("Lift target", robot.lift.getElevatorPosition());
-            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getOffsetEncoderPosition());
             robot.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             robot.telemetryNode.getTelemetry().addData("Test", "Running...");
             robot.telemetryNode.getTelemetry().addData("Lift target", robot.lift.getElevatorPosition());
-            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getOffsetEncoderPosition());
             robot.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             robot.telemetryNode.getTelemetry().addData("Test", "Running...");
             robot.telemetryNode.getTelemetry().addData("Lift target", robot.lift.getElevatorPosition());
-            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getOffsetEncoderPosition());
             robot.update();
         }
         robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
         while (!robot.lift.actionIsCompleted() && opModeIsActive()) {
             robot.telemetryNode.getTelemetry().addData("Test", "Running...");
             robot.telemetryNode.getTelemetry().addData("Lift target", robot.lift.getElevatorPosition());
-            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getLiftEncoderPosition());
+            robot.telemetryNode.getTelemetry().addData("Lift encoder", robot.lift.getOffsetEncoderPosition());
             robot.update();
         }
     }

@@ -22,7 +22,6 @@ public class Lift implements RobotModule {
     private final WoENRobot robot;
     public boolean queuebool = true;
     public DigitalChannel limitSwitch = null;
-    private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
     private final CommandSender liftCommandSender = new CommandSender((double value) -> motorLift.setPower(value));
     private final MotorAccelerationLimiter liftAccelerationLimiter = new MotorAccelerationLimiter(liftCommandSender::send,maxAcceleration);
@@ -49,58 +48,48 @@ public class Lift implements RobotModule {
 
     public ElevatorPosition getElevatorPosition() {
         if (elevatorTarget == ElevatorPosition.DOWN && queuebool) return ElevatorPosition.DOWN;
-        int encoderPosition = getLiftEncoderPosition();
+        int encoderPosition = getOffsetEncoderPosition();
         return abs(encoderPosition - middleTargetElevator) < abs(encoderPosition - upTargetElevator) ?
                 ElevatorPosition.MIDDLE : ElevatorPosition.UP;
     }
 
-    public void setElevatorTarget(ElevatorPosition elevatorPosition) {
-        this.elevatorTarget = elevatorPosition;
-
-        switch (elevatorPosition) {
-            case DOWN:
-                encoderTarget = downTargetElevator;
-                break;
-            case MIDDLE:
-                encoderTarget = middleTargetElevator;
-                break;
-            case UP:
-                encoderTarget = upTargetElevator;
-                break;
-        }
-
-        queuebool = false;
+    public void setElevatorTarget(ElevatorPosition elevatorTarget) {
+        this.elevatorTarget = elevatorTarget;
     }
 
-    public int getLiftEncoderPosition() {
+    public int getEncoderTarget() {
+        switch (elevatorTarget) {
+            case UP:
+                return upTargetElevator;
+            case MIDDLE:
+                return middleTargetElevator;
+            case DOWN:
+            default:
+                return downTargetElevator;
+        }
+    }
+
+    public int getOffsetEncoderPosition() {
         return motorLift.getCurrentPosition() - liftEncoderOffset;
     }
 
     public void update() {
-        double motorSpeed;
+        int error = getEncoderTarget() - getOffsetEncoderPosition();
+        double power;
         if (elevatorTarget == ElevatorPosition.DOWN) {
-            if (!limitSwitch.getState()) {
-                double error = encoderTarget - getLiftEncoderPosition();
-                motorSpeed = (((error < 0 ? error * kP : 0) - homingPower) * robot.accumulator.getkVoltage());
-                queuebool = false;
-            } else {
-                motorSpeed = 0;
+            if (!limitSwitch.getState()) power = ((error < 0 ? error * kP : 0) - homingPower);
+            else {
+                power = 0;
                 if (!queuebool) liftEncoderOffset = motorLift.getCurrentPosition();
-                queuebool = true;
-            }
-        } else {
-            double error = encoderTarget - getLiftEncoderPosition();
-            if (abs(error) > errorThreshold) {
-                motorSpeed = (error * kP * robot.accumulator.getkVoltage());
-                queuebool = false;
-            } else {
-                motorSpeed = 0;
-                queuebool = true;
             }
         }
-        //liftCommandSender.send(motorSpeed);
-        liftAccelerationLimiter.setSpeed(motorSpeed);
-    }
+        else power = abs(error) > errorThreshold ? error * kP : 0;
+
+        queuebool = power == 0;
+        //liftCommandSender.send(power * robot.accumulator.getkVoltage());
+        liftAccelerationLimiter.setSpeed(power * robot.battery.getkVoltage());
+
+}
 
     public enum ElevatorPosition {
         DOWN, MIDDLE, UP
@@ -112,8 +101,8 @@ public class Lift implements RobotModule {
         public static double kP = 0.01;
         public static double maxAcceleration = 10;
         public static int errorThreshold = 10;
-        public static double downTargetElevator = 0;
-        public static double middleTargetElevator = 650;
-        public static double upTargetElevator = 1340;
+        public static int downTargetElevator = 0;
+        public static int middleTargetElevator = 650;
+        public static int upTargetElevator = 1340;
     }
 }

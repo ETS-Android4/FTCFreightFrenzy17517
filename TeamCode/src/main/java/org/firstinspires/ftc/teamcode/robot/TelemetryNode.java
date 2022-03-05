@@ -103,7 +103,7 @@ public class TelemetryNode implements RobotModule {
                     break;
                 case LIFT:
                     currentTelemetry.addData("ElevatorPosition", robot.lift.getElevatorPosition());
-                    currentTelemetry.addData("LiftEncoderPosition", robot.lift.getLiftEncoderPosition());
+                    currentTelemetry.addData("LiftEncoderPosition", robot.lift.getOffsetEncoderPosition());
                     break;
                 case MOVEMENT:
                     robot.movement.telemetryForMovement(currentTelemetry);
