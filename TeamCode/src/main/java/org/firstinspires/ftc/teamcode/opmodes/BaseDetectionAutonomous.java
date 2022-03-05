@@ -78,6 +78,6 @@ public abstract class BaseDetectionAutonomous extends BaseAutonomous {
     public void runOpMode() {
         robot.arucoDetect.initialize();
         super.runOpMode();
-        robot.arucoDetect.stopCamera();
+        //robot.arucoDetect.stopCamera();
     }
 }

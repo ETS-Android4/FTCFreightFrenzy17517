@@ -12,9 +12,11 @@ import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.minEr
 import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.minErrorDistance;
 import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.moveTimeoutS;
 import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.zeroPowerBehavior;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
+import static java.lang.Math.sqrt;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -162,6 +164,7 @@ public class Movement implements RobotModule {
         this.angle = angle;
         this.speed = speed;
     }
+
 
     public void update() {
         if (!manualControl) {

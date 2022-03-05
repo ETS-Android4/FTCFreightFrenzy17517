@@ -88,7 +88,7 @@ public class Bucket implements RobotModule {
         public static double distanceThresholdCm = 9.5;
         public static double positionServoUp = 0.38;
         public static double positionServoDown = 0.8;
-        public static double positonServoForElevator = 0.4;
+        public static double positonServoForElevator = 0.45;
         public static double bucketServoDelay = 0.5;
     }
 }

@@ -15,13 +15,14 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
             () -> {
-                robot.movement.Move(-59.67, -34.5);                                //-64, -37
+                robot.movement.Move(-58, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-25.72, -37),
+            () -> robot.timer.delay(1),
             () -> robot.movement.Move(-25.72, 90),
             () -> robot.movement.Move(-108.02, 90),
             () -> robot.movement.Move(-108.02, 180),
@@ -34,19 +35,20 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
             () -> robot.movement.Move(-77.16, 90),
             () -> robot.movement.Move(216.05, 90, 1.4),
             () -> robot.movement.Move(216.05, 0),
-            () -> robot.movement.Move(226.34, 0, 1.7),
+            () -> robot.movement.Move(220, 0, 1.7),
 
 
     };
     Runnable[] middlePosition = {
             () -> {
-                robot.movement.Move(-59.67, -34.5);                                //-64, -37
+                robot.movement.Move(-58, -34.5);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-25.72, -37),
+            () -> robot.timer.delay(1),
             () -> robot.movement.Move(-25.72, 90),
             () -> robot.movement.Move(-108.02, 90),
             () -> robot.movement.Move(-108.02, 180),
@@ -59,13 +61,13 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
             () -> robot.movement.Move(-77.16, 90),
             () -> robot.movement.Move(216.05, 90, 1.4),
             () -> robot.movement.Move(216.05, 0),
-            () -> robot.movement.Move(226.34, 0, 1.7),
+            () -> robot.movement.Move(220, 0, 1.7),
 
     };
     Runnable[] upPosition = {
 
             () -> {
-                robot.movement.Move(-59.67, -33);                                //-64, -37
+                robot.movement.Move(-58, -33);                                //-64, -37
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
@@ -84,7 +86,7 @@ public class AutonomBlueTeamRIghtPos extends BaseDetectionAutonomous {
             () -> robot.movement.Move(-77.16, 90),
             () -> robot.movement.Move(216.05, 90, 1.4),
             () -> robot.movement.Move(216.05, 0),
-            () -> robot.movement.Move(226.34, 0, 1.7),
+            () -> robot.movement.Move(220, 0, 1.7),
 
 
     };

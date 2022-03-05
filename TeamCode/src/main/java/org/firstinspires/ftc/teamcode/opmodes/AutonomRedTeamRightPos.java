@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     Runnable[] upPosition = {
-
+            () -> robot.timer.delay(11),
             () -> {
                 robot.movement.Move(-59.57, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
@@ -22,11 +22,12 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-54.53, -30, 5),
             () -> robot.movement.Move(-46.30, 0, 4),
-            () -> robot.movement.Move(-46.30, 90, 4),
-            () -> robot.movement.Move(-185.18, 90, 3),};
-
+            () -> robot.movement.Move(-46.30, -90, 4),
+            () -> robot.timer.delay(1),
+            () -> robot.movement.Move(100, -90, 5),};
     Runnable[] middlePosition = {
 
+            () -> robot.timer.delay(11),
             () -> {
                 robot.movement.Move(-59.57, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
@@ -36,10 +37,13 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-54.53, -30, 5),
             () -> robot.movement.Move(-46.30, 0, 4),
-            () -> robot.movement.Move(-46.30, 90, 4),
-            () -> robot.movement.Move(-185.18, 90, 3),};
+            () -> robot.movement.Move(-46.30, -90, 4),
+            () -> robot.timer.delay(1),
+            () -> robot.movement.Move(100, -90, 5),};
 
     Runnable[] downPosition = {
+
+            () -> robot.timer.delay(11),
             () -> {
                 robot.movement.Move(-59.57, -30);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
@@ -49,9 +53,9 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
             () -> robot.movement.Move(-54.53, -30, 5),
             () -> robot.movement.Move(-46.30, 0, 4),
-            () -> robot.movement.Move(-46.30, 90, 4),
-            () -> robot.movement.Move(-185.18, 90, 3),};
-
+            () -> robot.movement.Move(-46.30, -90, 4),
+            () -> robot.timer.delay(1),
+            () -> robot.movement.Move(100, -90, 5),};
     @Override
     protected Runnable[] upPosition() {
         return downPosition;

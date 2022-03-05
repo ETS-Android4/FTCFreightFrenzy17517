@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.downTargetEle
 import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.errorThreshold;
 import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.homingPower;
 import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.kP;
+import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.maxAcceleration;
 import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.middleTargetElevator;
 import static org.firstinspires.ftc.teamcode.robot.Lift.LiftConfig.upTargetElevator;
 import static java.lang.Math.abs;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.misc.CommandSender;
+import org.firstinspires.ftc.teamcode.misc.MotorAccelerationLimiter;
 
 public class Lift implements RobotModule {
 
@@ -23,6 +25,7 @@ public class Lift implements RobotModule {
     private double encoderTarget = 0;
     private DcMotorEx motorLift = null;
     private final CommandSender liftCommandSender = new CommandSender((double value) -> motorLift.setPower(value));
+    private final MotorAccelerationLimiter liftAccelerationLimiter = new MotorAccelerationLimiter(liftCommandSender::send,maxAcceleration);
     private ElevatorPosition elevatorTarget = ElevatorPosition.DOWN;
     private int liftEncoderOffset = 0;
 
@@ -74,26 +77,29 @@ public class Lift implements RobotModule {
     }
 
     public void update() {
+        double motorSpeed;
         if (elevatorTarget == ElevatorPosition.DOWN) {
             if (!limitSwitch.getState()) {
                 double error = encoderTarget - getLiftEncoderPosition();
-                liftCommandSender.send(((error < 0 ? error * kP : 0) - homingPower) * robot.accumulator.getkVoltage());
+                motorSpeed = (((error < 0 ? error * kP : 0) - homingPower) * robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
-                liftCommandSender.send(0);
+                motorSpeed = 0;
                 if (!queuebool) liftEncoderOffset = motorLift.getCurrentPosition();
                 queuebool = true;
             }
         } else {
             double error = encoderTarget - getLiftEncoderPosition();
             if (abs(error) > errorThreshold) {
-                liftCommandSender.send(error * kP * robot.accumulator.getkVoltage());
+                motorSpeed = (error * kP * robot.accumulator.getkVoltage());
                 queuebool = false;
             } else {
-                liftCommandSender.send(0);
+                motorSpeed = 0;
                 queuebool = true;
             }
         }
+        //liftCommandSender.send(motorSpeed);
+        liftAccelerationLimiter.setSpeed(motorSpeed);
     }
 
     public enum ElevatorPosition {
@@ -102,8 +108,9 @@ public class Lift implements RobotModule {
 
     @Config
     public static class LiftConfig {
-        public static double homingPower = 0.25;
+        public static double homingPower = 0.4;
         public static double kP = 0.01;
+        public static double maxAcceleration = 10;
         public static int errorThreshold = 10;
         public static double downTargetElevator = 0;
         public static double middleTargetElevator = 650;

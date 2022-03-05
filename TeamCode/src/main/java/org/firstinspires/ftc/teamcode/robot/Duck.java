@@ -4,16 +4,21 @@ package org.firstinspires.ftc.teamcode.robot;
 import static org.firstinspires.ftc.teamcode.opencv.ArucoDetect.centreOfDuck;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.autonomousSpinTime;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.directionDuck;
-import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.motorSpeed;
+import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.finalMotorSpeed;
+import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.initialMotorSpeed;
+import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.maxAcceleration;
 import static org.firstinspires.ftc.teamcode.robot.Duck.DuckConfig.teleOpSpinTime;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.misc.CommandSender;
 import org.firstinspires.ftc.teamcode.misc.AllianceColor;
+import org.firstinspires.ftc.teamcode.misc.MotorAccelerationLimiter;
 import org.firstinspires.ftc.teamcode.misc.StartingPosition;
 
 public class Duck implements RobotModule {
@@ -22,6 +27,7 @@ public class Duck implements RobotModule {
     private boolean queuebool = true;
     private DcMotorEx duckMotor = null;
     private final CommandSender motorCommandSender = new CommandSender((double value) -> duckMotor.setPower(value));
+    private final MotorAccelerationLimiter duckAccelerationLimiter = new MotorAccelerationLimiter(motorCommandSender::send, maxAcceleration);
     private boolean shoudSpin = false;
     private boolean teleOpMode = false;
 
@@ -32,6 +38,7 @@ public class Duck implements RobotModule {
     public void initialize() {
         duckMotor = robot.getLinearOpMode().hardwareMap.get(DcMotorEx.class, "DuckMotor");
         duckMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        duckMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void setFieldPosition(AllianceColor allianceColor, StartingPosition startingPosition) {
@@ -66,8 +73,11 @@ public class Duck implements RobotModule {
         this.teleOpMode = teleOpMode;
     }
 
+    double accelerationCoefficient = 1;
+
     public void duckSpin(boolean doSpin) {
         if (shoudSpin != doSpin) duckTimer.reset();
+        accelerationCoefficient = (finalMotorSpeed - initialMotorSpeed) / teleOpSpinTime;
         shoudSpin = doSpin;
     }
 
@@ -77,20 +87,23 @@ public class Duck implements RobotModule {
 
     public void update() {
         if (shoudSpin && duckTimer.seconds() < (teleOpMode ? teleOpSpinTime : autonomousSpinTime)) {
-            motorCommandSender.send(directionDuck * motorSpeed * robot.accumulator.getkVoltage());
+            duckAccelerationLimiter.setSpeed(directionDuck * Range.clip(duckTimer.seconds() * accelerationCoefficient +
+                    initialMotorSpeed, initialMotorSpeed, finalMotorSpeed) * robot.accumulator.getkVoltage());
             queuebool = false;
         } else {
             shoudSpin = false;
             queuebool = true;
-            motorCommandSender.send(0);
+            duckAccelerationLimiter.setSpeed(0);
         }
     }
 
     @Config
     public static class DuckConfig {
         public static double autonomousSpinTime = 5.0;
-        public static double teleOpSpinTime = 1.9;
-        public static double motorSpeed = 0.4;
+        public static double teleOpSpinTime = 1.5;
+        public static double finalMotorSpeed = 0.85;
+        public static double initialMotorSpeed = 0.42;
+        public static double maxAcceleration = 10;
         public static double directionDuck = 1;
     }
 }

@@ -48,7 +48,7 @@ public class ArucoDetect {
             @Override
             public void onOpened() {
                 camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
-                FtcDashboard.getInstance().startCameraStream(camera, 5);
+            //    FtcDashboard.getInstance().startCameraStream(camera, 5);
             }
 
             @Override
@@ -73,7 +73,6 @@ public class ArucoDetect {
                 }
                 timePosition = detections.get(0).pose.x * FEET_PER_METER * detections.get(0).pose.z * FEET_PER_METER;
                 timePosition = timePosition + centreOfDuck;
-
             }
         } else {
             return FreightPosition.RIGHT;
@@ -89,9 +88,9 @@ public class ArucoDetect {
 
     public FreightPosition stopCamera() {
         FreightPosition value = forceGetPosition();
-        camera.closeCameraDeviceAsync(() -> {
-            FtcDashboard.getInstance().stopCameraStream();
-        });
+        //FtcDashboard.getInstance().stopCameraStream();
+        //camera.stopStreaming();
+        camera.closeCameraDeviceAsync(()->{});
         return value;
     }
 
