@@ -196,9 +196,9 @@ public class Movement implements RobotModule {
                 differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
             }
             setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed *
-                            robot.accumulator.getkVoltage(),
+                            robot.battery.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle *
-                            robot.accumulator.getkVoltage());
+                            robot.battery.getkVoltage());
             queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle)) ||
                     (timer.seconds() >= moveTimeoutS);
         } else {

@@ -79,8 +79,8 @@ public class TelemetryNode implements RobotModule {
                     currentTelemetry.addLine(currentString);
                     break;
                 case ACCUMULATOR:
-                    currentTelemetry.addData("Voltage", robot.accumulator.getBatteryVoltage());
-                    currentTelemetry.addData("Coefficient", robot.accumulator.getkVoltage());
+                    currentTelemetry.addData("Voltage", robot.battery.getBatteryVoltage());
+                    currentTelemetry.addData("Coefficient", robot.battery.getkVoltage());
                     break;
                 case BRUSH:
                     currentTelemetry.addData("Enabled", robot.brush.getEnableIntake());

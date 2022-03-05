@@ -118,7 +118,7 @@ public class LedStrip implements RobotModule {
     }
 
     private double lineariseBrightness(double percentage) {
-        return log(abs(percentage) * E + 1) * signum(percentage) * robot.accumulator.getkVoltage();
+        return log(abs(percentage) * E + 1) * signum(percentage) * robot.battery.getkVoltage();
     }
 
     public enum LedStripMode {

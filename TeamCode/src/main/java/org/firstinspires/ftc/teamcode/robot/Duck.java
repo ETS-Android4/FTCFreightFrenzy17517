@@ -88,7 +88,7 @@ public class Duck implements RobotModule {
     public void update() {
         if (shoudSpin && duckTimer.seconds() < (teleOpMode ? teleOpSpinTime : autonomousSpinTime)) {
             duckAccelerationLimiter.setSpeed(directionDuck * Range.clip(duckTimer.seconds() * accelerationCoefficient +
-                    initialMotorSpeed, initialMotorSpeed, finalMotorSpeed) * robot.accumulator.getkVoltage());
+                    initialMotorSpeed, initialMotorSpeed, finalMotorSpeed) * robot.battery.getkVoltage());
             queuebool = false;
         } else {
             shoudSpin = false;

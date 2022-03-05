@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.internal.tfod.RollingAverage;
 import org.firstinspires.ftc.teamcode.misc.TimedSensorQuery;
 
-public class Accumulator implements RobotModule {
+public class Battery implements RobotModule {
 
     WoENRobot robot;
     private double kVoltage = 1;
@@ -19,7 +19,7 @@ public class Accumulator implements RobotModule {
         return averageBatteryVoltage.get();
     }, 8);
 
-    public Accumulator(WoENRobot robot) {
+    public Battery(WoENRobot robot) {
         this.robot = robot;
     }
 

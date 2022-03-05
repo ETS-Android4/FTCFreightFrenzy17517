@@ -19,7 +19,7 @@ public class WoENRobot {
     public final Brush brush = new Brush(this);
     public final Timer timer = new Timer();
     public final TelemetryNode telemetryNode = new TelemetryNode(this);
-    public final Accumulator accumulator = new Accumulator(this);
+    public final Battery battery = new Battery(this);
     public final Gyro gyro = new Gyro(this);
     public final GyroAuto gyroAuto = new GyroAuto(this);
     private final LinearOpMode linearOpMode;
@@ -32,7 +32,7 @@ public class WoENRobot {
             odometry,
             brush,
             timer,
-            accumulator,
+            battery,
             gyroAuto,
             telemetryNode};
     public ArucoDetect arucoDetect = new ArucoDetect(this);
