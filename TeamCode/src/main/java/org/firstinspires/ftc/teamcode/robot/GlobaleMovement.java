@@ -19,8 +19,8 @@ public class GlobaleMovement implements RobotModule{
 
 
 private WoENRobot robot = null;
-private DcMotorEx leftMotor = null;
-private DcMotorEx rightMotorBack = null;
+private DcMotorEx leftMotorFront = null;
+private DcMotorEx leftMotorBack = null;
 private final CommandSender leftMotorCommandSender = new CommandSender((double value) -> {
      leftMotorBack.setPower(value);
      leftMotorFront.setPower(value);
