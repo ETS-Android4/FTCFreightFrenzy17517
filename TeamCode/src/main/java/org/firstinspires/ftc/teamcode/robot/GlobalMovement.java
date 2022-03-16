@@ -1,22 +1,15 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kD_Angle;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kD_Distance;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kI_Angle;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kI_Distance;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kP_Angle;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.kP_Distance;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.maxIntegralAngle;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.maxIntegralDistance;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.minErrorAngle;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.minErrorDistance;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.moveTimeoutS;
-import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.zeroPowerBehavior;
+import static org.firstinspires.ftc.teamcode.robot.GlobalMovement.GMConfig.*;
+import static org.firstinspires.ftc.teamcode.robot.Movement.MovementConfig.*;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
+import static java.lang.Math.cos;
 import static java.lang.Math.signum;
 import static java.lang.Math.sqrt;
+import static java.lang.Math.atan2;
+import static java.lang.Math.toRadians;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.misc.CommandSender;
 
 
-public class Movement implements RobotModule {
+public class GlobalMovement implements RobotModule {
 
     private static final double TRACK_WIDTH_CM = 38.84500;
     private static final double WHEEL_DIAMETER_CM = 10.90532;
@@ -66,7 +59,7 @@ public class Movement implements RobotModule {
         rightMotorFront.setPower(value);
     });
 
-    public Movement(WoENRobot robot) {
+    public GlobalMovement(WoENRobot robot) {
         this.robot = robot;
     }
 
@@ -104,8 +97,9 @@ public class Movement implements RobotModule {
         leftMotorBack.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
-    public double getCurrent(){
-        return leftMotorFront.getCurrent(CurrentUnit.AMPS) + leftMotorBack.getCurrent(CurrentUnit.AMPS) + rightMotorFront.getCurrent(CurrentUnit.AMPS) + rightMotorBack.getCurrent(CurrentUnit.AMPS);
+    public double getCurrent() {
+        return leftMotorFront.getCurrent(CurrentUnit.AMPS) + leftMotorBack.getCurrent(CurrentUnit.AMPS) +
+                rightMotorFront.getCurrent(CurrentUnit.AMPS) + rightMotorBack.getCurrent(CurrentUnit.AMPS);
     }
 
     public void resetEncoders(DcMotor.RunMode runMode) {
@@ -133,35 +127,41 @@ public class Movement implements RobotModule {
         setZeroPowerBehaviors(zeroPowerBehavior);
     }
 
-    public double getDistanceError(double target) {
-        return target - encoderTicksToCm((getLeftEncoder() + getRightEncoder()) / 2.0);
+    public double xError = 0;
+    public double yError = 0;
+
+    public double getDistanceError() {
+        xError = xTarget - robot.odometry.getCurrentPosition().x;
+        yError = yTarget - robot.odometry.getCurrentPosition().y;
+        distance = sqrt(xError * xError + yError * yError);
+        return distance;
     }
 
-    public double getAngleError(double target) {
-        double error = target - getGyroHeading();
-        if (error > 180.0) do error -= 360.0; while (error > 180.0);
-        else if (error < -180.0) do error += 360.0; while (error < -180.0);
+    public double getAngleError() {
+        double error = -atan2(xError, yError) - robot.odometry.getCurrentPosition().heading;
+        if (error > PI) do error -= 2 * PI; while (error > PI);
+        else if (error < -PI) do error += 2 * PI; while (error < -PI);
         return error;
     }
 
-    public void Move(double distance) {
-        Move(distance, 0, 1);
+    public void Move(double x, double y) {
+        Move(x, y, 1);
     }
 
-    public void Move(double distance, double angle) {
-        Move(distance, angle, 1);
-    }
+    private double xTarget = 0;
+    private double yTarget = 0;
 
-    public void Move(double distance, double angle, double speed) {
+    public void Move(double xT, double yT, double speed) {
         timer.reset();
+        xTarget = xT;
+        yTarget = yT;
         manualControl = false;
+        queuebool = false;
         if (distance != this.distance || angle != this.angle || speed != this.speed) {
             loopTimer.reset();
-            oldErrDistance = getDistanceError(this.distance);
-            oldErrAngle = getAngleError(this.angle);
+            oldErrDistance = getDistanceError();
+            oldErrAngle = getAngleError();
         }
-        this.distance = distance;
-        this.angle = angle;
         this.speed = speed;
     }
 
@@ -171,17 +171,18 @@ public class Movement implements RobotModule {
             double deltaErrDistance = 0;
             double deltaErrAngle = 0;
             double speedAngle = 1;
-            double errDistance = getDistanceError(distance);
-            double errAngle = getAngleError(angle);
+            double errDistance = getDistanceError();
+            double errAngle = getAngleError();
+            errDistance *= cos(errAngle);
             double timestep = loopTimer.seconds();
             loopTimer.reset();
             {   //proportional component
-                proportionalLinear = errDistance * kP_Distance;
-                proportionalAngular = errAngle * kP_Angle;
+                proportionalLinear = errDistance * G_kP_Distance;
+                proportionalAngular = errAngle * G_kP_Angle;
             }
             {   //integral component  (|0.25|)
-                integralLinear += errDistance * kI_Distance * timestep;
-                integralAngular += errAngle * kI_Angle * timestep;
+                integralLinear += errDistance * G_kI_Distance * timestep;
+                integralAngular += errAngle * G_kI_Angle * timestep;
                 if (abs(integralAngular) > maxIntegralAngle)
                     integralAngular = maxIntegralAngle * signum(integralAngular);
                 if (abs(integralLinear) > maxIntegralDistance)
@@ -192,15 +193,14 @@ public class Movement implements RobotModule {
                 deltaErrAngle = errAngle - oldErrAngle;
                 oldErrDistance = errDistance;
                 oldErrAngle = errAngle;
-                differentialLinear = (deltaErrDistance / timestep) * kD_Distance;
-                differentialAngular = (deltaErrAngle / timestep) * kD_Angle;
+                differentialLinear = (deltaErrDistance / timestep) * G_kD_Distance;
+                differentialAngular = (deltaErrAngle / timestep) * G_kD_Angle;
             }
-            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed *
-                            robot.battery.getkVoltage(),
+            setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.battery.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle *
                             robot.battery.getkVoltage());
-            queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < minErrorAngle)) ||
-                    (timer.seconds() >= moveTimeoutS);
+            queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < toRadians(minErrorAngle))) /*||
+                    (timer.seconds() >= moveTimeoutS)*/;
         } else {
             queuebool = true;
         }
@@ -214,6 +214,9 @@ public class Movement implements RobotModule {
         telemetry.addData("Differential(angle)", differentialAngular);
         telemetry.addData("Integral(linear)", integralLinear);
         telemetry.addData("Integral(angle)", integralAngular);
+        telemetry.addData("distanceErr", getDistanceError());
+        telemetry.addData("angleErr", getAngleError());
+        telemetry.addData("heading", robot.odometry.getCurrentPosition().heading * 180/PI);
     }
 
     public void setMotorPowers(double power, double angle) {
@@ -235,18 +238,12 @@ public class Movement implements RobotModule {
     }
 
     @Config
-    public static class MovementConfig {
-        public static double kP_Distance = 0.02;
-        public static double kP_Angle = 0.063;
-        public static double kI_Distance = 0.004;
-        public static double kI_Angle = 0.01;
-        public static double kD_Distance = 0.002;
-        public static double kD_Angle = 0.003;
-        public static double maxIntegralAngle = 0.25;
-        public static double maxIntegralDistance = 0.25;
-        public static double minErrorDistance = 2.0;
-        public static double minErrorAngle = 1;
-        public static double moveTimeoutS = 2;
-        public static DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT;
+    public static class GMConfig {
+        public static double G_kP_Distance = 0.02;
+        public static double G_kP_Angle = 5;
+        public static double G_kI_Distance = 0.04;
+        public static double G_kI_Angle = 0;
+        public static double G_kD_Distance = 0;
+        public static double G_kD_Angle = 0;
     }
 }

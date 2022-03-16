@@ -108,6 +108,9 @@ public class TelemetryNode implements RobotModule {
                 case MOVEMENT:
                     robot.movement.telemetryForMovement(currentTelemetry);
                     break;
+                case GLOBALMOVEMENT:
+                    robot.globalMovement.telemetryForMovement(currentTelemetry);
+                    break;
                 case LEDSTRIP:
                     currentTelemetry.addData("LED Current", robot.ledStrip.getLEDCurrent());
                     break;
@@ -164,7 +167,7 @@ public class TelemetryNode implements RobotModule {
     }
 
     public enum TelemetryModuleValue {
-        SPEEDOMETER, ACCUMULATOR, BRUSH, BUCKET, ENCODERS, OPENCV, GYRO, LIFT, MOVEMENT, LEDSTRIP, DUCK, ODOMETRY, UNEXPECTED
+        SPEEDOMETER, ACCUMULATOR, BRUSH, BUCKET, ENCODERS, OPENCV, GYRO, LIFT, GLOBALMOVEMENT,MOVEMENT, LEDSTRIP, DUCK, ODOMETRY, UNEXPECTED
     }
 
     @Config

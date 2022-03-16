@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.misc.Pose2D;
 import org.firstinspires.ftc.teamcode.robot.Bucket;
 import org.firstinspires.ftc.teamcode.robot.Lift;
 
@@ -10,14 +11,9 @@ public class AutonomTest extends BaseAutonomous {
 
     Runnable[] test = {                         //-64, -37
             () -> {
-                robot.movement.Move(-59.67, -34.5);                                //-64, -37
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
+                robot.odometry.setCurrentPosition(new Pose2D(0,0,0));
+                robot.globalMovement.Move(30, 0);
             },
-            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
-            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
-            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-10.3, 0),
-
     };
 
     @Override

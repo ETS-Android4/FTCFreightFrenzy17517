@@ -37,14 +37,11 @@ public class DifferentialOdometry implements RobotModule {
         return (leftMotorBack.getCurrentPosition() + leftMotorFront.getCurrentPosition()) / 2.0;
     }
 
-    double getRightEncoder() {
-        return rightMotorFront.getCurrentPosition();
-        // (rightMotorFront.getCurrentPosition() + rightMotorBack.getCurrentPosition()) / 2.0; //TODO fix wiring
-    }
+    double getRightEncoder() {return (rightMotorFront.getCurrentPosition() + rightMotorBack.getCurrentPosition()) / 2.0;}
 
     public double getVelocityKmH(){
         return encoderTicksToCm((leftMotorBack.getVelocity() + leftMotorFront.getVelocity()
-                + rightMotorFront.getVelocity() * 2.0 /*+ rightMotorBack.getCurrentPosition() */)/4.0)*(3600.0/(100.0*1000.0));
+                + rightMotorFront.getVelocity() * 2.0 + rightMotorBack.getCurrentPosition() )/4.0)*(3600.0/(100.0*1000.0));
     }
 
     public Pose2D getCurrentPosition() {
@@ -65,8 +62,8 @@ public class DifferentialOdometry implements RobotModule {
     public void update() {
         double currentLeftEncoder = getLeftEncoder();
         double currentRightEncoder = getRightEncoder();
-        double currentHeading = Math.toRadians(getGyroHeading());
-        //double currentHeading = Math.toRadians(encoderTicksToRotationDegrees(currentLeftEncoder - currentRightEncoder) * 0.5));
+        //double currentHeading = Math.toRadians(getGyroHeading());
+        double currentHeading = Math.toRadians(encoderTicksToRotationDegrees(currentLeftEncoder - currentRightEncoder) * 0.5);
         double deltaLeftEncoder = currentLeftEncoder - previousLeftEncoder;
         double deltaRightEncoder = currentRightEncoder - previousRightEncoder;
         double deltaHeading = angleWrapHalf(currentHeading - previousHeading);

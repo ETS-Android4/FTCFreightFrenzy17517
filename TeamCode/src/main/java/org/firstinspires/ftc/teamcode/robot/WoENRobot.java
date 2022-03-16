@@ -15,6 +15,7 @@ public class WoENRobot {
     public final Duck duck = new Duck(this);
     public final Lift lift = new Lift(this);
     public final Movement movement = new Movement(this);
+    public final GlobalMovement globalMovement = new GlobalMovement(this);
     public final DifferentialOdometry odometry = new DifferentialOdometry(this);
     public final Brush brush = new Brush(this);
     public final Timer timer = new Timer();
@@ -34,6 +35,7 @@ public class WoENRobot {
             timer,
             battery,
             gyroAuto,
+            globalMovement,
             telemetryNode};
     public ArucoDetect arucoDetect = new ArucoDetect(this);
     public FtcDashboard dashboard = FtcDashboard.getInstance();

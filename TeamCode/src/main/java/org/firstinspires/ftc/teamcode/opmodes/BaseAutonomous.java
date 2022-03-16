@@ -17,7 +17,7 @@ public abstract class BaseAutonomous extends BaseOpMode {
     }
 
     public final void execute(Runnable[] runnables) {
-        execute(runnables, 3);
+        execute(runnables, 300);
     }
 
     public final void execute(Runnable[] runnables, double timeoutSeconds) {
