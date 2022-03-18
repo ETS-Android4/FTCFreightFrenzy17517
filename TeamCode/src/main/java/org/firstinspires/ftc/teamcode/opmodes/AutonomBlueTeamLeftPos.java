@@ -15,8 +15,8 @@ public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
 
 
             () -> {
-                robot.movement.Move(-61.72, 34);
-                robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
+                robot.movement.Move(-62, 40);
+                robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
@@ -42,15 +42,23 @@ public class AutonomBlueTeamLeftPos extends BaseDetectionAutonomous {
     Runnable[] upPosition = {
 
             () -> {
-                robot.movement.Move(-61.72, 34);
+                robot.movement.Move(-60, 40);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
             },
-            () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
+            () -> robot.movement.Move(-67,40,1.5),
+            () -> {
+                robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT);
+                robot.movement.Move(-72, 40, 0.5);
+            },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-34.92, 34),
-            () -> robot.movement.Move(-34.92, 90),
-            () -> robot.movement.Move(103.168, 90, 1.6),};
+            () -> robot.movement.Move(-45, 40),
+            () -> robot.movement.Move(-45, 75),
+            () -> robot.timer.delay(2),
+            () -> robot.movement.Move(90, 60, 1.6),
+            () -> robot.movement.Move(105, 45)
+    };
+
 
     @Override
     protected Runnable[] upPosition() {

@@ -15,6 +15,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -134,28 +135,35 @@ public class GlobalMovement implements RobotModule {
         xError = xTarget - robot.odometry.getCurrentPosition().x;
         yError = yTarget - robot.odometry.getCurrentPosition().y;
         distance = sqrt(xError * xError + yError * yError);
-        if (xErrorForTan < 0 - MinErrorForX) return -distance;
-        else return distance;
+       // if (xErrorForTan < 0 - MinErrorForX) return -distance;
+        /*else*/ return distance;
     }
 
     public double getAngleError() {
         double error = -atan2(yError, xError) - robot.odometry.getCurrentPosition().heading;
-        if (xErrorForTan < 0 - MinErrorForX) error = -atan2( -yError, -xError) - robot.odometry.getCurrentPosition().heading;
+        //if (xErrorForTan < 0 - MinErrorForX) error = -atan2( -yError, -xError) - robot.odometry.getCurrentPosition().heading;
         if (error > PI) do error -= PI*2; while (error > PI);
         else if (error < -PI) do error += PI*2; while (error < -PI);
         return error;
     }
 
-    public void Move(double x, double y) {
-        Move(x, y, 1);
+    public void Move(double x, double y, double a) {
+        Move(x, y, a,1);
     }
+
+    public void Move(double x, double y) {
+        Move(x, y, Double.NaN,1);
+    }
+
     private double xTarget = 0;
     private double yTarget = 0;
-    private double xErrorForTan = 0;
-    public void Move(double xT, double yT, double speed) {
+    private double angleTarget = 0;
+    //private double xErrorForTan = 0;
+    public void Move(double xT, double yT, double aT, double speed) {
         timer.reset();
         xTarget = xT;
         yTarget = yT;
+        angleTarget = aT;
         manualControl = false;
         queuebool = false;
         if (distance != this.distance || angle != this.angle || speed != this.speed) {
@@ -163,18 +171,29 @@ public class GlobalMovement implements RobotModule {
             oldErrDistance = getDistanceError();
             oldErrAngle = getAngleError();
         }
-        xErrorForTan = xT - robot.odometry.getCurrentPosition().x;
+        //xErrorForTan = xT - robot.odometry.getCurrentPosition().x;
         this.speed = speed;
     }
 
 
     public void update() {
         if (!manualControl) {
+            boolean inRadius = false;
             double deltaErrDistance = 0;
             double deltaErrAngle = 0;
             double speedAngle = 1;
             double errDistance = getDistanceError();
             double errAngle = getAngleError();
+            if(errDistance < MinErrorDistance && !Double.isNaN(angleTarget)) inRadius = true;
+            if(errDistance > MinErrorDistance * 2) inRadius = false;
+            errDistance *= cos(errAngle);
+            if (errAngle > PI/2) do errAngle -= PI; while (errAngle > PI/2);
+            else if (errAngle < -PI/2) do errAngle += PI; while (errAngle < -PI/2);
+            if (inRadius){
+                errAngle = angleTarget - robot.odometry.getCurrentPosition().heading;
+                if (errAngle > PI) do errAngle -= PI*2; while (errAngle > PI);
+                else if (errAngle < -PI) do errAngle += PI*2; while (errAngle < -PI);
+            }
             double timestep = loopTimer.seconds();
             loopTimer.reset();
             {   //proportional component
@@ -200,7 +219,7 @@ public class GlobalMovement implements RobotModule {
             setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.battery.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle *
                             robot.battery.getkVoltage());
-            queuebool = ((abs(errDistance) < minErrorDistance)) /*||
+            queuebool = ((abs(errDistance) < minErrorDistance - 1) && (errAngle < toRadians(2))) /*||
                     (timer.seconds() >= moveTimeoutS)*/;
         } else {
             queuebool = true;
@@ -228,8 +247,8 @@ public class GlobalMovement implements RobotModule {
     }
 
     private void setMotorPowersPrivate(double power, double angle) {
-        rightMotorCommandSender.send(power - angle);
-        leftMotorCommandSender.send(power + angle);
+        rightMotorCommandSender.send(Range.clip(power - angle, -MaxSpeed, MaxSpeed));
+        leftMotorCommandSender.send(Range.clip(power + angle, -MaxSpeed, MaxSpeed));
     }
 
     double getLeftEncoder() {
@@ -248,6 +267,7 @@ public class GlobalMovement implements RobotModule {
         public static double G_kI_Angle = 0.02;
         public static double G_kD_Distance = 0.01;
         public static double G_kD_Angle = 0.02;
-        public static double MinErrorForX = 2;
+        public static double MaxSpeed = 1;
+        public static double MinErrorDistance = 3;
     }
 }
