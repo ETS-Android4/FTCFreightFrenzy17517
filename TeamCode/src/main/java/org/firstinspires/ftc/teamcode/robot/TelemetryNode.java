@@ -109,7 +109,7 @@ public class TelemetryNode implements RobotModule {
                     robot.movement.telemetryForMovement(currentTelemetry);
                     break;
                 case GLOBALMOVEMENT:
-                    robot.globalMovement.telemetryForMovement(currentTelemetry);
+                  //  robot.globalMovement.telemetryForMovement(currentTelemetry);
                     break;
                 case LEDSTRIP:
                     currentTelemetry.addData("LED Current", robot.ledStrip.getLEDCurrent());

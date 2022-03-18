@@ -11,31 +11,29 @@ import org.firstinspires.ftc.teamcode.robot.Lift;
 public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     Runnable[] upPosition = {
-            () -> robot.timer.delay(11),
             () -> {
-                robot.movement.Move(-59.57, -30);
+                robot.movement.Move(-59, -51);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP);
-                robot.timer.delay(1);
             },
+            () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.UP),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-54.53, -30, 5),
-            () -> robot.movement.Move(-46.30, 0, 4),
-            () -> robot.movement.Move(-46.30, -90, 4),
+            () -> robot.movement.Move(-52, -40, 3),
+            () -> robot.movement.Move(-46.30, 0, 3),
+            () -> robot.movement.Move(-46.30, -90, 3),
             () -> robot.timer.delay(1),
-            () -> robot.movement.Move(100, -90, 5),};
+            () -> robot.movement.Move(115, -90, 3),};
     Runnable[] middlePosition = {
 
-            () -> robot.timer.delay(11),
             () -> {
-                robot.movement.Move(-59.57, -30);
+                robot.movement.Move(-59.57, -40);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.MIDDLE);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-54.53, -30, 5),
+            () -> robot.movement.Move(-54.53, -40, 5),
             () -> robot.movement.Move(-46.30, 0, 4),
             () -> robot.movement.Move(-46.30, -90, 4),
             () -> robot.timer.delay(1),
@@ -43,15 +41,14 @@ public class AutonomRedTeamRightPos extends BaseDetectionAutonomous {
 
     Runnable[] downPosition = {
 
-            () -> robot.timer.delay(11),
             () -> {
-                robot.movement.Move(-59.57, -30);
+                robot.movement.Move(-59.57, -40);
                 robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN);
             },
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.EJECT),
             () -> robot.bucket.setBucketPosition(Bucket.BucketPosition.COLLECT),
             () -> robot.lift.setElevatorTarget(Lift.ElevatorPosition.DOWN),
-            () -> robot.movement.Move(-54.53, -30, 5),
+            () -> robot.movement.Move(-54.53, -40, 5),
             () -> robot.movement.Move(-46.30, 0, 4),
             () -> robot.movement.Move(-46.30, -90, 4),
             () -> robot.timer.delay(1),

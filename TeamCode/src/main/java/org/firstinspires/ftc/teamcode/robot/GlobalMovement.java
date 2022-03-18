@@ -134,23 +134,24 @@ public class GlobalMovement implements RobotModule {
         xError = xTarget - robot.odometry.getCurrentPosition().x;
         yError = yTarget - robot.odometry.getCurrentPosition().y;
         distance = sqrt(xError * xError + yError * yError);
-        return distance;
+        if (xErrorForTan < 0 - MinErrorForX) return -distance;
+        else return distance;
     }
 
     public double getAngleError() {
-        double error = -atan2(xError, yError) - robot.odometry.getCurrentPosition().heading;
-        if (error > PI) do error -= 2 * PI; while (error > PI);
-        else if (error < -PI) do error += 2 * PI; while (error < -PI);
+        double error = -atan2(yError, xError) - robot.odometry.getCurrentPosition().heading;
+        if (xErrorForTan < 0 - MinErrorForX) error = -atan2( -yError, -xError) - robot.odometry.getCurrentPosition().heading;
+        if (error > PI) do error -= PI*2; while (error > PI);
+        else if (error < -PI) do error += PI*2; while (error < -PI);
         return error;
     }
 
     public void Move(double x, double y) {
         Move(x, y, 1);
     }
-
     private double xTarget = 0;
     private double yTarget = 0;
-
+    private double xErrorForTan = 0;
     public void Move(double xT, double yT, double speed) {
         timer.reset();
         xTarget = xT;
@@ -162,6 +163,7 @@ public class GlobalMovement implements RobotModule {
             oldErrDistance = getDistanceError();
             oldErrAngle = getAngleError();
         }
+        xErrorForTan = xT - robot.odometry.getCurrentPosition().x;
         this.speed = speed;
     }
 
@@ -173,7 +175,6 @@ public class GlobalMovement implements RobotModule {
             double speedAngle = 1;
             double errDistance = getDistanceError();
             double errAngle = getAngleError();
-            errDistance *= cos(errAngle);
             double timestep = loopTimer.seconds();
             loopTimer.reset();
             {   //proportional component
@@ -199,7 +200,7 @@ public class GlobalMovement implements RobotModule {
             setMotorPowersPrivate((integralLinear + proportionalLinear + differentialLinear) * speed * robot.battery.getkVoltage(),
                     (integralAngular + proportionalAngular + differentialAngular) * speedAngle *
                             robot.battery.getkVoltage());
-            queuebool = ((abs(errDistance) < minErrorDistance) && (abs(errAngle) < toRadians(minErrorAngle))) /*||
+            queuebool = ((abs(errDistance) < minErrorDistance)) /*||
                     (timer.seconds() >= moveTimeoutS)*/;
         } else {
             queuebool = true;
@@ -214,9 +215,11 @@ public class GlobalMovement implements RobotModule {
         telemetry.addData("Differential(angle)", differentialAngular);
         telemetry.addData("Integral(linear)", integralLinear);
         telemetry.addData("Integral(angle)", integralAngular);
-        telemetry.addData("distanceErr", getDistanceError());
         telemetry.addData("angleErr", getAngleError());
-        telemetry.addData("heading", robot.odometry.getCurrentPosition().heading * 180/PI);
+        telemetry.addData("ErrDistance", getDistanceError());
+        telemetry.addData("arctg", -atan2(yError,xError));
+        telemetry.addData("arctgFor-", -atan2(-yError,-xError));
+        telemetry.addData("ErrDistance * cos", getDistanceError()* cos(getAngleError()));
     }
 
     public void setMotorPowers(double power, double angle) {
@@ -241,9 +244,10 @@ public class GlobalMovement implements RobotModule {
     public static class GMConfig {
         public static double G_kP_Distance = 0.02;
         public static double G_kP_Angle = 5;
-        public static double G_kI_Distance = 0.04;
-        public static double G_kI_Angle = 0;
-        public static double G_kD_Distance = 0;
-        public static double G_kD_Angle = 0;
+        public static double G_kI_Distance = 0.01;
+        public static double G_kI_Angle = 0.02;
+        public static double G_kD_Distance = 0.01;
+        public static double G_kD_Angle = 0.02;
+        public static double MinErrorForX = 2;
     }
 }

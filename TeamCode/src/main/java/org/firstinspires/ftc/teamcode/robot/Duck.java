@@ -99,11 +99,11 @@ public class Duck implements RobotModule {
 
     @Config
     public static class DuckConfig {
-        public static double autonomousSpinTime = 5.0;
+        public static double autonomousSpinTime = 2.0;
         public static double teleOpSpinTime = 1.5;
-        public static double finalMotorSpeed = 0.85;
-        public static double initialMotorSpeed = 0.42;
-        public static double maxAcceleration = 10;
+        public static double finalMotorSpeed = 0.72;
+        public static double initialMotorSpeed = 0.4;
+        public static double maxAcceleration = 7;
         public static double directionDuck = 1;
     }
 }
