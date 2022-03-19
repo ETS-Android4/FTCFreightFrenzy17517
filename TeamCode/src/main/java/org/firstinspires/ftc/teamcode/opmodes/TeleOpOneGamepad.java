@@ -55,10 +55,14 @@ public class TeleOpOneGamepad extends BaseOpMode {
     }
 
     private void ledStripFunction() {
-        if (gamepad1.left_trigger > 0.5 && gamepad1.right_trigger > 0.5)
+        if (gamepad1.left_trigger > 0.1 || gamepad1.right_trigger > 0.1)
+            LedStrip.LedStripConfig.LEDPower = Math.max(gamepad1.left_trigger, gamepad1.right_trigger);
+        else
+            LedStrip.LedStripConfig.LEDPower = 1;
+        if (gamepad1.left_trigger > 0.1 && gamepad1.right_trigger > 0.1)
             robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_DUALCOLOR);
-        else if (gamepad1.left_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
-        else if (gamepad1.right_trigger > 0.5) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR1);
+        else if (gamepad1.left_trigger > 0.1) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR2);
+        else if (gamepad1.right_trigger > 0.1) robot.ledStrip.setMode(LedStrip.LedStripMode.STATIC_COLOR1);
         else robot.ledStrip.setMode(LedStrip.LedStripMode.DRIVER_INDICATOR);
     }
 
